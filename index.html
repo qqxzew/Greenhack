@@ -566,6 +566,11 @@
     .kind-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 6px; }
     .kind-badge.productive { background: var(--green-soft); color: var(--green); }
     .kind-badge.abuser { background: var(--red-soft); color: var(--red); }
+    .kind-badge.real { background: rgba(0,122,204,0.12); color: #007ACC; }
+    .real-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green); background: var(--green-soft); border-radius: 5px; padding: 2px 6px; animation: pulse-badge 2.4s ease-in-out infinite; }
+    @keyframes pulse-badge { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+    .real-agent-banner { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border-radius: 11px; font-size: 11.5px; font-weight: 600; margin-bottom: 12px; background: rgba(0,122,204,0.08); color: #007ACC; border: 1px solid rgba(0,122,204,0.22); }
+    .real-agent-banner svg { width: 15px; height: 15px; stroke-width: 2.2; flex-shrink: 0; }
     .util-bar { height: 6px; border-radius: 99px; background: var(--bg-panel-2); overflow: hidden; margin-top: 5px; }
     .util-bar > span { display: block; height: 100%; border-radius: 99px; }
 
@@ -884,16 +889,18 @@
       { key: 'alchemist', name: 'Alchemist', role: 'Data Alchemist',      sceneKey: 'alchemy', accent: '#db2777', task: 'Transforming raw event streams into clean datasets.' },
       { key: 'robot',     name: 'Automaton', role: 'Automation Engineer', sceneKey: 'robot',   accent: '#7c3aed', task: 'Running the nightly deployment + smoke-test pipeline.' },
       { key: 'punk',      name: 'Punk',      role: 'Creative Strategist',  sceneKey: 'punk',   accent: '#ec4899', task: 'Drafting campaign concepts from the latest brief.' },
-      { key: 'mage',      name: 'Mage',      role: 'Research Mage',        sceneKey: 'mage',    accent: '#0891b2', task: 'Synthesising research notes into a briefing doc.' }
+      { key: 'mage',      name: 'Mage',      role: 'Research Mage',        sceneKey: 'mage',    accent: '#0891b2', task: 'Synthesising research notes into a briefing doc.' },
+      { key: 'extension', name: 'Extension', role: 'VS Code Extension',   sceneKey: 'office',  accent: '#007ACC', task: 'Routing IDE prompts through the cheapest available model.' }
     ];
 
     // archetypeKey → animation played once on carousel scroll / beehive enter+exit
     const AGENT_VIDEOS = {
-      guardian: 'videos/Thinking.mp4',
+      guardian:  'videos/Thinking.mp4',
       alchemist: 'videos/404.mp4',
       mage:      'videos/succes.mp4',
       punk:      'videos/CONFUSED.mp4',
       robot:     'videos/TYping.mp4',
+      extension: 'videos/TYping.mp4',
     };
 
     const MODELS = [
@@ -919,7 +926,7 @@
     function fmtCo2(g) { return g >= 1000 ? `${(g/1000).toFixed(2)} kg` : `${Math.round(g)} g`; }
 
     // Backend "character" → frontend archetype (1:1 with ARCHETYPES keys).
-    const CHAR_TO_ARCH = { guardian: 'guardian', alchemist: 'alchemist', robot: 'robot', punk: 'punk', mage: 'mage' };
+    const CHAR_TO_ARCH = { guardian: 'guardian', alchemist: 'alchemist', robot: 'robot', punk: 'punk', mage: 'mage', extension: 'extension' };
 
     const DEFAULT_INTEGRATIONS = [
       { key: 'github',   name: 'GitHub',       cat: 'Source control', color: '#1f2328', mono: 'GH', desc: 'Let agents open PRs, review diffs and read issues.', connected: true },
@@ -1047,7 +1054,11 @@
           anomaly: !!a.anomaly,
           stuck: !!a.stuck,
           kind: a.kind || 'productive',
-          taskTypes: a.task_types || {}
+          taskTypes: a.task_types || {},
+          activeTask: a.active_task || '',
+          providersCount: a.providers_count || 0,
+          lastHeartbeat: a.last_heartbeat || null,
+          savedCents: a.saved_cents || 0,
         },
         metrics: null
       };
@@ -1257,7 +1268,10 @@
           ${agents.map(a => {
             const arch = archetype(a.archetypeKey), st = STATUSES[a.status] || STATUSES.active;
             const paused = a.status === 'paused', killed = a.status === 'killed';
-            const actions = killed
+            const isRealAgent = a.live && a.live.kind === 'real';
+            const actions = isRealAgent
+              ? `<span style="font-size:11px;color:var(--text-muted);font-style:italic;">Live integration — not controllable</span>`
+              : killed
               ? `<button class="sup-btn resume" data-ctl="resume" data-id="${a.id}">Reactivate</button>`
               : paused
                 ? `<button class="sup-btn resume" data-ctl="resume" data-id="${a.id}">Resume</button><button class="sup-btn kill" data-ctl="kill" data-id="${a.id}">Kill</button>`
@@ -1397,7 +1411,7 @@
           <div class="agent-item${index === currentIndex ? ' active' : ''}" data-focus="${agent.id}" role="button" tabindex="0">
             <div class="agent-avatar" style="background:${a.accent}">${esc(agent.name[0] || 'A')}</div>
             <div class="agent-item-body">
-              <div class="agent-item-name"><strong>${esc(agent.name)}</strong></div>
+              <div class="agent-item-name"><strong>${esc(agent.name)}</strong>${agent.live && agent.live.kind === 'real' ? ' <span class="real-badge">● Live</span>' : ''}</div>
               <div class="agent-item-role">${esc(agent.role)}</div>
               <div class="agent-item-sub">
                 <span class="status-badge ${st.cls}"><span class="dot"></span>${st.label}</span>
@@ -1430,6 +1444,30 @@
         </div>`;
 
       if (agent.live) {
+        // Real Extension agent — show live telemetry from the VS Code extension
+        if (agent.live.kind === 'real') {
+          const L = agent.live;
+          const savedDollars = (L.savedCents || 0) / 100;
+          const hbAge = L.lastHeartbeat ? relTime(L.lastHeartbeat) : 'no signal';
+          el.agentDetail.innerHTML = `
+            ${head}
+            <div class="real-agent-banner">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+              Live VS Code Extension — real telemetry from your IDE
+            </div>
+            <div class="agent-detail-task"><b>Active operation</b><br>${esc(L.activeTask || 'Idle — waiting for the next prompt')}</div>
+            <div class="agent-detail-meta">
+              <div class="meta-tile"><div class="v">${(L.calls || 0).toLocaleString()}</div><div class="l">Prompts run</div></div>
+              <div class="meta-tile"><div class="v">${fmtCost(L.cost || 0)}</div><div class="l">Local spend</div></div>
+              <div class="meta-tile"><div class="v">${fmtCost(savedDollars)}</div><div class="l">Saved vs full</div></div>
+            </div>
+            <div style="font-size:11.5px;color:var(--text-muted);line-height:1.7;margin-top:10px;">
+              Providers connected: <b style="color:var(--text)">${L.providersCount || 0}/3</b><br>
+              Last heartbeat: <b style="color:var(--text)">${hbAge}</b>
+            </div>`;
+          return;
+        }
+
         const L = agent.live;
         const q = (L.quality != null) ? `${Math.round(L.quality * 100)}%` : '—';
         const util = Math.round((L.util || 0) * 100);
@@ -1446,7 +1484,7 @@
           ${banner}
           <div class="agent-detail-task" style="display:flex;align-items:flex-start;gap:8px;justify-content:space-between;">
             <span>${esc(agent.task)}</span>
-            <span class="kind-badge ${L.kind === 'abuser' ? 'abuser' : 'productive'}" style="flex-shrink:0;">${L.kind === 'abuser' ? 'Abuser' : 'Healthy'}</span>
+            <span class="kind-badge ${L.kind === 'abuser' ? 'abuser' : L.kind === 'real' ? 'real' : 'productive'}" style="flex-shrink:0;">${L.kind === 'abuser' ? 'Abuser' : L.kind === 'real' ? 'Real' : 'Healthy'}</span>
           </div>
           <div class="agent-detail-meta">
             <div class="meta-tile"><div class="v">${(L.calls || 0).toLocaleString()}</div><div class="l">Calls</div></div>

@@ -3,6 +3,7 @@
 import json
 import os
 import re
+import time
 from collections import Counter, defaultdict
 
 import anthropic as _anthropic
@@ -22,6 +23,11 @@ _pipeline: OptimizationPipeline | None = None
 # are short-circuited to "blocked" before the pipeline ever runs.
 _controls: dict[str, str] = {}
 
+# Live telemetry pushed by the VS Code extension via POST /v1/extension/heartbeat.
+_extension_heartbeat: dict = {}
+_extension_heartbeat_ts: float = 0.0
+_HEARTBEAT_STALE_SEC = 15
+
 
 class AgentControl(BaseModel):
     action: str  # "pause" | "resume" | "kill"
@@ -40,6 +46,19 @@ router = APIRouter()
 @router.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@router.post("/extension/heartbeat")
+def extension_heartbeat(body: dict):
+    """
+    Receive live telemetry from the VS Code extension.
+    The extension POSTs here every 2 s with its current usage state so the
+    frontend can display real data for the 'Extension' agent.
+    """
+    global _extension_heartbeat, _extension_heartbeat_ts
+    _extension_heartbeat = body
+    _extension_heartbeat_ts = time.time()
+    return {"ok": True}
 
 
 @router.post("/pre_call", response_model=PreCallResponse)
@@ -164,6 +183,47 @@ def agents():
             "control":       ctl,
             "status":        status,
         })
+
+    # ── Real Extension agent (built from live heartbeat, not event log) ──
+    age = time.time() - _extension_heartbeat_ts
+    ext_online = bool(_extension_heartbeat) and age < _HEARTBEAT_STALE_SEC
+    hb = _extension_heartbeat if ext_online else {}
+
+    ext_calls   = int(hb.get("calls", 0))
+    ext_spend_c = float(hb.get("spend_cents", 0.0))
+    ext_saved_c = float(hb.get("saved_cents", 0.0))
+    ext_tokens  = int(hb.get("tokens_estimated", 0))
+    ext_status  = hb.get("status", "idle") if ext_online else "idle"
+    ext_model   = hb.get("last_model")
+    ext_budget  = int(hb.get("budget_cents", 10000))
+
+    out.insert(0, {
+        "id":             "agent-extension",
+        "name":           "Extension",
+        "role":           "VS Code Integration",
+        "kind":           "real",
+        "character":      "extension",
+        "persona":        "Live VS Code Extension — routes prompts through the cheapest available model and reports real usage metrics back to Argus.",
+        "model":          ext_model,
+        "calls":          ext_calls,
+        "tokens":         ext_tokens,
+        "cost":           round(ext_spend_c / 100.0, 5),
+        "avg_quality":    None,
+        "task_types":     {"prompt": ext_calls} if ext_calls else {},
+        "budget":         ext_budget,
+        "used":           ext_spend_c,
+        "utilization":    min(ext_spend_c / max(float(ext_budget), 1.0), 1.0),
+        "budget_action":  "ok",
+        "anomaly":        False,
+        "stuck":          False,
+        "control":        None,
+        "status":         ext_status,
+        "real":           True,
+        "active_task":    hb.get("active_task", ""),
+        "providers_count": int(hb.get("providers_count", 0)),
+        "saved_cents":    ext_saved_c,
+        "last_heartbeat": _extension_heartbeat_ts if ext_online else None,
+    })
 
     # ── Efficiency / energy impact (honest, from real counters) ──
     cache_stats   = pipeline.cache.stats()

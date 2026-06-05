@@ -63,3 +63,33 @@ export async function ping(): Promise<boolean> {
     return false;
   }
 }
+
+export interface HeartbeatPayload {
+  status: 'active' | 'idle';
+  calls: number;
+  spend_cents: number;
+  saved_cents: number;
+  tokens_estimated: number;
+  last_model: string | null;
+  last_tier: string | null;
+  providers_count: number;
+  backend_online: boolean;
+  active_task: string;
+  budget_cents: number;
+}
+
+/**
+ * Push live extension state to the backend so the frontend's "Extension" agent
+ * shows real data. Fire-and-forget — never throws.
+ */
+export async function postHeartbeat(payload: HeartbeatPayload): Promise<void> {
+  try {
+    await fetch(`${apiBase()}/v1/extension/heartbeat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    // best-effort; silently ignore if backend is unreachable
+  }
+}

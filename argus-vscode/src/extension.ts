@@ -3,11 +3,14 @@ import { PROVIDERS, ProviderId, callModel, estimateTokens } from './providers';
 import { pickModel, estimateTier, costCents, premiumCostCents } from './router';
 import { loadUsage, addSpend, resetUsage, budgetCents } from './usage';
 import { getApiKey, setApiKey, clearApiKey, availableProviders } from './secrets';
-import { fetchTokenStats, apiBase, TokenStats } from './backend';
+import { fetchTokenStats, apiBase, TokenStats, postHeartbeat } from './backend';
 
 let statusBar: vscode.StatusBarItem;
 let pollTimer: ReturnType<typeof setInterval> | undefined;
 let lastStats: TokenStats | undefined;
+let lastUsedModel: string | null = null;
+let lastUsedTier: string | null = null;
+let lastActiveTask: string = '';
 
 const POLL_MS = 2000;
 
@@ -102,6 +105,23 @@ async function refreshStatusBar(ctx: vscode.ExtensionContext) {
   const stats = await fetchTokenStats();
   lastStats = stats;
   const available = await availableProviders(ctx);
+  const u = loadUsage(ctx);
+
+  // Push live telemetry to backend so the dashboard's "Extension" agent shows real data.
+  const tokEst = u.spentCents > 0 ? Math.round((u.spentCents / 100) * (1_000_000 / 3)) : 0;
+  void postHeartbeat({
+    status: u.calls > 0 ? 'active' : 'idle',
+    calls: u.calls,
+    spend_cents: u.spentCents,
+    saved_cents: u.savedCents,
+    tokens_estimated: tokEst,
+    last_model: lastUsedModel,
+    last_tier: lastUsedTier,
+    providers_count: available.length,
+    backend_online: stats.online,
+    active_task: lastActiveTask,
+    budget_cents: budgetCents(),
+  });
 
   if (!stats.online) {
     statusBar.text = `$(plug) Argus · offline`;
@@ -118,7 +138,6 @@ async function refreshStatusBar(ctx: vscode.ExtensionContext) {
   // The headline: tokens WITH Argus vs WITHOUT, in realtime.
   statusBar.text = `$(zap) Argus  ${fmtTok(stats.withArgus)} w/ · ${fmtTok(stats.withoutArgus)} w/o · -${pct}%`;
 
-  const u = loadUsage(ctx);
   const md = new vscode.MarkdownString();
   md.appendMarkdown(`**Argus — realtime token savings**\n\n`);
   md.appendMarkdown(`- With Argus: **${stats.withArgus.toLocaleString()}** tokens\n`);
@@ -181,6 +200,9 @@ async function cmdRun(ctx: vscode.ExtensionContext) {
   let outTok: number;
   let simulated = false;
   let replyNote = '';
+  lastUsedModel = model.apiId;
+  lastUsedTier = tier;
+  lastActiveTask = `Routing to ${model.label} [${tier} tier]…`;
 
   if (hasKey) {
     try {
@@ -204,6 +226,7 @@ async function cmdRun(ctx: vscode.ExtensionContext) {
 
   const spent = costCents(model, inTok, outTok);
   const saved = Math.max(0, premiumCostCents(inTok, outTok) - spent);
+  lastActiveTask = `${model.label} [${tier}] — ${inTok}↑ ${outTok}↓ tok · saved ${saved.toFixed(2)}¢`;
   await addSpend(ctx, spent, saved);
   await refreshStatusBar(ctx);
 
