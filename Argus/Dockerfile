@@ -30,10 +30,12 @@ COPY simulation/   simulation/
 COPY storage/      storage/
 COPY make_investor_report.py .
 COPY demo_app.py             .
+COPY chat_app.py             .
 
 # Cloud Run injects $PORT (default 8080); uvicorn reads it at startup
 ENV PORT=8080
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "uvicorn demo_app:app --host 0.0.0.0 --port ${PORT}"]
+# Set APP=demo to run the investor-report demo instead of the chat interface
+CMD ["sh", "-c", "uvicorn ${APP:-chat}_app:app --host 0.0.0.0 --port ${PORT}"]

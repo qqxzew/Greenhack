@@ -1,11 +1,11 @@
 {
   "config": {
-    "n_tasks": 300,
+    "n_tasks": 200,
     "seed": 7,
     "difficulty": "balanced",
     "reasoning_depth": 1.0,
     "cache_hit_rate": 0.12,
-    "loop_rate": 0.04,
+    "loop_rate": 0.03,
     "compressible_fraction": 0.65,
     "strong_model_fraction": null,
     "ceiling_quality": 0.93
@@ -17,15 +17,15 @@
     "expert": 0.12
   },
   "band_counts": {
-    "simple": 106,
-    "medium": 76,
-    "hard": 40,
-    "expert": 30
+    "simple": 71,
+    "medium": 51,
+    "hard": 27,
+    "expert": 21
   },
-  "n_unique": 252,
-  "n_cache_repeat": 36,
-  "n_loops": 12,
-  "n_emitted": 300,
+  "n_unique": 170,
+  "n_cache_repeat": 24,
+  "n_loops": 6,
+  "n_emitted": 200,
   "routing_tiers": [
     [
       0.33,

@@ -75,8 +75,12 @@ class OptimizationPipeline:
         # Layer 3: Budget check (reserve, not yet spent)
         budget_action = self.budget.consume(agent_id, 0)
 
-        # Layer 4: Route to model
-        model, meta = self.router.choose(task)
+        # Layer 4: Route to model (user may override via task["user_model"])
+        user_model = task.get("user_model")
+        if user_model:
+            model, meta = user_model, {}
+        else:
+            model, meta = self.router.choose(task)
 
         if budget_action == "block":
             return {"action": "blocked", "reason": "budget_exhausted", "task_id": task_id}
