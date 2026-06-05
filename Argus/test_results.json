@@ -1,0 +1,709 @@
+{
+  "baseline_cost": 0.028380000000000006,
+  "actual_cost": 0.06023000000000001,
+  "savings_pct": -112.22692036645525,
+  "cache": {
+    "hit_count": 0,
+    "hit_rate": 0.0,
+    "tokens_saved": 0,
+    "cost_saved": 0.0
+  },
+  "routing": {
+    "claude-haiku-4-5": {
+      "count": 12,
+      "pct": 32.4
+    },
+    "claude-sonnet-4-5": {
+      "count": 25,
+      "pct": 67.6
+    }
+  },
+  "quality": {
+    "optimized_avg": 0.523,
+    "baseline_avg": 0.54,
+    "quality_delta": -0.017
+  },
+  "anomalies": {
+    "agent-hr": {
+      "alerts": 0,
+      "current": 0.0
+    },
+    "agent-dev": {
+      "alerts": 0,
+      "current": 0.0
+    },
+    "agent-finance": {
+      "alerts": 0,
+      "current": 0.0
+    },
+    "agent-wasteful": {
+      "alerts": 0,
+      "current": 0.0
+    },
+    "agent-spammer": {
+      "alerts": 0,
+      "current": 0.0
+    }
+  },
+  "pipeline_state": {
+    "router": {
+      "call_count": 37,
+      "linucb": {
+        "t": 33,
+        "stats": {
+          "claude-haiku-4-5": {
+            "name": "claude-haiku-4-5",
+            "calls": 12,
+            "total_reward": 4.778671999999999,
+            "total_tokens": 0,
+            "total_cost": 0.0026660000000000004
+          },
+          "claude-sonnet-4-5": {
+            "name": "claude-sonnet-4-5",
+            "calls": 25,
+            "total_reward": 14.089488000000001,
+            "total_tokens": 0,
+            "total_cost": 0.05756400000000001
+          }
+        },
+        "routing": {
+          "claude-haiku-4-5": 0.32432432432432434,
+          "claude-sonnet-4-5": 0.6756756756756757
+        }
+      },
+      "logistic": {
+        "weights": [
+          0.012767959842669136,
+          0.0774192993868938,
+          0.1192993299432581,
+          0.04158388324412487,
+          0.03697254425424985,
+          0.06240248484536736,
+          0.08003779865878763,
+          0.0
+        ],
+        "n_updates": 12
+      },
+      "routing_dist": {
+        "claude-haiku-4-5": 0.32432432432432434,
+        "claude-sonnet-4-5": 0.6756756756756757
+      }
+    },
+    "cache": {
+      "size": 37,
+      "hits": 0,
+      "misses": 32,
+      "hit_rate": 0.0,
+      "threshold": 0.82
+    },
+    "dedup": {
+      "total": 32,
+      "duplicates": 0,
+      "dedup_rate": 0.0
+    },
+    "budget": {
+      "org_budget": 500000,
+      "org_used": 9460.0,
+      "org_remaining": 490540.0,
+      "agents": {
+        "agent-hr": {
+          "budget": 10000,
+          "used": 2093.0,
+          "utilization": 0.2093,
+          "action": "ok"
+        },
+        "agent-dev": {
+          "budget": 10000,
+          "used": 2809.0,
+          "utilization": 0.2809,
+          "action": "ok"
+        },
+        "agent-finance": {
+          "budget": 10000,
+          "used": 1771.0,
+          "utilization": 0.1771,
+          "action": "ok"
+        },
+        "agent-wasteful": {
+          "budget": 10000,
+          "used": 1264.0,
+          "utilization": 0.1264,
+          "action": "ok"
+        },
+        "agent-spammer": {
+          "budget": 10000,
+          "used": 1523.0,
+          "utilization": 0.1523,
+          "action": "ok"
+        }
+      }
+    },
+    "prefix": {
+      "unique_prefixes": 32,
+      "total_prompts": 32,
+      "reuse_rate": 0.0
+    },
+    "events": [
+      {
+        "agent_id": "agent-hr",
+        "task_id": "f783ff16-002d-41b7-94f2-accc93d7be1a",
+        "task_type": "qa",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.000142,
+        "tokens_total": 208,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5,
+        "reward": 0.3989,
+        "ts": 1780670132.862497
+      },
+      {
+        "agent_id": "agent-dev",
+        "task_id": "eb5d951c-ead3-454c-8cae-dc046d6fffb5",
+        "task_type": "code_review",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.004059,
+        "tokens_total": 405,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5022,
+        "reward": 0.3675,
+        "ts": 1780670139.2063448
+      },
+      {
+        "agent_id": "agent-finance",
+        "task_id": "6382c82f-cd66-447a-aa2f-34ecd725a8df",
+        "task_type": "analysis",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.000304,
+        "tokens_total": 376,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5022,
+        "reward": 0.3976,
+        "ts": 1780670143.916028
+      },
+      {
+        "agent_id": "agent-wasteful",
+        "task_id": "",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.000984,
+        "tokens_total": 120,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5,
+        "reward": 0.7421,
+        "ts": 1780670148.217185
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp01",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.00111,
+        "tokens_total": 130,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5101,
+        "reward": 0.7411,
+        "ts": 1780670152.013109
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "1b199a28-acbe-46ab-a6af-152e40410bba",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.0015,
+        "tokens_total": 196,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5106,
+        "reward": 0.738,
+        "ts": 1780670156.608046
+      },
+      {
+        "agent_id": "agent-dev",
+        "task_id": "d9050b73-59ec-4076-bf02-ed959bed052e",
+        "task_type": "code_review",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.000397,
+        "tokens_total": 444,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5044,
+        "reward": 0.3968,
+        "ts": 1780670161.0103612
+      },
+      {
+        "agent_id": "agent-finance",
+        "task_id": "a6a79c16-b872-4e91-8170-63cfb0702b70",
+        "task_type": "summarize",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.001872,
+        "tokens_total": 252,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5056,
+        "reward": 0.385,
+        "ts": 1780670164.2520478
+      },
+      {
+        "agent_id": "agent-wasteful",
+        "task_id": "",
+        "task_type": "code_review",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.003372,
+        "tokens_total": 324,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5,
+        "reward": 0.373,
+        "ts": 1780670170.9510121
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp02",
+        "task_type": "qa",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.0001097,
+        "tokens_total": 143,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5125,
+        "reward": 0.3991,
+        "ts": 1780670174.1278431
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "1122bf87-9622-47fa-9353-0207c1b8fee5",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.00243,
+        "tokens_total": 258,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5187,
+        "reward": 0.7306,
+        "ts": 1780670181.1911428
+      },
+      {
+        "agent_id": "agent-dev",
+        "task_id": "620e64f4-fa4c-4175-b86e-d4cfcd20b5db",
+        "task_type": "analysis",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.005484,
+        "tokens_total": 484,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.516,
+        "reward": 0.3561,
+        "ts": 1780670193.47227
+      },
+      {
+        "agent_id": "agent-finance",
+        "task_id": "cec364ee-bab1-41c0-b81d-5bf3f3578b22",
+        "task_type": "analysis",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.0004508,
+        "tokens_total": 491,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.516,
+        "reward": 0.3964,
+        "ts": 1780670200.247169
+      },
+      {
+        "agent_id": "agent-wasteful",
+        "task_id": "",
+        "task_type": "analysis",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.004395,
+        "tokens_total": 397,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5,
+        "reward": 0.3648,
+        "ts": 1780670217.654308
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp03",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.000669,
+        "tokens_total": 103,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5218,
+        "reward": 0.7446,
+        "ts": 1780670221.126849
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "606512d2-3926-4ce0-9d37-dd024d1b3ca7",
+        "task_type": "summarize",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.0001665,
+        "tokens_total": 266,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.509,
+        "reward": 0.3987,
+        "ts": 1780670224.092154
+      },
+      {
+        "agent_id": "agent-dev",
+        "task_id": "17f44fad-53c5-46f1-a99f-220e11ba1140",
+        "task_type": "code_review",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.0002585,
+        "tokens_total": 326,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5203,
+        "reward": 0.3979,
+        "ts": 1780670227.679112
+      },
+      {
+        "agent_id": "agent-finance",
+        "task_id": "0cd9fb16-02b0-4d22-b893-04ec6651601d",
+        "task_type": "analysis",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.004383,
+        "tokens_total": 409,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5249,
+        "reward": 0.3649,
+        "ts": 1780670236.996093
+      },
+      {
+        "agent_id": "agent-wasteful",
+        "task_id": "",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.000555,
+        "tokens_total": 93,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5,
+        "reward": 0.7456,
+        "ts": 1780670240.984973
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp04",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.001251,
+        "tokens_total": 141,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5253,
+        "reward": 0.39,
+        "ts": 1780670244.37425
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "7f58d2db-870d-4a63-893b-0365b27ae9e6",
+        "task_type": "translation",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.001038,
+        "tokens_total": 166,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.512,
+        "reward": 0.7417,
+        "ts": 1780670248.153238
+      },
+      {
+        "agent_id": "agent-dev",
+        "task_id": "cb435ea0-9e87-4e0f-82bd-727688f5ad25",
+        "task_type": "analysis",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.0003728,
+        "tokens_total": 419,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5249,
+        "reward": 0.397,
+        "ts": 1780670252.7052732
+      },
+      {
+        "agent_id": "agent-finance",
+        "task_id": "a57ed34f-21ff-4ba1-9e87-d0942bbe12cf",
+        "task_type": "summarize",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.001821,
+        "tokens_total": 243,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5186,
+        "reward": 0.3854,
+        "ts": 1780670257.6932778
+      },
+      {
+        "agent_id": "agent-wasteful",
+        "task_id": "",
+        "task_type": "code_review",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.003582,
+        "tokens_total": 330,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5,
+        "reward": 0.3713,
+        "ts": 1780670264.2380831
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp05",
+        "task_type": "qa",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.000119,
+        "tokens_total": 152,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5269,
+        "reward": 0.399,
+        "ts": 1780670266.9740238
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "32553ca5-e139-4ca0-bc50-6e84d4b30e09",
+        "task_type": "translation",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 7.07e-05,
+        "tokens_total": 151,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5147,
+        "reward": 0.3994,
+        "ts": 1780670268.931351
+      },
+      {
+        "agent_id": "agent-dev",
+        "task_id": "65c34cb6-5449-413d-89fb-2015a49279b8",
+        "task_type": "code_review",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.003951,
+        "tokens_total": 389,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5286,
+        "reward": 0.3684,
+        "ts": 1780670276.361106
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp06",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.001323,
+        "tokens_total": 145,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5341,
+        "reward": 0.7394,
+        "ts": 1780670281.7458189
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "f9ce7387-149a-4159-a06a-766ff6e52a36",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.001419,
+        "tokens_total": 193,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5341,
+        "reward": 0.7386,
+        "ts": 1780670286.2264352
+      },
+      {
+        "agent_id": "agent-dev",
+        "task_id": "29946042-5a5b-456a-8c5c-7c58fb55557a",
+        "task_type": "analysis",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.003318,
+        "tokens_total": 342,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5382,
+        "reward": 0.3735,
+        "ts": 1780670293.725613
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp07",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.001806,
+        "tokens_total": 178,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5319,
+        "reward": 0.7356,
+        "ts": 1780670299.3593879
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "d3db1521-e926-46ea-99d3-015499a9ea91",
+        "task_type": "summarize",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.000138,
+        "tokens_total": 236,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5211,
+        "reward": 0.3989,
+        "ts": 1780670302.329878
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp08",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.4,
+        "cost": 0.00207,
+        "tokens_total": 194,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5354,
+        "reward": 0.3834,
+        "ts": 1780670307.485315
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "9a41d6af-cd1d-47c4-b2c0-852bd49bb373",
+        "task_type": "qa",
+        "model": "claude-haiku-4-5",
+        "quality": 0.4,
+        "cost": 0.000137,
+        "tokens_total": 204,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5354,
+        "reward": 0.3989,
+        "ts": 1780670310.236314
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp09",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.001617,
+        "tokens_total": 163,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5407,
+        "reward": 0.7371,
+        "ts": 1780670318.922188
+      },
+      {
+        "agent_id": "agent-hr",
+        "task_id": "090508b2-c371-43d5-ac94-cc2bfb1e7c35",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.001785,
+        "tokens_total": 215,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5407,
+        "reward": 0.7357,
+        "ts": 1780670325.811044
+      },
+      {
+        "agent_id": "agent-spammer",
+        "task_id": "sp10",
+        "task_type": "qa",
+        "model": "claude-sonnet-4-5",
+        "quality": 0.75,
+        "cost": 0.00177,
+        "tokens_total": 174,
+        "is_anomaly": false,
+        "sprt": "STOP_PROGRESSING",
+        "complexity_score": 0.5407,
+        "reward": 0.7358,
+        "ts": 1780670331.200767
+      }
+    ],
+    "cusum": {
+      "agent-hr": {
+        "S": 0.0,
+        "mu0": 209.3,
+        "h": 3000.0,
+        "alerts": 0,
+        "step": 10,
+        "recent_avg": 209.3
+      },
+      "agent-dev": {
+        "S": 0.0,
+        "mu0": 401.3,
+        "h": 3000.0,
+        "alerts": 0,
+        "step": 7,
+        "recent_avg": 401.3
+      },
+      "agent-finance": {
+        "S": 0.0,
+        "mu0": 354.2,
+        "h": 3000.0,
+        "alerts": 0,
+        "step": 5,
+        "recent_avg": 354.2
+      },
+      "agent-wasteful": {
+        "S": 0.0,
+        "mu0": 252.8,
+        "h": 3000.0,
+        "alerts": 0,
+        "step": 5,
+        "recent_avg": 252.8
+      },
+      "agent-spammer": {
+        "S": 0.0,
+        "mu0": 152.3,
+        "h": 3000.0,
+        "alerts": 0,
+        "step": 10,
+        "recent_avg": 152.3
+      }
+    }
+  }
+}

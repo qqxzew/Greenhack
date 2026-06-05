@@ -1,0 +1,54 @@
+{
+  "name": "argus",
+  "displayName": "Argus",
+  "description": "Cost-optimizing multi-provider LLM router: add your Anthropic / OpenAI / Gemini key, Argus auto-picks the cheapest suitable model and tracks spend & savings in the status bar.",
+  "version": "0.0.1",
+  "publisher": "argus",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Machine Learning",
+    "Other"
+  ],
+  "icon": "media/argus-logo.png",
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "argus.run", "title": "Run Prompt (auto-pick model)", "category": "Argus" },
+      { "command": "argus.connect", "title": "Connect (enter API key)", "category": "Argus" },
+      { "command": "argus.setApiKey", "title": "Set API Key", "category": "Argus" },
+      { "command": "argus.clearApiKey", "title": "Clear API Key", "category": "Argus" },
+      { "command": "argus.showStatus", "title": "Show Usage / Savings", "category": "Argus" },
+      { "command": "argus.resetUsage", "title": "Reset Usage Counter", "category": "Argus" }
+    ],
+    "configuration": {
+      "title": "Argus",
+      "properties": {
+        "argus.budgetCents": {
+          "type": "number",
+          "default": 10000,
+          "description": "Spend budget in USD cents (10000 = $100). Shown in the status bar as spent / budget."
+        },
+        "argus.apiBase": {
+          "type": "string",
+          "default": "http://localhost:8000",
+          "description": "Local Argus backend (the algorithms). The extension polls GET /v1/agents in realtime and shows tokens with/without Argus."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}
