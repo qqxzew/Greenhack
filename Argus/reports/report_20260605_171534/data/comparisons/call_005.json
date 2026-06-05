@@ -1,0 +1,39 @@
+{
+  "call_id": 5,
+  "agent_id": "classifier",
+  "task_type": "qa",
+  "timestamp": 1780672534.754853,
+  "optimization": "ROUTE",
+  "optimization_detail": {
+    "complexity_score": 0.18,
+    "threshold": 0.5,
+    "routed_to": "claude-haiku-4-5",
+    "would_have_been": "claude-sonnet-4-5",
+    "compression_ratio": 1.0,
+    "turns_dropped": 0,
+    "facts_kept": 0,
+    "system_before_tokens": 0,
+    "system_after_tokens": 0
+  },
+  "baseline_model": "claude-sonnet-4-5",
+  "baseline_tokens_in": 31,
+  "baseline_cost": 0.000768,
+  "actual_model": "claude-haiku-4-5",
+  "actual_tokens_in": 31,
+  "actual_tokens_out": 45,
+  "actual_cost": 6.4e-05,
+  "tokens_saved": 0,
+  "cost_saved": 0.000704,
+  "saved_pct": 91.7,
+  "quality_score": 0.95,
+  "baseline_quality": 0.95,
+  "savings_components": {
+    "CACHE": 0.0,
+    "COMPRESS": 0.0,
+    "ROUTE": 0.000704,
+    "STOP": 0.0
+  },
+  "baseline_prompt": "SYSTEM: Intent classifier. Return one label from the allowed set.\n\nUSER: Classify the intent of: \"What's my account balance?\"",
+  "actual_prompt": "SYSTEM: Intent classifier. Return one label from the allowed set.\n\nUSER: Classify the intent of: \"What's my account balance?\"",
+  "output_text": "{\"answer\":\"balance_inquiry\",\"confidence\":0.97}"
+}

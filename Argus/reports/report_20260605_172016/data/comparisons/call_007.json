@@ -1,0 +1,39 @@
+{
+  "call_id": 7,
+  "agent_id": "analyst",
+  "task_type": "analysis",
+  "timestamp": 1780672816.261297,
+  "optimization": "COMPRESS",
+  "optimization_detail": {
+    "complexity_score": 0.34,
+    "threshold": 0.5,
+    "routed_to": "claude-haiku-4-5",
+    "would_have_been": "claude-sonnet-4-5",
+    "compression_ratio": 0.35,
+    "turns_dropped": 5,
+    "facts_kept": 1,
+    "system_before_tokens": 87,
+    "system_after_tokens": 35
+  },
+  "baseline_model": "claude-sonnet-4-5",
+  "baseline_tokens_in": 286,
+  "baseline_cost": 0.006258,
+  "actual_model": "claude-haiku-4-5",
+  "actual_tokens_in": 100,
+  "actual_tokens_out": 360,
+  "actual_cost": 0.000475,
+  "tokens_saved": 186,
+  "cost_saved": 0.005783,
+  "saved_pct": 92.4,
+  "quality_score": 0.9,
+  "baseline_quality": 0.92,
+  "savings_components": {
+    "CACHE": 0.0,
+    "COMPRESS": 0.000558,
+    "ROUTE": 0.005225,
+    "STOP": 0.0
+  },
+  "baseline_prompt": "SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise. Take your time and think step by step. Be respectful and professional in all answers. Avoid speculation and only state what the data supports. Always show your reasoning clearly so reviewers can follow along.\n\nCONVERSATION HISTORY (verbatim):\n[User]: I need help analyzing this quarter's regional performance.\n[Asst]: I'd be happy to help you analyze the regional performance. Could you tell me which regions and metrics you care about? I can look at revenue, margin, headcount, or growth rates.\n[User]: Just summarize the headline numbers for now.\n[Asst]: Certainly. For the APAC region, revenue grew +9% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts. The pipeline for next quarter looks healthy at $1.2M.\n[User]: Great, thanks. That all sounds correct to me.\n[Asst]: You're welcome! I'm glad that lines up. Let me know if you'd like me to break any of those numbers down further or add commentary.\n\nUSER: Write a 3-bullet executive summary of the quarter.",
+  "actual_prompt": "SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise.\n\nCONVERSATION SUMMARY (compressed by rolling summarizer):\n[Context: For the APAC region, revenue grew +9% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts.]\n\nUSER: Write a 3-bullet executive summary of the quarter.",
+  "output_text": "{\"recommendation\":\"hold\",\"pros\":[\"growth\"],\"cons\":[\"margin\"],\"confidence\":0.8}"
+}

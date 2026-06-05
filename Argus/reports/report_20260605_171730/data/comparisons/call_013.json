@@ -1,0 +1,33 @@
+{
+  "call_id": 13,
+  "agent_id": "pipeline-processor-3",
+  "task_type": "qa",
+  "timestamp": 1780672650.353157,
+  "optimization": "STOP",
+  "optimization_detail": {
+    "loops_run": 2,
+    "loops_prevented": 9,
+    "reason": "SPRT STOP_STUCK \u2014 no new tool_calls"
+  },
+  "baseline_model": "claude-sonnet-4-5",
+  "baseline_tokens_in": 3780,
+  "baseline_cost": 0.03564,
+  "actual_model": "cache",
+  "actual_tokens_in": 0,
+  "actual_tokens_out": 0,
+  "actual_cost": 0.0,
+  "tokens_saved": 3780,
+  "cost_saved": 0.03564,
+  "saved_pct": 100.0,
+  "quality_score": null,
+  "baseline_quality": null,
+  "savings_components": {
+    "CACHE": 0.0,
+    "COMPRESS": 0.0,
+    "ROUTE": 0.0,
+    "STOP": 0.03564
+  },
+  "baseline_prompt": "SYSTEM: You are a pipeline processing agent. Continue until the task is done.\n\nCONVERSATION HISTORY (verbatim):\n[Asst]: Retrying the same step again with no new tool calls.\n[Asst]: Retrying the same step again with no new tool calls.\n[Asst]: Retrying the same step again with no new tool calls.\n\nUSER: Process the next record.",
+  "actual_prompt": null,
+  "output_text": ""
+}

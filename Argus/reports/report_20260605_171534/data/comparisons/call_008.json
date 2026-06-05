@@ -1,0 +1,39 @@
+{
+  "call_id": 8,
+  "agent_id": "summarizer",
+  "task_type": "summarize",
+  "timestamp": 1780672534.75691,
+  "optimization": "COMPRESS",
+  "optimization_detail": {
+    "complexity_score": 0.31,
+    "threshold": 0.5,
+    "routed_to": "claude-haiku-4-5",
+    "would_have_been": "claude-sonnet-4-5",
+    "compression_ratio": 0.423,
+    "turns_dropped": 3,
+    "facts_kept": 3,
+    "system_before_tokens": 111,
+    "system_after_tokens": 44
+  },
+  "baseline_model": "claude-sonnet-4-5",
+  "baseline_tokens_in": 366,
+  "baseline_cost": 0.007548,
+  "actual_model": "claude-haiku-4-5",
+  "actual_tokens_in": 155,
+  "actual_tokens_out": 430,
+  "actual_cost": 0.000576,
+  "tokens_saved": 211,
+  "cost_saved": 0.006972,
+  "saved_pct": 92.4,
+  "quality_score": 0.91,
+  "baseline_quality": 0.93,
+  "savings_components": {
+    "CACHE": 0.0,
+    "COMPRESS": 0.000633,
+    "ROUTE": 0.006339,
+    "STOP": 0.0
+  },
+  "baseline_prompt": "SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.\n\nCONVERSATION HISTORY (verbatim):\n[User]: Hey, can you help me put together the weekly report?\n[Asst]: Of course! I'd be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.\n[User]: Let's focus on sales and team updates please, keep it tight.\n[Asst]: Understood! I'll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +5% year over year, we made 1 new engineering hires this quarter, and project Draco is on track for the November deadline. Does that match your notes?\n[User]: Yes that's right. Anything else you remember from our chats?\n[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you'd like me to add anything else at all.\n\nUSER: Now write the final weekly digest.",
+  "actual_prompt": "SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.\n\nCONVERSATION SUMMARY (compressed by rolling summarizer):\n[Context: Let's focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +5% year over year, we made 1 new engineering hires this quarter, and project Draco is on track for the November deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]\n\nUSER: Now write the final weekly digest.",
+  "output_text": "{\"points\":[\"Sales up\",\"3 hires\",\"Artemis on track\"],\"sentiment\":\"positive\"}"
+}

@@ -1,0 +1,276 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Optimization Report 2026-06-05 17:15</title><style>
+:root{color-scheme:dark}
+body{background:#0C0C12;color:#F0F0FF;font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+ margin:0;padding:32px;max-width:1100px;margin:auto}
+h1{font-size:22px} h2{font-size:17px;margin-top:34px;border-bottom:1px solid #2A2A3E;padding-bottom:6px}
+.summary{background:#14141E;border:1px solid #2A2A3E;border-radius:12px;padding:20px 24px;margin:18px 0}
+.big{font-size:30px;font-weight:700;color:#2DD4B4;font-family:monospace}
+.row{display:flex;gap:40px;font-family:monospace;margin:6px 0;color:#C8C8E0}
+.row .k{color:#8888AA;width:230px}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}
+th,td{border:1px solid #2A2A3E;padding:6px 10px;text-align:left;font-family:monospace}
+th{color:#8888AA;font-weight:600}
+details{background:#14141E;border:1px solid #2A2A3E;border-radius:10px;margin:10px 0;padding:6px 14px}
+summary{cursor:pointer;font-family:monospace;font-size:13px;display:flex;align-items:center;gap:10px}
+.cid{color:#7B68EE;font-weight:700}.agent{color:#4A90D9}.tt{color:#8888AA}
+.badge{margin-left:auto;padding:2px 8px;border-radius:6px;font-size:11px}
+.badge.ok{background:#2DD4B433;color:#2DD4B4}.badge.warn{background:#F5A62333;color:#F5A623}
+.badge.none{background:#40405833;color:#8888AA}
+.save{color:#2DD4B4;font-weight:700;width:54px;text-align:right}
+.status{background:#0C0C12;border-radius:6px;padding:10px;color:#A8A8C8;font-size:12px;white-space:pre-wrap}
+.cols{display:flex;gap:14px;flex-wrap:wrap}.col{flex:1;min-width:320px}
+.col h4{color:#8888AA;font-size:12px;margin:8px 0 4px}
+pre.before,pre.after{background:#0C0C12;border:1px solid #2A2A3E;border-radius:6px;padding:10px;
+ font-size:11px;line-height:1.45;overflow:auto;max-height:340px;white-space:pre-wrap}
+pre.before{border-left:3px solid #E05A3A}pre.after{border-left:3px solid #2DD4B4}
+table.result{width:auto;margin-top:10px}.note{color:#F5A623;font-family:monospace;font-size:13px}
+.warn-box{background:#1a1410;border:1px solid #F5A62355;border-radius:8px;padding:8px 14px;margin:8px 0;
+ color:#E8D0A8;font-size:13px}
+.bar{height:10px;border-radius:5px;background:#2DD4B4;display:inline-block;vertical-align:middle}
+</style></head><body><h1>Token Governance Report · 2026-06-05 17:15</h1><div class='summary'><div class='row'><span class='k'>Pipeline</span><span>conversation-agents · 20 tasks</span></div><div class='row'><span class='k'>Tokens WITHOUT optimization</span><span>8,660  ($0.146)</span></div><div class='row'><span class='k'>Tokens WITH optimization</span><span>1,998  ($0.015)</span></div><div class='big'>Savings: 6,662 tokens · 76.9% · $0.131</div><div class='row'><span class='k'>Quality</span><span>avg 0.92 (baseline 0.93, Δ -0.01)</span></div></div><h2>Savings Breakdown by Mechanism</h2><table><tr><th>Mechanism</th><th>Calls</th><th>Tokens saved</th><th>% of total</th><th></th></tr><tr><td>Semantic Cache</td><td>3</td><td>258</td><td>7.1%</td><td><span class='bar' style='width:10px'></span></td></tr><tr><td>Context Compression</td><td>13</td><td>2,624</td><td>6.0%</td><td><span class='bar' style='width:8px'></span></td></tr><tr><td>Model Routing (small)</td><td>15</td><td>—</td><td>59.7%</td><td><span class='bar' style='width:84px'></span></td></tr><tr><td>Marginal Utility Stop</td><td>1</td><td>3,780</td><td>27.2%</td><td><span class='bar' style='width:38px'></span></td></tr></table><h2>Step-by-Step Prompt Comparison</h2><details><summary><span class="cid">#001</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 367 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +12% year over year, we made 3 new engineering hires this quarter, and project Artemis is on track for the August deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 155 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +12% year over year, we made 3 new engineering hires this quarter, and project Artemis is on track for the August deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>367 -&gt; 155  (-57.8%)</td></tr><tr><td>Cost</td><td>$0.0076 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#002</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 367 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +8% year over year, we made 2 new engineering hires this quarter, and project Borealis is on track for the September deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 156 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +8% year over year, we made 2 new engineering hires this quarter, and project Borealis is on track for the September deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>367 -&gt; 156  (-57.5%)</td></tr><tr><td>Cost</td><td>$0.0076 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#003</span> <span class="agent">analyst</span> <span class="tt">analysis</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.34 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 286 tok</h4><pre class="before">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise. Take your time and think step by step. Be respectful and professional in all answers. Avoid speculation and only state what the data supports. Always show your reasoning clearly so reviewers can follow along.
+
+CONVERSATION HISTORY (verbatim):
+[User]: I need help analyzing this quarter&#x27;s regional performance.
+[Asst]: I&#x27;d be happy to help you analyze the regional performance. Could you tell me which regions and metrics you care about? I can look at revenue, margin, headcount, or growth rates.
+[User]: Just summarize the headline numbers for now.
+[Asst]: Certainly. For the EMEA region, revenue grew +15% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts. The pipeline for next quarter looks healthy at $1.2M.
+[User]: Great, thanks. That all sounds correct to me.
+[Asst]: You&#x27;re welcome! I&#x27;m glad that lines up. Let me know if you&#x27;d like me to break any of those numbers down further or add commentary.
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div><div class="col"><h4>AFTER — 100 tok</h4><pre class="after">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: For the EMEA region, revenue grew +15% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts.]
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>286 -&gt; 100  (-65.0%)</td></tr><tr><td>Cost</td><td>$0.0063 -&gt; $0.0005  (-92.4%)</td></tr><tr><td>Quality</td><td>0.92 -&gt; 0.90  (-0.02)</td></tr></table></details><details><summary><span class="cid">#004</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 367 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +21% year over year, we made 5 new engineering hires this quarter, and project Cygnus is on track for the October deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 155 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +21% year over year, we made 5 new engineering hires this quarter, and project Cygnus is on track for the October deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>367 -&gt; 155  (-57.8%)</td></tr><tr><td>Cost</td><td>$0.0076 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#005</span> <span class="agent">classifier</span> <span class="tt">qa</span><span class="badge ok">Model Routing -&gt; haiku</span><span class="save">-92%</span></summary><pre class="status">Optimization: Model Routing -&gt; haiku
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.18 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 31 tok</h4><pre class="before">SYSTEM: Intent classifier. Return one label from the allowed set.
+
+USER: Classify the intent of: &quot;What&#x27;s my account balance?&quot;</pre></div><div class="col"><h4>AFTER — 31 tok</h4><pre class="after">SYSTEM: Intent classifier. Return one label from the allowed set.
+
+USER: Classify the intent of: &quot;What&#x27;s my account balance?&quot;</pre></div></div><table class="result"><tr><td>Input tokens</td><td>31 -&gt; 31  (-0.0%)</td></tr><tr><td>Cost</td><td>$0.0008 -&gt; $0.0001  (-91.7%)</td></tr><tr><td>Quality</td><td>0.95 -&gt; 0.95  (+0.00)</td></tr></table></details><details><summary><span class="cid">#006</span> <span class="agent">classifier</span> <span class="tt">qa</span><span class="badge ok">Model Routing -&gt; haiku</span><span class="save">-92%</span></summary><pre class="status">Optimization: Model Routing -&gt; haiku
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.18 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 31 tok</h4><pre class="before">SYSTEM: Intent classifier. Return one label from the allowed set.
+
+USER: Classify the intent of: &quot;How do I reset my password?&quot;</pre></div><div class="col"><h4>AFTER — 31 tok</h4><pre class="after">SYSTEM: Intent classifier. Return one label from the allowed set.
+
+USER: Classify the intent of: &quot;How do I reset my password?&quot;</pre></div></div><table class="result"><tr><td>Input tokens</td><td>31 -&gt; 31  (-0.0%)</td></tr><tr><td>Cost</td><td>$0.0008 -&gt; $0.0001  (-91.7%)</td></tr><tr><td>Quality</td><td>0.95 -&gt; 0.95  (+0.00)</td></tr></table></details><details><summary><span class="cid">#007</span> <span class="agent">analyst</span> <span class="tt">analysis</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.34 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 286 tok</h4><pre class="before">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise. Take your time and think step by step. Be respectful and professional in all answers. Avoid speculation and only state what the data supports. Always show your reasoning clearly so reviewers can follow along.
+
+CONVERSATION HISTORY (verbatim):
+[User]: I need help analyzing this quarter&#x27;s regional performance.
+[Asst]: I&#x27;d be happy to help you analyze the regional performance. Could you tell me which regions and metrics you care about? I can look at revenue, margin, headcount, or growth rates.
+[User]: Just summarize the headline numbers for now.
+[Asst]: Certainly. For the APAC region, revenue grew +9% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts. The pipeline for next quarter looks healthy at $1.2M.
+[User]: Great, thanks. That all sounds correct to me.
+[Asst]: You&#x27;re welcome! I&#x27;m glad that lines up. Let me know if you&#x27;d like me to break any of those numbers down further or add commentary.
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div><div class="col"><h4>AFTER — 100 tok</h4><pre class="after">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: For the APAC region, revenue grew +9% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts.]
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>286 -&gt; 100  (-65.0%)</td></tr><tr><td>Cost</td><td>$0.0063 -&gt; $0.0005  (-92.4%)</td></tr><tr><td>Quality</td><td>0.92 -&gt; 0.90  (-0.02)</td></tr></table></details><details><summary><span class="cid">#008</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 366 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +5% year over year, we made 1 new engineering hires this quarter, and project Draco is on track for the November deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 155 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +5% year over year, we made 1 new engineering hires this quarter, and project Draco is on track for the November deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>366 -&gt; 155  (-57.7%)</td></tr><tr><td>Cost</td><td>$0.0075 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#009</span> <span class="agent">responder</span> <span class="tt">generation</span><span class="badge none">No optimization</span><span class="save">-0%</span></summary><pre class="status">Optimization: No optimization
+Model used:   claude-sonnet-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.83 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>Passed through unchanged — 196 tok</h4><pre class="before">SYSTEM: You are a senior customer-support resolution specialist. You must be empathetic, patient, and exceptionally thorough. Always acknowledge the customer&#x27;s feelings first. Never dismiss a complaint. Escalate appropriately. Maintain a calm and reassuring tone. The company&#x27;s reputation depends on your professionalism.
+
+CONVERSATION HISTORY (verbatim):
+[User]: This is the third time I&#x27;ve contacted you about a double charge.
+[Asst]: I&#x27;m truly sorry for the frustration this has caused. A double charge is not acceptable and I want to make this right. Let me pull up your account history so I fully understand what happened.
+[User]: I was charged $129 twice on May 3rd and nobody has fixed it.
+
+USER: Draft a resolution that refunds the duplicate charge and offers a goodwill credit.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>196 -&gt; 196  (-0.0%)</td></tr><tr><td>Cost</td><td>$0.0078 -&gt; $0.0078  (-0.0%)</td></tr><tr><td>Quality</td><td>0.94 -&gt; 0.94  (+0.00)</td></tr></table></details><details><summary><span class="cid">#010</span> <span class="agent">classifier</span> <span class="tt">qa</span><span class="badge ok">Semantic Cache HIT</span><span class="save">-100%</span></summary><pre class="status">Optimization: Semantic Cache HIT
+Cache match:  call #5 (cosine similarity = 1.0)</pre><p class="note">Response served from cache — LLM was never called.</p><table class="result"><tr><td>Input tokens</td><td>31 -&gt; 0  (-100.0%)</td></tr><tr><td>Cost</td><td>$0.0008 -&gt; $0.0000  (-100.0%)</td></tr><tr><td>Quality</td><td>0.95 -&gt; 0.95  (+0.00)</td></tr></table></details><details><summary><span class="cid">#011</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 367 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +18% year over year, we made 4 new engineering hires this quarter, and project Eridanus is on track for the December deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 156 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +18% year over year, we made 4 new engineering hires this quarter, and project Eridanus is on track for the December deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>367 -&gt; 156  (-57.5%)</td></tr><tr><td>Cost</td><td>$0.0076 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#012</span> <span class="agent">analyst</span> <span class="tt">analysis</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.34 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 287 tok</h4><pre class="before">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise. Take your time and think step by step. Be respectful and professional in all answers. Avoid speculation and only state what the data supports. Always show your reasoning clearly so reviewers can follow along.
+
+CONVERSATION HISTORY (verbatim):
+[User]: I need help analyzing this quarter&#x27;s regional performance.
+[Asst]: I&#x27;d be happy to help you analyze the regional performance. Could you tell me which regions and metrics you care about? I can look at revenue, margin, headcount, or growth rates.
+[User]: Just summarize the headline numbers for now.
+[Asst]: Certainly. For the LATAM region, revenue grew +11% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts. The pipeline for next quarter looks healthy at $1.2M.
+[User]: Great, thanks. That all sounds correct to me.
+[Asst]: You&#x27;re welcome! I&#x27;m glad that lines up. Let me know if you&#x27;d like me to break any of those numbers down further or add commentary.
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div><div class="col"><h4>AFTER — 100 tok</h4><pre class="after">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: For the LATAM region, revenue grew +11% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts.]
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>287 -&gt; 100  (-65.2%)</td></tr><tr><td>Cost</td><td>$0.0063 -&gt; $0.0005  (-92.4%)</td></tr><tr><td>Quality</td><td>0.92 -&gt; 0.90  (-0.02)</td></tr></table></details><details><summary><span class="cid">#013</span> <span class="agent">pipeline-processor-3</span> <span class="tt">qa</span><span class="badge warn">Marginal Utility Stop</span><span class="save">-100%</span></summary><pre class="status">Optimization: Marginal Utility Stop
+Loops run:    2  |  prevented: 9</pre><p class="note">Stuck loop force-stopped — remaining calls never executed.</p><table class="result"><tr><td>Input tokens</td><td>3,780 -&gt; 0  (-100.0%)</td></tr><tr><td>Cost</td><td>$0.0356 -&gt; $0.0000  (-100.0%)</td></tr></table></details><details><summary><span class="cid">#014</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 366 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +7% year over year, we made 2 new engineering hires this quarter, and project Fornax is on track for the January deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 155 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +7% year over year, we made 2 new engineering hires this quarter, and project Fornax is on track for the January deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>366 -&gt; 155  (-57.7%)</td></tr><tr><td>Cost</td><td>$0.0075 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#015</span> <span class="agent">responder</span> <span class="tt">generation</span><span class="badge ok">Semantic Cache HIT</span><span class="save">-100%</span></summary><pre class="status">Optimization: Semantic Cache HIT
+Cache match:  call #9 (cosine similarity = 1.0)</pre><p class="note">Response served from cache — LLM was never called.</p><table class="result"><tr><td>Input tokens</td><td>196 -&gt; 0  (-100.0%)</td></tr><tr><td>Cost</td><td>$0.0078 -&gt; $0.0000  (-100.0%)</td></tr><tr><td>Quality</td><td>0.94 -&gt; 0.94  (+0.00)</td></tr></table></details><details><summary><span class="cid">#016</span> <span class="agent">classifier</span> <span class="tt">qa</span><span class="badge ok">Semantic Cache HIT</span><span class="save">-100%</span></summary><pre class="status">Optimization: Semantic Cache HIT
+Cache match:  call #6 (cosine similarity = 1.0)</pre><p class="note">Response served from cache — LLM was never called.</p><table class="result"><tr><td>Input tokens</td><td>31 -&gt; 0  (-100.0%)</td></tr><tr><td>Cost</td><td>$0.0008 -&gt; $0.0000  (-100.0%)</td></tr><tr><td>Quality</td><td>0.95 -&gt; 0.95  (+0.00)</td></tr></table></details><details><summary><span class="cid">#017</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 367 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +14% year over year, we made 3 new engineering hires this quarter, and project Gemini is on track for the February deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 155 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +14% year over year, we made 3 new engineering hires this quarter, and project Gemini is on track for the February deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>367 -&gt; 155  (-57.8%)</td></tr><tr><td>Cost</td><td>$0.0076 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#018</span> <span class="agent">analyst</span> <span class="tt">analysis</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.34 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 286 tok</h4><pre class="before">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise. Take your time and think step by step. Be respectful and professional in all answers. Avoid speculation and only state what the data supports. Always show your reasoning clearly so reviewers can follow along.
+
+CONVERSATION HISTORY (verbatim):
+[User]: I need help analyzing this quarter&#x27;s regional performance.
+[Asst]: I&#x27;d be happy to help you analyze the regional performance. Could you tell me which regions and metrics you care about? I can look at revenue, margin, headcount, or growth rates.
+[User]: Just summarize the headline numbers for now.
+[Asst]: Certainly. For the NA region, revenue grew +6% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts. The pipeline for next quarter looks healthy at $1.2M.
+[User]: Great, thanks. That all sounds correct to me.
+[Asst]: You&#x27;re welcome! I&#x27;m glad that lines up. Let me know if you&#x27;d like me to break any of those numbers down further or add commentary.
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div><div class="col"><h4>AFTER — 99 tok</h4><pre class="after">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: For the NA region, revenue grew +6% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts.]
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>286 -&gt; 99  (-65.4%)</td></tr><tr><td>Cost</td><td>$0.0063 -&gt; $0.0005  (-92.4%)</td></tr><tr><td>Quality</td><td>0.92 -&gt; 0.90  (-0.02)</td></tr></table></details><details><summary><span class="cid">#019</span> <span class="agent">summarizer</span> <span class="tt">summarize</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.31 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 366 tok</h4><pre class="before">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses. Make sure to maintain a warm and friendly tone at all times. Never use jargon the client might not understand. Always double-check your work before sending. Remember that the client is paying a premium for this service and expects excellence. Be polite and courteous.
+
+CONVERSATION HISTORY (verbatim):
+[User]: Hey, can you help me put together the weekly report?
+[Asst]: Of course! I&#x27;d be happy to help with that. What would you like me to include in the weekly report? I can cover sales figures, team updates, project milestones, customer feedback, or any other areas you care about. Just let me know what matters most this week.
+[User]: Let&#x27;s focus on sales and team updates please, keep it tight.
+[Asst]: Understood! I&#x27;ll focus on sales and team updates and keep it concise. Here is what I have on record: sales rose +9% year over year, we made 2 new engineering hires this quarter, and project Hydra is on track for the March deadline. Does that match your notes?
+[User]: Yes that&#x27;s right. Anything else you remember from our chats?
+[Asst]: Sure thing! Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%. I hope this is helpful. Let me know if you&#x27;d like me to add anything else at all.
+
+USER: Now write the final weekly digest.</pre></div><div class="col"><h4>AFTER — 154 tok</h4><pre class="after">SYSTEM: You are a helpful summarization assistant. Your job is to summarize weekly digests for enterprise clients. Always be thorough, professional, and comprehensive in your responses.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: Let&#x27;s focus on sales and team updates please, keep it tight. Here is what I have on record: sales rose +9% year over year, we made 2 new engineering hires this quarter, and project Hydra is on track for the March deadline. Earlier you also mentioned the marketing budget was approved and the customer churn target is 4%.]
+
+USER: Now write the final weekly digest.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>366 -&gt; 154  (-57.9%)</td></tr><tr><td>Cost</td><td>$0.0075 -&gt; $0.0006  (-92.4%)</td></tr><tr><td>Quality</td><td>0.93 -&gt; 0.91  (-0.02)</td></tr></table></details><details><summary><span class="cid">#020</span> <span class="agent">analyst</span> <span class="tt">analysis</span><span class="badge ok">Context Compression</span><span class="save">-92%</span></summary><pre class="status">Optimization: Context Compression
+Model used:   claude-haiku-4-5  (would have been: claude-sonnet-4-5)
+Routing:      complexity=0.33 (threshold 0.5)</pre><div class="cols"><div class="col"><h4>BEFORE — 286 tok</h4><pre class="before">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise. Take your time and think step by step. Be respectful and professional in all answers. Avoid speculation and only state what the data supports. Always show your reasoning clearly so reviewers can follow along.
+
+CONVERSATION HISTORY (verbatim):
+[User]: I need help analyzing this quarter&#x27;s regional performance.
+[Asst]: I&#x27;d be happy to help you analyze the regional performance. Could you tell me which regions and metrics you care about? I can look at revenue, margin, headcount, or growth rates.
+[User]: Just summarize the headline numbers for now.
+[Asst]: Certainly. For the EMEA region, revenue grew +13% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts. The pipeline for next quarter looks healthy at $1.2M.
+[User]: Great, thanks. That all sounds correct to me.
+[Asst]: You&#x27;re welcome! I&#x27;m glad that lines up. Let me know if you&#x27;d like me to break any of those numbers down further or add commentary.
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div><div class="col"><h4>AFTER — 100 tok</h4><pre class="after">SYSTEM: You are a meticulous financial analysis assistant supporting the corporate finance team. You should always be careful, rigorous, and precise.
+
+CONVERSATION SUMMARY (compressed by rolling summarizer):
+[Context: For the EMEA region, revenue grew +13% quarter over quarter, margin held at 22%, and we onboarded 5 new enterprise accounts.]
+
+USER: Write a 3-bullet executive summary of the quarter.</pre></div></div><table class="result"><tr><td>Input tokens</td><td>286 -&gt; 100  (-65.0%)</td></tr><tr><td>Cost</td><td>$0.0063 -&gt; $0.0005  (-92.4%)</td></tr><tr><td>Quality</td><td>0.92 -&gt; 0.90  (-0.02)</td></tr></table></details><h2>Quality vs. Cost</h2><img src='quality_cost.png' style='max-width:100%'><h2>Anomalies & Warnings</h2><div class='warn-box'>[W1] Call #013 · agent <b>pipeline-processor-3</b> — LLM called 2 times in a row with no new tool_calls. Possible infinite loop. Forced stop saved ~3,780 tokens.</div><div class='warn-box'>[W2] agent <b>multiple</b> — System prompt of ~111 tokens repeats across 8 calls. Recommendation: move to a prompt-caching prefix. Estimated savings next run: ~$0.00/run.</div><div class='warn-box'>[W3] agent <b>multiple</b> — System prompt of ~87 tokens repeats across 5 calls. Recommendation: move to a prompt-caching prefix. Estimated savings next run: ~$0.00/run.</div><h2>Full Call Log</h2><table><tr><th>#</th><th>Agent</th><th>Task</th><th>Optimization</th><th>Baseline tok</th><th>Actual tok</th><th>Saved</th><th>Quality Δ</th></tr><tr><td>001</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>367</td><td>155</td><td>92%</td><td>-0.02</td></tr><tr><td>002</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>367</td><td>156</td><td>92%</td><td>-0.02</td></tr><tr><td>003</td><td>analyst</td><td>analysis</td><td>COMPRESS</td><td>286</td><td>100</td><td>92%</td><td>-0.02</td></tr><tr><td>004</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>367</td><td>155</td><td>92%</td><td>-0.02</td></tr><tr><td>005</td><td>classifier</td><td>qa</td><td>ROUTE</td><td>31</td><td>31</td><td>92%</td><td>+0.00</td></tr><tr><td>006</td><td>classifier</td><td>qa</td><td>ROUTE</td><td>31</td><td>31</td><td>92%</td><td>+0.00</td></tr><tr><td>007</td><td>analyst</td><td>analysis</td><td>COMPRESS</td><td>286</td><td>100</td><td>92%</td><td>-0.02</td></tr><tr><td>008</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>366</td><td>155</td><td>92%</td><td>-0.02</td></tr><tr><td>009</td><td>responder</td><td>generation</td><td>NONE</td><td>196</td><td>196</td><td>0%</td><td>+0.00</td></tr><tr><td>010</td><td>classifier</td><td>qa</td><td>CACHE</td><td>31</td><td>0</td><td>100%</td><td>+0.00</td></tr><tr><td>011</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>367</td><td>156</td><td>92%</td><td>-0.02</td></tr><tr><td>012</td><td>analyst</td><td>analysis</td><td>COMPRESS</td><td>287</td><td>100</td><td>92%</td><td>-0.02</td></tr><tr><td>013</td><td>pipeline-processor-3</td><td>qa</td><td>STOP</td><td>3,780</td><td>0</td><td>100%</td><td>—</td></tr><tr><td>014</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>366</td><td>155</td><td>92%</td><td>-0.02</td></tr><tr><td>015</td><td>responder</td><td>generation</td><td>CACHE</td><td>196</td><td>0</td><td>100%</td><td>+0.00</td></tr><tr><td>016</td><td>classifier</td><td>qa</td><td>CACHE</td><td>31</td><td>0</td><td>100%</td><td>+0.00</td></tr><tr><td>017</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>367</td><td>155</td><td>92%</td><td>-0.02</td></tr><tr><td>018</td><td>analyst</td><td>analysis</td><td>COMPRESS</td><td>286</td><td>99</td><td>92%</td><td>-0.02</td></tr><tr><td>019</td><td>summarizer</td><td>summarize</td><td>COMPRESS</td><td>366</td><td>154</td><td>92%</td><td>-0.02</td></tr><tr><td>020</td><td>analyst</td><td>analysis</td><td>COMPRESS</td><td>286</td><td>100</td><td>92%</td><td>-0.02</td></tr></table></body></html>

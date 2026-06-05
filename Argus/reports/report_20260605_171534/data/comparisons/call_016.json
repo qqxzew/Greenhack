@@ -1,0 +1,32 @@
+{
+  "call_id": 16,
+  "agent_id": "classifier",
+  "task_type": "qa",
+  "timestamp": 1780672534.771074,
+  "optimization": "CACHE",
+  "optimization_detail": {
+    "cache_similarity": 1.0,
+    "matched_call": 6
+  },
+  "baseline_model": "claude-sonnet-4-5",
+  "baseline_tokens_in": 31,
+  "baseline_cost": 0.000768,
+  "actual_model": "cache",
+  "actual_tokens_in": 0,
+  "actual_tokens_out": 45,
+  "actual_cost": 0.0,
+  "tokens_saved": 31,
+  "cost_saved": 0.000768,
+  "saved_pct": 100.0,
+  "quality_score": 0.95,
+  "baseline_quality": 0.95,
+  "savings_components": {
+    "CACHE": 0.000768,
+    "COMPRESS": 0.0,
+    "ROUTE": 0.0,
+    "STOP": 0.0
+  },
+  "baseline_prompt": "SYSTEM: Intent classifier. Return one label from the allowed set.\n\nUSER: Classify the intent of: \"How do I reset my password?\"",
+  "actual_prompt": null,
+  "output_text": "{\"answer\":\"balance_inquiry\",\"confidence\":0.97}"
+}

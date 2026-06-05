@@ -1,0 +1,32 @@
+{
+  "call_id": 15,
+  "agent_id": "responder",
+  "task_type": "generation",
+  "timestamp": 1780672650.3553212,
+  "optimization": "CACHE",
+  "optimization_detail": {
+    "cache_similarity": 1.0,
+    "matched_call": 9
+  },
+  "baseline_model": "claude-sonnet-4-5",
+  "baseline_tokens_in": 196,
+  "baseline_cost": 0.007788,
+  "actual_model": "cache",
+  "actual_tokens_in": 0,
+  "actual_tokens_out": 480,
+  "actual_cost": 0.0,
+  "tokens_saved": 196,
+  "cost_saved": 0.007788,
+  "saved_pct": 100.0,
+  "quality_score": 0.94,
+  "baseline_quality": 0.94,
+  "savings_components": {
+    "CACHE": 0.007788,
+    "COMPRESS": 0.0,
+    "ROUTE": 0.0,
+    "STOP": 0.0
+  },
+  "baseline_prompt": "SYSTEM: You are a senior customer-support resolution specialist. You must be empathetic, patient, and exceptionally thorough. Always acknowledge the customer's feelings first. Never dismiss a complaint. Escalate appropriately. Maintain a calm and reassuring tone. The company's reputation depends on your professionalism.\n\nCONVERSATION HISTORY (verbatim):\n[User]: This is the third time I've contacted you about a double charge.\n[Asst]: I'm truly sorry for the frustration this has caused. A double charge is not acceptable and I want to make this right. Let me pull up your account history so I fully understand what happened.\n[User]: I was charged $129 twice on May 3rd and nobody has fixed it.\n\nUSER: Draft a resolution that refunds the duplicate charge and offers a goodwill credit.",
+  "actual_prompt": null,
+  "output_text": "{\"content\":\"Refund issued + $20 credit\",\"word_count\":160}"
+}

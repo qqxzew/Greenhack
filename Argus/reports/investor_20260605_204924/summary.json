@@ -1,0 +1,61 @@
+{
+  "n_calls": 300,
+  "cost": {
+    "flat_opus": 12.33062999999998,
+    "flat_sonnet": 2.4661259999999974,
+    "quality_matched": 4.518710250000002,
+    "argus": 3.3634129999999978
+  },
+  "time": {
+    "flat_opus": 3858.2864400000026,
+    "flat_sonnet": 1659.384139999999,
+    "quality_matched": 2097.140139999998,
+    "argus": 1547.0409749999994
+  },
+  "save_vs_frontier_cost": 72.72310498328144,
+  "save_vs_frontier_time": 59.90341829053008,
+  "save_vs_qmatch_cost": 25.56696902617297,
+  "save_vs_qmatch_time": 26.230920600279926,
+  "cost_per_1m_saved_frontier": 29890.723333333273,
+  "cost_per_1m_saved_qmatch": 3850.990833333346,
+  "routing_dist": {
+    "Opus": 29,
+    "Sonnet": 116,
+    "Haiku": 60,
+    "Stopped": 12,
+    "Cache": 83
+  },
+  "tier_quality": {
+    "Frontier \u2192 Opus": {
+      "argus": 0.9299999999999999,
+      "sonnet": 0.8222857142857145
+    },
+    "Standard \u2192 Sonnet": {
+      "argus": 0.9300000000000033,
+      "sonnet": 0.9300000000000033
+    },
+    "Simple \u2192 Haiku": {
+      "argus": 0.9300000000000027,
+      "sonnet": 0.9300000000000027
+    }
+  },
+  "quality_opt": 0.930000000000005,
+  "quality_base": 0.9169097222222273,
+  "quality_delta": 0.013090277777777715,
+  "cost_waterfall": {
+    "start": 12.33062999999998,
+    "ROUTING": 7.811919749999978,
+    "COMPRESS": 0.0636435000000001,
+    "CACHE": 0.62437375,
+    "STOP": 0.46728000000000003,
+    "end": 3.3634129999999978
+  },
+  "time_waterfall": {
+    "start": 3858.2864400000026,
+    "ROUTING": 1761.1463000000044,
+    "COMPRESS": 0.7742849999999609,
+    "CACHE": 308.89467999999994,
+    "STOP": 240.4302,
+    "end": 1547.0409750000044
+  }
+}
