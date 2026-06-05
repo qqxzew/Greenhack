@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimalist Workspace Workspace</title>
+  
+  <!-- Premium Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & GSAP for world-class interactive 3D layouts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      /* Palette */
+      --bg-main: #ffffff;
+      --bg-panel: #f3f4f6; /* Soft light grey */
+      --bg-panel-hover: #e5e7eb;
+      --color-text-main: #1f2937;
+      --color-text-muted: #6b7280;
+      --color-text-active: #111827;
+      --indigo: #4f46e5;
+      --border-color: rgba(0, 0, 0, 0.04);
+      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      
+      /* Layout & Animation speeds */
+      --sidebar-width: 280px;
+      --transition-timing: cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-duration: 0.45s;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-main);
+      color: var(--color-text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* Outer Wrapper */
+    #app-container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* Sidebar Base */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100%;
+      background-color: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 10;
+      transition: transform var(--transition-duration) var(--transition-timing),
+                  width var(--transition-duration) var(--transition-timing);
+      flex-shrink: 0;
+    }
+
+    /* Left Sidebar Specific */
+    #sidebar-left {
+      border-right: 1px solid var(--border-color);
+    }
+
+    /* Right Sidebar Specific */
+    #sidebar-right {
+      border-left: 1px solid var(--border-color);
+    }
+
+    /* Sidebar Collapsed State */
+    .sidebar.collapsed {
+      transform: translateX(0); /* Handled by standard translate or width collapse depending on aesthetics */
+    }
+
+    #sidebar-left.collapsed {
+      transform: translateX(-100%);
+    }
+
+    #sidebar-right.collapsed {
+      transform: translateX(100%);
+    }
+
+    /* Left Panel Inner Structure */
+    .sidebar-header {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--color-text-main);
+    }
+
+    .sidebar-navigation {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      cursor: default;
+      user-select: none;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background-color: var(--bg-panel-hover);
+      color: var(--color-text-active);
+    }
+
+    .nav-item.active {
+      background-color: var(--bg-main);
+      color: var(--color-text-active);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    /* Footer Details - Bottom buttons (non-functional, cosmetic) */
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      color: var(--color-text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s ease, color 0.15s ease;
+    }
+
+    .footer-action:hover {
+      background-color: var(--bg-panel-hover);
+      color: var(--color-text-active);
+    }
+
+    .footer-action svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.8;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 24px;
+      height: 24px;
+    }
+
+    .avatar-placeholder {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #d1d5db;
+      border: 1.5px solid var(--bg-main);
+    }
+
+    /* Right Sidebar Header / Setup */
+    .right-panel-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-size: 14px;
+    }
+
+    .panel-section-title {
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 8px;
+    }
+
+    .calibration-panel {
+      gap: 22px;
+    }
+
+    .calibration-note {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #64748b;
+      max-width: 220px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      color: var(--color-text-main);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #10b981; /* Green */
+    }
+
+    /* Minimalist Interactive Toggle Handle Trigger Buttons */
+    .toggle-trigger {
+      position: absolute;
+      top: 24px;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+      transition: transform var(--transition-duration) var(--transition-timing),
+                  background-color 0.2s ease,
+                  box-shadow 0.2s ease,
+                  color 0.2s ease;
+      color: var(--color-text-muted);
+    }
+
+    .toggle-trigger:hover {
+      background-color: var(--bg-main);
+      color: var(--color-text-active);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Positioning the triggers */
+    #sidebar-left + .toggle-trigger-left {
+      left: calc(var(--sidebar-width) - 14px);
+    }
+
+    #sidebar-right + .toggle-trigger-right {
+      right: calc(var(--sidebar-width) - 14px);
+    }
+
+    /* Animations when sidebar is collapsed */
+    #sidebar-left.collapsed + .toggle-trigger-left {
+      transform: translateX(calc(-1 * var(--sidebar-width) + 14px + 10px));
+      background-color: var(--bg-panel);
+    }
+
+    #sidebar-right.collapsed + .toggle-trigger-right {
+      transform: translateX(calc(var(--sidebar-width) - 14px - 10px));
+      background-color: var(--bg-panel);
+    }
+
+    /* Rotation animations for toggle icons */
+    .toggle-trigger svg {
+      width: 16px;
+      height: 16px;
+      transition: transform var(--transition-duration) var(--transition-timing);
+    }
+
+    #sidebar-left.collapsed + .toggle-trigger-left svg {
+      transform: rotate(180deg);
+    }
+
+    #sidebar-right.collapsed + .toggle-trigger-right svg {
+      transform: rotate(180deg);
+    }
+
+
+    /* Main Area styling */
+    main {
+      flex: 1;
+      height: 100%;
+      background-color: var(--bg-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 40px;
+    }
+
+    /* Grid pattern overlay background for aesthetics */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Photo Slider Container */
+    .slider-wrapper {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .slider-viewport {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      overflow: visible;
+    }
+
+    .slider-track {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slider-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 450px;
+      height: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .slider-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slider-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Control arrows near sidebars */
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.5s ease;
+    }
+
+    .slider-arrow:hover {
+      background-color: var(--bg-main);
+      color: var(--color-text-active);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .slider-arrow:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .slider-arrow-left {
+      left: 24px;
+    }
+
+    .slider-arrow-right {
+      right: 24px;
+    }
+
+    .slider-arrow svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+    }
+
+    .office-variant-controls {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 80;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .office-variant-controls.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .office-variant-arrow {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.10);
+      transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .office-variant-arrow:hover {
+      background: #ffffff;
+      color: var(--color-text-active);
+      transform: translateY(-1px);
+    }
+
+    .office-variant-arrow svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    .office-variant-label {
+      min-width: 132px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--color-text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+      user-select: none;
+    }
+
+    /* Toggle view mode button style */
+    .beehive-toggle-btn {
+      position: absolute;
+      top: 24px;
+      z-index: 150;
+      padding: 10px 24px;
+      border-radius: 100px;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      color: var(--color-text-muted);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: background-color 0.2s ease, color 0.15s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .beehive-toggle-btn:hover {
+      background-color: var(--bg-main);
+      color: var(--color-text-active);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .beehive-toggle-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Active Beehive Layout changes */
+    .slider-wrapper.beehive-mode .slider-viewport {
+      overflow: visible; /* Show staggered positions smoothly */
+    }
+
+    .slider-wrapper.beehive-mode .slider-slide {
+      opacity: 1;
+      pointer-events: auto;
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,0.06));
+    }
+
+    /* Coordinate offsets for the honeycomb cluster (beehive grid layout) */
+    .slider-wrapper.beehive-mode .slider-slide[data-index="0"] {
+      z-index: 5;
+    }
+    .slider-wrapper.beehive-mode .slider-slide[data-index="1"] {
+      z-index: 4;
+    }
+    .slider-wrapper.beehive-mode .slider-slide[data-index="2"] {
+      z-index: 3;
+    }
+    .slider-wrapper.beehive-mode .slider-slide[data-index="3"] {
+      z-index: 2;
+    }
+    .slider-wrapper.beehive-mode .slider-slide[data-index="4"] {
+      z-index: 1;
+    }
+
+    /* Hide arrows in beehive mode */
+    .slider-wrapper.beehive-mode .slider-arrow {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Main central card content */
+    .main-canvas {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: fadeIn 0.8s var(--transition-timing) forwards;
+    }
+
+    .main-canvas h1 {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--color-text-main);
+      line-height: 1.15;
+    }
+
+    .main-canvas p {
+      font-size: 16px;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .control-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-panel);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+    }
+
+    .key-cap {
+      background-color: var(--bg-main);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--color-text-main);
+    }
+
+    /* Info card list in sidebars */
+    .info-card {
+      background-color: var(--bg-main);
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.015), 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .info-card h4 {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: var(--color-text-active);
+    }
+
+    .info-card p {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Touch screen optimization */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+      }
+      #sidebar-left {
+        left: 0;
+      }
+      #sidebar-right {
+        right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-container">
+
+    <!-- LEFT SIDEBAR -->
+    <aside id="sidebar-left" class="sidebar">
+      <!-- Sidebar Header -->
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="brand-dot"></div>
+          <span>GreenWorkspace</span>
+        </div>
+      </div>
+
+      <!-- Navigation Content -->
+      <div class="sidebar-navigation">
+        <div class="nav-item active">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+          <span>Главная</span>
+        </div>
+        <div class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+          </svg>
+          <span>Интеграции</span>
+        </div>
+        <div class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+          </svg>
+          <span>Статистика</span>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer (Account & Settings buttons - non-functional cosmetic triggers) -->
+      <div class="sidebar-footer">
+        <div class="footer-action" title="Личный кабинет">
+          <div class="avatar-wrapper">
+            <div class="avatar-placeholder"></div>
+          </div>
+          <span>Аккаунт</span>
+        </div>
+        <div class="footer-action" title="Настройки интерфейса">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.047 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124c.072-.044.146-.086.22-.128c.332-.183.582-.495.644-.869l.214-1.28z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span>Настройки</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- LEFT TOGGLE TRIGGER -->
+    <div class="toggle-trigger toggle-trigger-left" id="toggle-left" title="Скрыть/показать левую панель">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+    </div>
+
+    <!-- MAIN APP CANVAS -->
+    <main>
+      <div class="grid-bg"></div>
+      
+      <!-- Toggle Mode Button above slideshow -->
+      <button class="beehive-toggle-btn" id="toggle-view-mode" title="Переключить режим отображения">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+        </svg>
+        <span id="toggle-btn-text">Режим улья</span>
+      </button>
+
+      <!-- Slider Wrapper placed in center -->
+      <div id="slider-wrapper" class="slider-wrapper">
+        <button class="slider-arrow slider-arrow-left" id="slide-prev" title="Предыдущее изображение" aria-label="Назад">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+
+        <div class="slider-viewport">
+          <div class="slider-track" id="slider-track">
+            <div class="slider-slide active" data-index="0">
+              <img src="background images/Bria - Remove Background_0001.png" alt="Workspace Concept 1">
+            </div>
+            <div class="slider-slide" data-index="1">
+              <img src="background images/Bria - Remove Background_0002.png" alt="Workspace Concept 2">
+            </div>
+            <div class="slider-slide" data-index="2">
+              <img src="background images/Bria - Remove Background_0003.png" alt="Workspace Concept 3">
+            </div>
+            <div class="slider-slide" data-index="4">
+              <img src="background images/Bria - Remove Background_0005.png" alt="Workspace Concept 5">
+            </div>
+            <div class="slider-slide" data-index="3">
+              <img src="background images/Bria - Remove Background_0004.png" alt="Workspace Concept 4">
+            </div>
+          </div>
+        </div>
+
+        <button class="slider-arrow slider-arrow-right" id="slide-next" title="Следующее изображение" aria-label="Вперед">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+
+        <div class="office-variant-controls" id="office-variant-controls">
+          <button class="office-variant-arrow" id="office-variant-prev" type="button" aria-label="Предыдущая вариация офиса">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <div class="office-variant-label" id="office-variant-label">Вариации офиса</div>
+          <button class="office-variant-arrow" id="office-variant-next" type="button" aria-label="Следующая вариация офиса">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside id="sidebar-right" class="sidebar">
+      <div class="right-panel-content calibration-panel">
+        <h3 class="panel-section-title">Калибровка улья</h3>
+        <p class="calibration-note">
+          Конфигурация улья зафиксирована в коде и больше не изменяется через интерфейс.
+        </p>
+      </div>
+    </aside>
+
+    <!-- RIGHT TOGGLE TRIGGER -->
+    <div class="toggle-trigger toggle-trigger-right" id="toggle-right" title="Скрыть/показать правую панель">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+    </div>
+
+  </div>
+
+  <!-- Interactive script to handle transitions and states -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebarLeft = document.getElementById('sidebar-left');
+      const sidebarRight = document.getElementById('sidebar-right');
+      const btnLeft = document.getElementById('toggle-left');
+      const btnRight = document.getElementById('toggle-right');
+
+      // Expand/Collapse Left Sidebar
+      btnLeft.addEventListener('click', () => {
+        sidebarLeft.classList.toggle('collapsed');
+      });
+
+      // Expand/Collapse Right Sidebar
+      btnRight.addEventListener('click', () => {
+        sidebarRight.classList.toggle('collapsed');
+      });
+
+      // Slider Logic
+      const slides = document.querySelectorAll('.slider-slide');
+      const btnPrev = document.getElementById('slide-prev');
+      const btnNext = document.getElementById('slide-next');
+      const btnToggleView = document.getElementById('toggle-view-mode');
+      const sliderWrapper = document.getElementById('slider-wrapper');
+      const btnToggleText = document.getElementById('toggle-btn-text');
+      const officeVariantControls = document.getElementById('office-variant-controls');
+      const officeVariantPrev = document.getElementById('office-variant-prev');
+      const officeVariantNext = document.getElementById('office-variant-next');
+      const officeVariantLabel = document.getElementById('office-variant-label');
+      
+      let currentIndex = 0;
+      let isBeehive = false;
+
+      const officeCatalogIndex = 0;
+      const officeSlideImage = slides[officeCatalogIndex].querySelector('img');
+      const officeBaseImage = 'background images/Bria - Remove Background_0001.png';
+      const officeVariants = [
+        officeBaseImage,
+        'OFFICE ALL CHARAKTER/Bria - Remove Background_0001.png',
+        'OFFICE ALL CHARAKTER/Bria - Remove Background_0002.png',
+        'OFFICE ALL CHARAKTER/Bria - Remove Background_0003.png',
+        'OFFICE ALL CHARAKTER/Bria - Remove Background_0004.png',
+        'OFFICE ALL CHARAKTER/Bria - Remove Background_0005.png'
+      ];
+      let officeVariantIndex = 0;
+
+      const beehiveScale = 0.39;
+      const ratioX = 0.400;
+      const ratioY = 0.620;
+      const boxSize = 450;
+
+      function getBeehivePosition(index) {
+        const scaledSize = boxSize * beehiveScale;
+        const positions = [
+          { x: 0, y: 0 },
+          { x: ratioX * scaledSize, y: -ratioY * scaledSize },
+          { x: -ratioX * scaledSize, y: -ratioY * scaledSize },
+          { x: -2 * ratioX * scaledSize, y: 0 },
+          { x: 2 * ratioX * scaledSize, y: 0 }
+        ];
+
+        return positions[index];
+      }
+
+      function applyBeehiveLayout(duration = 0.2) {
+        slides.forEach((slide, i) => {
+          gsap.killTweensOf(slide);
+          slide.classList.add('active');
+          const pos = getBeehivePosition(i);
+          gsap.to(slide, {
+            x: pos.x,
+            y: pos.y,
+            scale: beehiveScale,
+            opacity: 1,
+            pointerEvents: 'auto',
+            duration,
+            ease: duration > 0.3 ? 'back.out(1.25)' : 'power1.out'
+          });
+        });
+      }
+
+      function updateOfficeVariantControls() {
+        const isOfficeSelected = !isBeehive && currentIndex === officeCatalogIndex;
+        officeVariantControls.classList.toggle('visible', isOfficeSelected);
+        officeVariantLabel.textContent = officeVariantIndex === 0
+          ? 'Оригинал офиса'
+          : `Вариация ${officeVariantIndex}/${officeVariants.length - 1}`;
+      }
+
+      function setOfficeVariant(index) {
+        officeVariantIndex = (index + officeVariants.length) % officeVariants.length;
+        officeSlideImage.src = officeVariants[officeVariantIndex];
+        updateOfficeVariantControls();
+      }
+
+      // Initialize slide states
+      function initSlider() {
+        slides.forEach((slide, i) => {
+          gsap.killTweensOf(slide);
+          if (i === currentIndex) {
+            gsap.set(slide, {
+              x: 0,
+              y: 0,
+              scale: 1,
+              opacity: 1,
+              pointerEvents: 'auto'
+            });
+            slide.classList.add('active');
+          } else {
+            gsap.set(slide, {
+              x: 0,
+              y: 0,
+              scale: 0.85,
+              opacity: 0,
+              pointerEvents: 'none'
+            });
+            slide.classList.remove('active');
+          }
+        });
+
+        updateOfficeVariantControls();
+      }
+
+      initSlider();
+
+      // Show Slide (Standard slideshow mode)
+      function showSlide(index, direction) {
+        if (isBeehive) return; 
+        if (index === currentIndex) return;
+
+        const currentSlide = slides[currentIndex];
+        const nextSlide = slides[index];
+
+        // Kill active tweens to handle rapid clicking immediately
+        gsap.killTweensOf(currentSlide);
+        gsap.killTweensOf(nextSlide);
+
+        const xOffset = direction === 'next' ? 120 : -120;
+
+        // Current slide flies out
+        gsap.to(currentSlide, {
+          x: -xOffset,
+          scale: 0.85,
+          opacity: 0,
+          pointerEvents: 'none',
+          duration: 0.45,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            currentSlide.classList.remove('active');
+          }
+        });
+
+        // Next slide slides in from opposite side
+        gsap.set(nextSlide, {
+          x: xOffset,
+          scale: 0.85,
+          opacity: 0
+        });
+
+        nextSlide.classList.add('active');
+
+        gsap.to(nextSlide, {
+          x: 0,
+          scale: 1,
+          opacity: 1,
+          pointerEvents: 'auto',
+          duration: 0.45,
+          ease: 'power2.inOut'
+        });
+
+        currentIndex = index;
+        updateOfficeVariantControls();
+      }
+
+      btnPrev.addEventListener('click', () => {
+        const nextIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(nextIndex, 'prev');
+      });
+
+      btnNext.addEventListener('click', () => {
+        const nextIndex = (currentIndex + 1) % slides.length;
+        showSlide(nextIndex, 'next');
+      });
+
+      // Enter/Exit Beehive Mode
+      function enterBeehiveMode() {
+        isBeehive = true;
+        sliderWrapper.classList.add('beehive-mode');
+        btnToggleText.textContent = 'Режим слайдов';
+        updateOfficeVariantControls();
+
+        // Hide slider arrow controls
+        gsap.to([btnPrev, btnNext], {
+          opacity: 0,
+          pointerEvents: 'none',
+          duration: 0.3
+        });
+
+        applyBeehiveLayout(0.7);
+      }
+
+      function exitBeehiveMode(targetIndex = currentIndex) {
+        isBeehive = false;
+        sliderWrapper.classList.remove('beehive-mode');
+        btnToggleText.textContent = 'Режим улья';
+
+        // Show slider arrow controls
+        gsap.to([btnPrev, btnNext], {
+          opacity: 1,
+          pointerEvents: 'auto',
+          duration: 0.3
+        });
+
+        currentIndex = targetIndex;
+  updateOfficeVariantControls();
+
+        // Animate slides back: target zoom center, other ones hide
+        slides.forEach((slide, i) => {
+          gsap.killTweensOf(slide);
+          if (i === targetIndex) {
+            slide.classList.add('active');
+            gsap.to(slide, {
+              x: 0,
+              y: 0,
+              scale: 1,
+              opacity: 1,
+              pointerEvents: 'auto',
+              duration: 0.6,
+              ease: 'power2.inOut'
+            });
+          } else {
+            gsap.to(slide, {
+              x: 0,
+              y: 0,
+              scale: 0.85,
+              opacity: 0,
+              pointerEvents: 'none',
+              duration: 0.6,
+              ease: 'power2.inOut',
+              onComplete: () => {
+                slide.classList.remove('active');
+              }
+            });
+          }
+        });
+      }
+
+      // View Mode Toggle button handler
+      btnToggleView.addEventListener('click', () => {
+        if (!isBeehive) {
+          enterBeehiveMode();
+        } else {
+          exitBeehiveMode();
+        }
+      });
+
+      // Individual slide click logic
+      slides.forEach((slide, i) => {
+        // Selection click in beehive mode
+        slide.addEventListener('click', (e) => {
+          if (isBeehive) {
+            e.stopPropagation();
+            exitBeehiveMode(i);
+          }
+        });
+
+      });
+
+      officeVariantPrev.addEventListener('click', (event) => {
+        event.stopPropagation();
+        setOfficeVariant(officeVariantIndex - 1);
+      });
+
+      officeVariantNext.addEventListener('click', (event) => {
+        event.stopPropagation();
+        setOfficeVariant(officeVariantIndex + 1);
+      });
+
+      setOfficeVariant(0);
+
+      // Hotkeys
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '[') {
+          sidebarLeft.classList.toggle('collapsed');
+        } else if (e.key === ']') {
+          sidebarRight.classList.toggle('collapsed');
+        } else if (!isBeehive) {
+          if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+            const nextIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(nextIndex, 'prev');
+          } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+            const nextIndex = (currentIndex + 1) % slides.length;
+            showSlide(nextIndex, 'next');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
