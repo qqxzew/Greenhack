@@ -31,7 +31,7 @@ class OptimizationPipeline:
     9. EventLogger
     """
 
-    def __init__(self, daily_budget: float = 100_000):
+    def __init__(self, daily_budget: float = 10_000_000):
         self.router    = HierarchicalRouter()
         self.cache     = SemanticCache()
         self.dedup     = MinHashDeduplicator()
@@ -125,8 +125,22 @@ class OptimizationPipeline:
 
         if agent_id not in self.stoppers:
             self.stoppers[agent_id] = SPRTStopper()
-        progress_delta = quality * 0.5 + (1 - cost / 0.05) * 0.5
+        # quality is [0,1]; (1 - cost/0.05) can go strongly negative for any
+        # cost > $0.05 — without clamping, a single $1+ call ($1.26 for the
+        # wasteful demo agent) drives progress_delta to ~-12, which alone
+        # crashes the SPRT log-likelihood past STOP_STUCK in one step.
+        # The detector is meant for "no progress over many cheap iterations",
+        # not "one expensive call". Clamp so each iteration contributes a
+        # bounded signal.
+        raw = quality * 0.5 + (1 - cost / 0.05) * 0.5
+        progress_delta = max(0.0, min(1.0, raw))
         sprt_decision = self.stoppers[agent_id].update(progress_delta)
+        # The live path uses SPRT as a ROLLING monitor across an agent's calls,
+        # not a one-shot test. After any terminal verdict, reset the accumulator
+        # so the agent is re-evaluated on fresh evidence: a healthy streak clears
+        # accumulated suspicion, and a fresh bad streak can re-trigger STOP_STUCK.
+        if sprt_decision in ("STOP_STUCK", "STOP_PROGRESSING"):
+            self.stoppers[agent_id].reset()
 
         event = {
             "agent_id":         agent_id,

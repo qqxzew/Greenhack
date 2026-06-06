@@ -25,6 +25,7 @@ MODEL_COSTS = {
     "claude-haiku-4-5":  {"input": 0.00025, "output": 0.00125},
     "claude-sonnet-4-5": {"input": 0.003,   "output": 0.015},
     "claude-opus-4-7":   {"input": 0.015,   "output": 0.075},
+    "claude-opus-4-8":   {"input": 0.015,   "output": 0.075},  # current frontier (live)
     "cache":             {"input": 0.0,     "output": 0.0},
 }
 
@@ -35,6 +36,7 @@ MODEL_CAPABILITY = {
     "claude-haiku-4-5":  1,
     "claude-sonnet-4-5": 2,
     "claude-opus-4-7":   3,
+    "claude-opus-4-8":   3,
     "cache":             3,   # a cache hit reproduces a prior full-quality answer
 }
 
@@ -47,12 +49,21 @@ MODEL_LATENCY = {
     "claude-haiku-4-5":  {"base_ms": 180.0, "ms_per_in_tok": 0.020, "ms_per_out_tok": 4.0},
     "claude-sonnet-4-5": {"base_ms": 380.0, "ms_per_in_tok": 0.045, "ms_per_out_tok": 11.0},
     "claude-opus-4-7":   {"base_ms": 700.0, "ms_per_in_tok": 0.070, "ms_per_out_tok": 26.0},
+    "claude-opus-4-8":   {"base_ms": 700.0, "ms_per_in_tok": 0.070, "ms_per_out_tok": 26.0},
     "cache":             {"base_ms": 6.0,   "ms_per_in_tok": 0.0,   "ms_per_out_tok": 0.0},
 }
 
 CACHE_LOOKUP_MS = 6.0   # latency of a semantic-cache hit (no model call)
 
-BASELINE_MODEL = "claude-sonnet-4-5"   # the "what if we never optimized" model
+# The "what if we never optimized" model for the LIVE dashboard (routes.py
+# stream/report/agents). Sonnet, NOT Opus, is the deliberate live baseline: the
+# live router only chooses between haiku and sonnet, so the honest "without
+# Argus" counterfactual is "run every call on the standard mid-tier model."
+# This is intentionally MORE CONSERVATIVE than the offline investor report
+# (make_investor_report.py), whose headline baseline is flat-Opus — see
+# METHODOLOGY.md §5 and the new §11. The two tools answer different questions
+# and therefore use different baselines on purpose.
+BASELINE_MODEL = "claude-sonnet-4-5"
 
 
 class OptType(str, Enum):

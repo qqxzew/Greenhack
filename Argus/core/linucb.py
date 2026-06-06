@@ -100,6 +100,16 @@ class LinUCBRouter:
         normalized_cost = min(cost / MAX_COST, 1.0)
         reward = quality - self.lambda_cost * normalized_cost
 
+        # Lazily register any model we're asked to learn from but didn't choose
+        # ourselves — e.g. a call the caller force-routed to a model outside our
+        # pool (Opus). Without this, A[model] would KeyError on the first such
+        # call. The model still isn't added to `self.models`, so choose() never
+        # auto-selects it; we just track its stats and feed back its reward.
+        if model not in self.A:
+            self.A[model] = np.eye(self.dim, dtype=np.float64) * 0.1
+            self.b[model] = np.zeros(self.dim, dtype=np.float64)
+            self.stats[model] = ModelStats(name=model)
+
         self.A[model] += np.outer(x, x)
         self.b[model] += reward * x
 

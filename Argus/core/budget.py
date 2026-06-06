@@ -83,7 +83,9 @@ class HierarchicalBudget:
           'block'   -- budget exhausted
         """
         if agent_id not in self.agents:
-            self.register_agent(agent_id, budget=10_000)
+            # Demo budget bumped from 10k -> 1M so the live-traffic generator
+            # doesn't blow per-agent budgets within a minute and stop the dashboard.
+            self.register_agent(agent_id, budget=1_000_000)
 
         node = self.agents[agent_id]
         node.used += tokens

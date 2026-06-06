@@ -42,6 +42,14 @@ AGENT_ROSTER = [
         "persona": "Fires near-duplicate questions in bursts — stress-tests the dedup + semantic cache layers.",
     },
     {
+        "id": "agent-research",
+        "name": "Research",
+        "role": "Research Scientist",
+        "kind": "productive",
+        "character": "mage",
+        "persona": "Tackles genuinely hard, multi-step reasoning — proofs, derivations, system design. Routed UP to the frontier model (Opus) on purpose: a deliberate quality investment, not a cost saving.",
+    },
+    {
         "id": "agent-wasteful",
         "name": "Wasteful",
         "role": "Unoptimised Control",

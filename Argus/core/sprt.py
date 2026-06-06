@@ -22,9 +22,17 @@ class SPRTStopper:
         self,
         alpha: float = 0.05,
         beta:  float = 0.10,
-        mu0:   float = 0.02,
-        mu1:   float = 0.15,
-        sigma: float = 0.08,
+        # Progress is reported on a [0,1] scale (see pipeline.post_call:
+        # quality·0.5 + (1−cost/0.05)·0.5). The hypotheses are calibrated to
+        # THAT scale: a healthy agent's progress clusters near μ1, a
+        # stuck/wasteful one near μ0. σ controls sensitivity — with these
+        # values a persistently-wasteful agent (progress ≈ 0.15) trips
+        # STOP_STUCK in ~4 steps, while a healthy one (≈ 0.90) never does.
+        # (Old values 0.02/0.15/0.08 were calibrated for a different,
+        # near-zero progress scale and made the live detector inert.)
+        mu0:   float = 0.35,
+        mu1:   float = 0.70,
+        sigma: float = 0.45,
     ):
         self.mu0   = mu0
         self.mu1   = mu1
@@ -45,8 +53,16 @@ class SPRTStopper:
         self.step += 1
         self.history.append(progress_delta)
 
+        # Per-step Gaussian log-likelihood ratio (Wald 1945):
+        #   ln f_{μ1}(x)/f_{μ0}(x) = [(x−μ0)² − (x−μ1)²] / (2σ²)
+        #                          = [x·(μ1−μ0) − ½(μ1²−μ0²)] / σ²
+        # i.e. (μ1−μ0)/σ² · (x − (μ0+μ1)/2): positive when x is above the
+        # midpoint of the two hypotheses, negative below.
+        # NOTE: the leading term is x·(μ1−μ0), NOT (x−μ0)·(μ1−μ0) — the latter
+        # injected a spurious −μ0·(μ1−μ0)/σ² bias every step, pushing the
+        # statistic toward STOP_STUCK and inflating the true Type-I error.
         log_ratio = (
-            (progress_delta - self.mu0) * (self.mu1 - self.mu0)
+            progress_delta * (self.mu1 - self.mu0)
             - 0.5 * (self.mu1**2 - self.mu0**2)
         ) / (self.sigma**2)
 

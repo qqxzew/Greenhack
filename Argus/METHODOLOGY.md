@@ -303,3 +303,33 @@ assumptions about model price, latency, and quality, this is exactly how much an
 agent platform's bill and wall-clock time shrink when each task is right-sized
 and the redundant work is removed.* Change the assumptions in this document and
 the numbers move accordingly — that is the point of publishing them.
+
+---
+
+## 11. Two tools, two baselines (offline report vs. live dashboard)
+
+There are **two** separate surfaces, and they use **different baselines on
+purpose** — do not expect their headline percentages to match:
+
+| Surface | Baseline ("without Argus") | Why |
+|---------|----------------------------|-----|
+| **Offline investor report** (`make_investor_report.py`, §5) | **flat-Opus** (best model for everything) | demonstrates the maximum waste of the naive "just use the strongest model" strategy across a designed 3-tier workload |
+| **Live dashboard** (`Argus/api/routes.py` → Live Stream, Impact Report, Analytics) | **per-call**: standard model (Sonnet, `LIVE_BASELINE_MODEL`), except a call routed **up** to the frontier model (Opus) is compared to **itself** | the live router routes haiku ↔ sonnet ↔ opus. A down-route to haiku is measured against Sonnet (real saving). An up-route to Opus is a deliberate **quality investment**, so its baseline is Opus → $0 cost-saved, never "Argus is more expensive" |
+
+The live dashboard's savings come from two honest sources only: **down-routing**
+(haiku instead of Sonnet) and **skipped calls** (cache / dedup). A call genuinely
+**routed up to Opus** shows **$0 cost-saved** and is labelled *“routed up — quality
+investment”* (method `route_up`) — it is the frontier baseline, not a cost win.
+This per-call baseline (`_baseline_for()` in `routes.py`) deliberately avoids both
+failure modes: it never inflates numbers to a flat-Opus strawman, and it never
+makes an up-routed call look like Argus overspent.
+
+The global `tracking.BASELINE_MODEL` (Sonnet) is **left untouched** — it belongs
+to the offline report path; the live dashboard uses its own `LIVE_BASELINE_MODEL`.
+
+Every live view (stream rows, the Impact Report, the org-level eco counters)
+reads from **one cumulative aggregate** (`_agg` / `_savings_snapshot()` in
+`routes.py`), so within the live dashboard all "saved" figures — cost, time,
+tokens, per-agent, per-method — reconcile to the same totals. (Earlier the org
+counter used an `avoided_calls × avg_tokens` estimate while the report summed
+per-call `baseline − actual`; those two methods disagreed and have been unified.)
