@@ -1,1121 +1,2171 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minimalist Workspace Workspace</title>
-  
+  <title>Argus — AI Agent Control Room</title>
+  <meta name="description" content="Argus — orchestrate a fleet of AI agents while cutting wasted tokens, and the electricity behind them.">
+  <link rel="icon" type="image/png" href="argus-logo.png">
+
   <!-- Premium Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS & GSAP for world-class interactive 3D layouts -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP for the interactive 3D scene transitions -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
+    /* ============================================================
+       THEME TOKENS
+       ============================================================ */
     :root {
-      /* Palette */
-      --bg-main: #ffffff;
-      --bg-panel: #f3f4f6; /* Soft light grey */
-      --bg-panel-hover: #e5e7eb;
-      --color-text-main: #1f2937;
-      --color-text-muted: #6b7280;
-      --color-text-active: #111827;
-      --indigo: #4f46e5;
-      --border-color: rgba(0, 0, 0, 0.04);
-      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      
-      /* Layout & Animation speeds */
-      --sidebar-width: 280px;
-      --transition-timing: cubic-bezier(0.16, 1, 0.3, 1);
-      --transition-duration: 0.45s;
+      --bg-main: #f7f8fa;
+      --bg-panel: #ffffff;
+      --bg-panel-2: #f1f3f7;
+      --bg-elevated: #ffffff;
+      --card: #ffffff;
+      --canvas: #fbfcfe;
+
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --text-strong: #0f172a;
+      --text-faint: #9aa3b2;
+
+      --border: rgba(15, 23, 42, 0.08);
+      --border-strong: rgba(15, 23, 42, 0.14);
+
+      --accent: #4f46e5;
+      --accent-strong: #4338ca;
+      --accent-soft: #eef2ff;
+      --accent-contrast: #ffffff;
+
+      --green: #10b981;
+      --green-soft: #d1fae5;
+      --amber: #f59e0b;
+      --amber-soft: #fef3c7;
+      --red: #ef4444;
+      --red-soft: #fee2e2;
+      --slate: #94a3b8;
+      --slate-soft: #e2e8f0;
+
+      --shadow-sm: 0 1px 2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.04);
+      --shadow-md: 0 8px 22px rgba(15,23,42,.07);
+      --shadow-lg: 0 18px 48px rgba(15,23,42,.14);
+      --shadow-pop: 0 24px 60px rgba(15,23,42,.22);
+
+      --grid-line: rgba(15,23,42,0.025);
+
+      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --sidebar-width: 282px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur: 0.45s;
+
+      color-scheme: light;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    [data-theme="dark"] {
+      --bg-main: #0a0c11;
+      --bg-panel: #11141b;
+      --bg-panel-2: #181c25;
+      --bg-elevated: #161a23;
+      --card: #161a23;
+      --canvas: #0d1016;
+
+      --text: #dfe3ea;
+      --text-muted: #9aa3b2;
+      --text-strong: #f8fafc;
+      --text-faint: #6b7480;
+
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+
+      --accent: #6366f1;
+      --accent-strong: #818cf8;
+      --accent-soft: rgba(99, 102, 241, 0.16);
+      --accent-contrast: #ffffff;
+
+      --green: #34d399;
+      --green-soft: rgba(52, 211, 153, 0.15);
+      --amber: #fbbf24;
+      --amber-soft: rgba(251, 191, 36, 0.15);
+      --red: #f87171;
+      --red-soft: rgba(248, 113, 113, 0.15);
+      --slate: #94a3b8;
+      --slate-soft: rgba(148, 163, 184, 0.16);
+
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+      --shadow-md: 0 8px 22px rgba(0,0,0,.45);
+      --shadow-lg: 0 18px 48px rgba(0,0,0,.55);
+      --shadow-pop: 0 24px 60px rgba(0,0,0,.6);
+
+      --grid-line: rgba(255,255,255,0.03);
+
+      color-scheme: dark;
     }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    html, body { height: 100%; }
     body {
-      font-family: var(--font-family);
-      background-color: var(--bg-main);
-      color: var(--color-text-main);
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
+      font-family: var(--font); background-color: var(--bg-main); color: var(--text);
+      height: 100vh; overflow: hidden; display: flex;
+      transition: background-color .4s ease, color .4s ease;
     }
+    button { font-family: inherit; }
+    ::selection { background: var(--accent-soft); color: var(--accent-strong); }
 
-    /* Outer Wrapper */
-    #app-container {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
+    *::-webkit-scrollbar { width: 10px; height: 10px; }
+    *::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; border: 3px solid transparent; background-clip: padding-box; }
+    *::-webkit-scrollbar-thumb:hover { background: var(--text-faint); background-clip: padding-box; }
 
-    /* Sidebar Base */
+    /* ============================================================
+       LAYOUT SHELL
+       ============================================================ */
+    #app-container { display: flex; width: 100%; height: 100%; position: relative; }
+
     .sidebar {
-      width: var(--sidebar-width);
-      height: 100%;
-      background-color: var(--bg-panel);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 10;
-      transition: transform var(--transition-duration) var(--transition-timing),
-                  width var(--transition-duration) var(--transition-timing);
-      flex-shrink: 0;
+      width: var(--sidebar-width); height: 100%; background-color: var(--bg-panel);
+      display: flex; flex-direction: column; position: relative; z-index: 10; flex-shrink: 0;
+      transition: transform var(--dur) var(--ease), width var(--dur) var(--ease), background-color .4s ease;
     }
+    #sidebar-left { border-right: 1px solid var(--border); }
+    #sidebar-right { display: none !important; }
+    #toggle-right { display: none !important; }
+    #sidebar-left.collapsed { transform: translateX(-100%); }
+    #sidebar-right.collapsed { transform: translateX(100%); }
 
-    /* Left Sidebar Specific */
-    #sidebar-left {
-      border-right: 1px solid var(--border-color);
+    .sidebar-header { padding: 22px 22px 14px; display: flex; align-items: center; justify-content: space-between; }
+    .brand-logo { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 17px; letter-spacing: -0.02em; color: var(--text-strong); }
+    .brand-mark-img {
+      width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0; object-fit: contain; padding: 3px;
+      background: var(--bg-panel-2); border: 1px solid var(--border);
     }
+    .brand-logo small { display: block; font-size: 11px; font-weight: 500; color: var(--text-faint); letter-spacing: 0; margin-top: 1px; }
 
-    /* Right Sidebar Specific */
-    #sidebar-right {
-      border-left: 1px solid var(--border-color);
-    }
-
-    /* Sidebar Collapsed State */
-    .sidebar.collapsed {
-      transform: translateX(0); /* Handled by standard translate or width collapse depending on aesthetics */
-    }
-
-    #sidebar-left.collapsed {
-      transform: translateX(-100%);
-    }
-
-    #sidebar-right.collapsed {
-      transform: translateX(100%);
-    }
-
-    /* Left Panel Inner Structure */
-    .sidebar-header {
-      padding: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 600;
-      font-size: 16px;
-      letter-spacing: -0.02em;
-    }
-
-    .brand-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: var(--color-text-main);
-    }
-
-    .sidebar-navigation {
-      flex: 1;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
+    .sidebar-navigation { flex: 1; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+    .nav-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); padding: 14px 12px 6px; }
     .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-muted);
-      cursor: default;
-      user-select: none;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px;
+      font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; user-select: none;
+      border: 1px solid transparent; width: 100%; background: transparent; text-align: left;
+      transition: background-color .18s ease, color .18s ease, border-color .18s ease;
     }
+    .nav-item:hover { background-color: var(--bg-panel-2); color: var(--text-strong); }
+    .nav-item.active { background-color: var(--accent-soft); color: var(--accent-strong); border-color: color-mix(in srgb, var(--accent) 20%, transparent); font-weight: 600; }
+    .nav-item svg { width: 18px; height: 18px; stroke-width: 1.9; flex-shrink: 0; }
+    .nav-item .nav-count { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--text-faint); background: var(--bg-panel-2); padding: 2px 8px; border-radius: 99px; }
+    .nav-item.active .nav-count { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent-strong); }
 
-    .nav-item:hover {
-      background-color: var(--bg-panel-hover);
-      color: var(--color-text-active);
-    }
-
-    .nav-item.active {
-      background-color: var(--bg-main);
-      color: var(--color-text-active);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04);
-    }
-
-    .nav-item svg {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2;
-    }
-
-    /* Footer Details - Bottom buttons (non-functional, cosmetic) */
-    .sidebar-footer {
-      padding: 16px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
     .footer-action {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 8px;
-      color: var(--color-text-muted);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.2s ease, color 0.15s ease;
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px;
+      color: var(--text-muted); font-size: 14px; font-weight: 500; cursor: pointer; user-select: none;
+      border: 1px solid transparent; background: transparent; width: 100%; text-align: left;
+      transition: background-color .18s ease, color .15s ease;
     }
-
-    .footer-action:hover {
-      background-color: var(--bg-panel-hover);
-      color: var(--color-text-active);
-    }
-
-    .footer-action svg {
-      width: 20px;
-      height: 20px;
-      stroke-width: 1.8;
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      width: 24px;
-      height: 24px;
-    }
-
+    .footer-action:hover { background-color: var(--bg-panel-2); color: var(--text-strong); }
+    .footer-action svg { width: 19px; height: 19px; stroke-width: 1.8; flex-shrink: 0; }
     .avatar-placeholder {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background-color: #d1d5db;
-      border: 1.5px solid var(--bg-main);
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #34d399, #4f46e5); color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;
     }
 
-    /* Right Sidebar Header / Setup */
-    .right-panel-content {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      font-size: 14px;
+    /* Ecology statement — the site's message, not a metric */
+    .eco-note {
+      margin: 8px 12px 4px; padding: 13px 14px; border-radius: 13px;
+      background: var(--green-soft); border: 1px solid color-mix(in srgb, var(--green) 24%, transparent);
+      display: flex; gap: 11px; align-items: flex-start;
     }
-
-    .panel-section-title {
-      font-weight: 600;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-text-muted);
-      margin-bottom: 8px;
+    .eco-note .leaf {
+      width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      background: var(--green); color: #fff; box-shadow: 0 6px 14px -6px var(--green);
     }
+    .eco-note .leaf svg { width: 17px; height: 17px; stroke-width: 2; }
+    .eco-note strong { display: block; font-size: 12.5px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 3px;
+      color: color-mix(in srgb, var(--green) 55%, var(--text-strong)); }
+    .eco-note span { font-size: 11.5px; line-height: 1.5; color: var(--text-muted); }
 
-    .calibration-panel {
-      gap: 22px;
-    }
-
-    .calibration-note {
-      font-size: 13px;
-      line-height: 1.6;
-      color: #64748b;
-      max-width: 220px;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 500;
-      color: var(--color-text-main);
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: #10b981; /* Green */
-    }
-
-    /* Minimalist Interactive Toggle Handle Trigger Buttons */
     .toggle-trigger {
-      position: absolute;
-      top: 24px;
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background-color: var(--bg-panel);
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 100;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
-      transition: transform var(--transition-duration) var(--transition-timing),
-                  background-color 0.2s ease,
-                  box-shadow 0.2s ease,
-                  color 0.2s ease;
-      color: var(--color-text-muted);
+      position: absolute; top: 22px; width: 26px; height: 26px; border-radius: 8px;
+      background-color: var(--bg-panel); border: 1px solid var(--border-strong);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100;
+      box-shadow: var(--shadow-sm); color: var(--text-muted);
+      transition: transform var(--dur) var(--ease), background-color .2s ease, color .2s ease;
     }
+    .toggle-trigger:hover { background-color: var(--bg-elevated); color: var(--text-strong); box-shadow: var(--shadow-md); }
+    #sidebar-left + .toggle-trigger-left { left: calc(var(--sidebar-width) - 13px); }
+    #sidebar-right + .toggle-trigger-right { right: calc(var(--sidebar-width) - 13px); }
+    #sidebar-left.collapsed + .toggle-trigger-left { transform: translateX(calc(-1 * var(--sidebar-width) + 24px)); }
+    #sidebar-right.collapsed + .toggle-trigger-right { transform: translateX(calc(var(--sidebar-width) - 24px)); }
+    .toggle-trigger svg { width: 15px; height: 15px; transition: transform var(--dur) var(--ease); }
+    #sidebar-left.collapsed + .toggle-trigger-left svg,
+    #sidebar-right.collapsed + .toggle-trigger-right svg { transform: rotate(180deg); }
 
-    .toggle-trigger:hover {
-      background-color: var(--bg-main);
-      color: var(--color-text-active);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+    /* ============================================================
+       MAIN AREA
+       ============================================================ */
+    main { flex: 1; height: 100%; background-color: var(--bg-main); position: relative; overflow: hidden; }
+
+    .main-topbar {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 60;
+      padding: 18px 26px; display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none;
     }
+    .main-topbar > * { pointer-events: auto; }
+    .topbar-title { display: flex; flex-direction: column; gap: 2px; }
+    .topbar-title h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-strong); }
+    .topbar-title p { font-size: 12.5px; color: var(--text-muted); font-weight: 500; }
 
-    /* Positioning the triggers */
-    #sidebar-left + .toggle-trigger-left {
-      left: calc(var(--sidebar-width) - 14px);
+    .pill-btn {
+      padding: 9px 18px; border-radius: 100px; background-color: var(--bg-panel); border: 1px solid var(--border-strong);
+      color: var(--text-muted); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 9px;
+      cursor: pointer; box-shadow: var(--shadow-sm);
+      transition: background-color .2s ease, color .15s ease, transform .2s ease, box-shadow .2s ease;
     }
+    .pill-btn:hover { background-color: var(--bg-elevated); color: var(--text-strong); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .pill-btn svg { width: 16px; height: 16px; }
 
-    #sidebar-right + .toggle-trigger-right {
-      right: calc(var(--sidebar-width) - 14px);
-    }
+    .view { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .35s var(--ease); }
+    .view.active { opacity: 1; visibility: visible; }
 
-    /* Animations when sidebar is collapsed */
-    #sidebar-left.collapsed + .toggle-trigger-left {
-      transform: translateX(calc(-1 * var(--sidebar-width) + 14px + 10px));
-      background-color: var(--bg-panel);
-    }
-
-    #sidebar-right.collapsed + .toggle-trigger-right {
-      transform: translateX(calc(var(--sidebar-width) - 14px - 10px));
-      background-color: var(--bg-panel);
-    }
-
-    /* Rotation animations for toggle icons */
-    .toggle-trigger svg {
-      width: 16px;
-      height: 16px;
-      transition: transform var(--transition-duration) var(--transition-timing);
-    }
-
-    #sidebar-left.collapsed + .toggle-trigger-left svg {
-      transform: rotate(180deg);
-    }
-
-    #sidebar-right.collapsed + .toggle-trigger-right svg {
-      transform: rotate(180deg);
-    }
-
-
-    /* Main Area styling */
-    main {
-      flex: 1;
-      height: 100%;
-      background-color: var(--bg-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      padding: 40px;
-    }
-
-    /* Grid pattern overlay background for aesthetics */
+    /* HOME (scene canvas) */
+    #view-home { display: flex; align-items: center; justify-content: center; }
     .grid-bg {
-      position: absolute;
-      inset: 0;
-      background-size: 32px 32px;
-      background-image: 
-        linear-gradient(to right, rgba(0, 0, 0, 0.015) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
-      pointer-events: none;
-      z-index: 1;
+      position: absolute; inset: 0; background-size: 34px 34px; pointer-events: none; z-index: 1;
+      background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      -webkit-mask-image: radial-gradient(circle at center, #000 35%, transparent 78%);
+      mask-image: radial-gradient(circle at center, #000 35%, transparent 78%);
     }
 
-    /* Photo Slider Container */
-    .slider-wrapper {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-    }
+    .slider-wrapper { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2; }
+    .slider-viewport { position: absolute; width: 560px; height: 560px; top: 50%; left: 50%; transform: translate(-50%, -52%); overflow: visible; }
+    .slider-track { width: 100%; height: 100%; position: relative; }
+    /* Polygon measured from actual PNG pixel boundaries (alpha-threshold scan, consensus of 5 images):
+       top(50%,4%) → ur(91%,27%) → lr(91%,72%) → bot(51%,96%) → ll(9%,71%) → ul(9%,27%)       */
+    .slider-slide { position: absolute; top: 0; left: 0; width: 560px; height: 560px; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; clip-path: polygon(50% 4%, 91% 27%, 91% 72%, 51% 96%, 9% 71%, 9% 27%); }
+    .slider-slide.active { opacity: 1; pointer-events: auto; }
+    .slider-slide img { width: 100%; height: 100%; object-fit: contain; user-select: none; pointer-events: none; -webkit-user-drag: none; filter: drop-shadow(0 24px 40px rgba(0,0,0,0.18)); }
 
-    .slider-viewport {
-      position: absolute;
-      width: 450px;
-      height: 450px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      overflow: visible;
-    }
+    /* Hex boundary overlay — traces the same measured polygon; visible on each cell */
+    .hex-outline { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; overflow: visible; }
 
-    .slider-track {
-      width: 100%;
-      height: 100%;
-      position: relative;
+    .agent-video {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; pointer-events: none; z-index: 1;
+      clip-path: polygon(50% 4%, 91% 27%, 91% 72%, 51% 96%, 9% 71%, 9% 27%);
+      opacity: 0; transition: opacity 0.18s ease;
     }
+    .agent-video.playing { opacity: 1; }
 
-    .slider-slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 450px;
-      height: 450px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .slider-slide.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .slider-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    /* Control arrows near sidebars */
     .slider-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background-color: var(--bg-panel);
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--color-text-muted);
-      z-index: 50;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.5s ease;
+      position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%;
+      background-color: var(--bg-panel); border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-muted); z-index: 50; box-shadow: var(--shadow-md);
+      transition: background-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease, opacity .4s ease;
     }
-
-    .slider-arrow:hover {
-      background-color: var(--bg-main);
-      color: var(--color-text-active);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    }
-
-    .slider-arrow:active {
-      transform: translateY(-50%) scale(0.95);
-    }
-
-    .slider-arrow-left {
-      left: 24px;
-    }
-
-    .slider-arrow-right {
-      right: 24px;
-    }
-
-    .slider-arrow svg {
-      width: 20px;
-      height: 20px;
-      stroke-width: 2;
-    }
+    .slider-arrow:hover { background-color: var(--bg-elevated); color: var(--text-strong); box-shadow: var(--shadow-lg); }
+    .slider-arrow:active { transform: translateY(-50%) scale(0.93); }
+    .slider-arrow-left { left: 40px; }
+    .slider-arrow-right { right: 40px; }
+    .slider-arrow svg { width: 20px; height: 20px; stroke-width: 2; }
 
     .office-variant-controls {
-      position: absolute;
-      left: 50%;
-      bottom: 26px;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 80;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
+      position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px;
+      z-index: 80; opacity: 0; pointer-events: none; transition: opacity .2s ease;
     }
-
-    .office-variant-controls.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
+    .office-variant-controls.visible { opacity: 1; pointer-events: auto; }
     .office-variant-arrow {
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.92);
-      color: var(--color-text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.10);
-      transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+      width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow-md);
+      transition: transform .2s ease, background-color .2s ease, color .2s ease;
     }
-
-    .office-variant-arrow:hover {
-      background: #ffffff;
-      color: var(--color-text-active);
-      transform: translateY(-1px);
-    }
-
-    .office-variant-arrow svg {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2;
-    }
-
+    .office-variant-arrow:hover { background: var(--bg-elevated); color: var(--text-strong); transform: translateY(-1px); }
+    .office-variant-arrow svg { width: 17px; height: 17px; stroke-width: 2; }
     .office-variant-label {
-      min-width: 132px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border-color);
-      background: rgba(255, 255, 255, 0.92);
-      color: var(--color-text-muted);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      text-align: center;
-      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
-      user-select: none;
+      min-width: 140px; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--bg-panel);
+      color: var(--text-muted); font-size: 12px; font-weight: 600; text-align: center; box-shadow: var(--shadow-md); user-select: none;
     }
 
-    /* Toggle view mode button style */
-    .beehive-toggle-btn {
-      position: absolute;
-      top: 24px;
-      z-index: 150;
-      padding: 10px 24px;
-      border-radius: 100px;
-      background-color: var(--bg-panel);
-      border: 1px solid var(--border-color);
-      color: var(--color-text-muted);
-      font-family: var(--font-family);
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      transition: background-color 0.2s ease, color 0.15s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    }
+    .slider-wrapper.beehive-mode .slider-slide { opacity: 1; pointer-events: auto; cursor: pointer; }
+    .slider-wrapper.beehive-mode .slider-slide img { filter: drop-shadow(0 10px 22px rgba(0,0,0,0.10)); transition: filter .2s ease; }
+    .slider-wrapper.beehive-mode .slider-slide:hover img { filter: drop-shadow(0 16px 30px rgba(0,0,0,0.18)) brightness(1.05); }
+    .slider-wrapper.beehive-mode .slider-arrow { opacity: 0; pointer-events: none; }
 
-    .beehive-toggle-btn:hover {
-      background-color: var(--bg-main);
-      color: var(--color-text-active);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      transform: translateY(-1px);
+    .agent-detail {
+      position: absolute; right: 0; top: 64px; bottom: 0; z-index: 55; width: 300px;
+      background: color-mix(in srgb, var(--bg-panel) 93%, transparent);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-left: 1px solid var(--border); border-top: 1px solid var(--border);
+      padding: 22px 20px; overflow-y: auto;
+      transform: translateX(100%); opacity: 0; pointer-events: none;
+      transition: transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.35s ease;
     }
+    .agent-detail.visible { transform: translateX(0); opacity: 1; pointer-events: auto; }
 
-    .beehive-toggle-btn svg {
-      width: 16px;
-      height: 16px;
+    /* Agent panel pushes slider — slider-wrapper shrinks from the right when detail is open */
+    .slider-wrapper { transition: right 0.45s cubic-bezier(0.22,1,0.36,1); }
+    #view-home.detail-open .slider-wrapper { right: 300px; }
+    .agent-detail-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .agent-detail-avatar { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0; box-shadow: var(--shadow-sm); }
+    .agent-detail-id h3 { font-size: 16px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.01em; }
+    .agent-detail-id p { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .agent-detail-task { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); background: var(--bg-panel-2); border-radius: 11px; padding: 10px 12px; margin-bottom: 14px; }
+    .agent-detail-task b { color: var(--text); font-weight: 600; }
+    .agent-detail-meta { display: flex; gap: 8px; margin-bottom: 14px; }
+    .meta-tile { flex: 1; background: var(--bg-panel-2); border-radius: 11px; padding: 9px 10px; text-align: center; }
+    .meta-tile .v { font-size: 15px; font-weight: 800; color: var(--text-strong); font-variant-numeric: tabular-nums; }
+    .meta-tile .l { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); margin-top: 2px; }
+    .agent-detail-actions { display: flex; gap: 8px; }
+    .detail-btn {
+      flex: 1; padding: 9px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--bg-elevated); color: var(--text);
+      font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background-color .18s ease, transform .15s ease, border-color .18s ease;
     }
+    .detail-btn:hover { background: var(--bg-panel-2); transform: translateY(-1px); }
+    .detail-btn svg { width: 14px; height: 14px; stroke-width: 2; }
+    .detail-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+    .detail-btn.primary:hover { background: var(--accent-strong); }
 
-    /* Active Beehive Layout changes */
-    .slider-wrapper.beehive-mode .slider-viewport {
-      overflow: visible; /* Show staggered positions smoothly */
-    }
+    .view-scroll { height: 100%; overflow-y: auto; padding: 88px 36px 40px; box-sizing: border-box; }
+    .view-inner { max-width: 980px; margin: 0 auto; }
+    .section-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-faint); margin-bottom: 14px; }
 
-    .slider-wrapper.beehive-mode .slider-slide {
-      opacity: 1;
-      pointer-events: auto;
-      filter: drop-shadow(0 10px 25px rgba(0,0,0,0.06));
+    .integration-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .integration-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px;
+      display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
     }
+    .integration-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+    .integration-top { display: flex; align-items: center; gap: 12px; }
+    .integration-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .integration-name { font-size: 14.5px; font-weight: 700; color: var(--text-strong); }
+    .integration-cat { font-size: 11.5px; color: var(--text-faint); font-weight: 500; }
+    .integration-desc { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); flex: 1; }
+    .integration-foot { display: flex; align-items: center; justify-content: space-between; }
+    .conn-state { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: var(--text-muted); }
+    .conn-state .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--slate); }
+    .conn-state.on { color: var(--green); }
+    .conn-state.on .dot { background: var(--green); box-shadow: 0 0 0 3px var(--green-soft); }
+    .conn-btn {
+      padding: 7px 14px; border-radius: 9px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-strong);
+      background: var(--bg-elevated); color: var(--text); transition: all .18s ease;
+    }
+    .conn-btn:hover { background: var(--bg-panel-2); }
+    .conn-btn.on { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 25%, transparent); color: var(--accent-strong); }
 
-    /* Coordinate offsets for the honeycomb cluster (beehive grid layout) */
-    .slider-wrapper.beehive-mode .slider-slide[data-index="0"] {
-      z-index: 5;
-    }
-    .slider-wrapper.beehive-mode .slider-slide[data-index="1"] {
-      z-index: 4;
-    }
-    .slider-wrapper.beehive-mode .slider-slide[data-index="2"] {
-      z-index: 3;
-    }
-    .slider-wrapper.beehive-mode .slider-slide[data-index="3"] {
-      z-index: 2;
-    }
-    .slider-wrapper.beehive-mode .slider-slide[data-index="4"] {
-      z-index: 1;
-    }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; box-shadow: var(--shadow-sm); }
+    .stat-card .l { font-size: 12px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 7px; }
+    .stat-card .l svg { width: 15px; height: 15px; stroke-width: 2; }
+    .stat-card .v { font-size: 30px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; margin-top: 8px; font-variant-numeric: tabular-nums; }
+    .stat-card .s { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; font-weight: 500; }
 
-    /* Hide arrows in beehive mode */
-    .slider-wrapper.beehive-mode .slider-arrow {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .panel-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 760px){ .panel-grid { grid-template-columns: 1fr; } }
+    .data-panel { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); }
+    .data-panel h3 { font-size: 13.5px; font-weight: 700; color: var(--text-strong); margin-bottom: 18px; }
 
-    /* Main central card content */
-    .main-canvas {
-      position: relative;
-      z-index: 2;
-      max-width: 600px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      animation: fadeIn 0.8s var(--transition-timing) forwards;
-    }
+    .donut-wrap { display: flex; align-items: center; gap: 22px; }
+    .donut { width: 128px; height: 128px; border-radius: 50%; flex-shrink: 0; position: relative; }
+    .donut::after { content: ""; position: absolute; inset: 22px; border-radius: 50%; background: var(--card); }
+    .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+    .donut-center .v { font-size: 24px; font-weight: 800; color: var(--text-strong); }
+    .donut-center .l { font-size: 10px; font-weight: 600; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+    .donut-legend { display: flex; flex-direction: column; gap: 9px; }
+    .legend-row { display: flex; align-items: center; gap: 9px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); }
+    .legend-row .sw { width: 11px; height: 11px; border-radius: 4px; flex-shrink: 0; }
+    .legend-row b { color: var(--text-strong); font-weight: 700; margin-left: auto; font-variant-numeric: tabular-nums; }
 
-    .main-canvas h1 {
-      font-size: 38px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--color-text-main);
-      line-height: 1.15;
-    }
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 13px; }
+    .bar-row:last-child { margin-bottom: 0; }
+    .bar-label { width: 92px; flex-shrink: 0; font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { flex: 1; height: 9px; background: var(--bg-panel-2); border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 99px; transition: width .7s var(--ease); }
+    .bar-val { width: 38px; text-align: right; font-size: 12px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 
-    .main-canvas p {
-      font-size: 16px;
-      color: var(--color-text-muted);
-      line-height: 1.6;
-      font-weight: 400;
-    }
+    .roster { width: 100%; border-collapse: collapse; }
+    .roster th { text-align: left; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); padding: 0 10px 12px; }
+    .roster td { padding: 11px 10px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text); }
+    .roster tr td:first-child { font-weight: 600; color: var(--text-strong); }
 
-    .control-hint {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background-color: var(--bg-panel);
-      padding: 8px 16px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--color-text-muted);
-    }
+    /* View toolbar (audit filters / export) */
+    .view-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .view-toolbar select { padding: 9px 12px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--text); font-size: 13px; font-family: inherit; cursor: pointer; }
+    .view-toolbar .spacer { flex: 1; }
+    .ghost-btn { padding: 9px 14px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--text); font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: background-color .18s ease; }
+    .ghost-btn:hover { background: var(--bg-panel-2); }
+    .ghost-btn svg { width: 15px; height: 15px; stroke-width: 2; }
 
-    .key-cap {
-      background-color: var(--bg-main);
-      border: 1px solid var(--border-color);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      border-radius: 4px;
-      padding: 1px 6px;
-      font-family: monospace;
-      font-size: 11px;
-      color: var(--color-text-main);
-    }
+    /* Audit timeline */
+    .audit-head, .audit-item { display: grid; grid-template-columns: 76px 1.4fr 1fr 96px 72px 78px; gap: 12px; align-items: center; }
+    .audit-head { padding: 0 18px 10px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); }
+    .audit-head .r { text-align: right; }
+    .audit-list { background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .audit-item { padding: 11px 18px; border-top: 1px solid var(--border); font-size: 12.5px; }
+    .audit-item:first-child { border-top: none; }
+    .audit-item.flagged-row { background: color-mix(in srgb, var(--red-soft) 45%, transparent); }
+    .audit-time { color: var(--text-faint); font-family: var(--mono); font-size: 11px; }
+    .audit-agent { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .audit-agent .av { width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 11px; }
+    .audit-agent strong { font-size: 12.5px; color: var(--text-strong); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .audit-type { color: var(--text-muted); }
+    .audit-num { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+    .audit-flags { display: flex; gap: 5px; justify-content: flex-end; align-items: center; }
+    .flag-pill { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 6px; border-radius: 5px; }
+    .flag-pill.anomaly { background: var(--red-soft); color: var(--red); }
+    .flag-pill.stuck { background: var(--amber-soft); color: var(--amber); }
 
-    /* Info card list in sidebars */
-    .info-card {
-      background-color: var(--bg-main);
-      padding: 14px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.015), 0 1px 2px rgba(0, 0, 0, 0.03);
-    }
+    /* Supervision */
+    .sup-section-title { font-size: 13px; font-weight: 700; color: var(--text-strong); margin: 22px 0 12px; }
+    .sup-section-title:first-child { margin-top: 0; }
+    .sup-alert { display: flex; align-items: center; gap: 13px; padding: 14px 16px; border-radius: 14px; margin-bottom: 10px; border: 1px solid color-mix(in srgb, var(--red) 25%, transparent); background: var(--red-soft); }
+    .sup-alert.warn { border-color: color-mix(in srgb, var(--amber) 28%, transparent); background: var(--amber-soft); }
+    .sup-alert .av { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px; }
+    .sup-alert-body { flex: 1; min-width: 0; }
+    .sup-alert-body strong { font-size: 14px; color: var(--text-strong); }
+    .sup-alert-body p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .sup-alert-actions { display: flex; gap: 7px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+    .sup-btn { padding: 8px 12px; border-radius: 9px; border: 1px solid var(--border-strong); background: var(--bg-elevated); color: var(--text); font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color .18s ease, filter .18s ease; }
+    .sup-btn:hover { background: var(--bg-panel-2); }
+    .sup-btn.kill { background: var(--red); border-color: var(--red); color: #fff; }
+    .sup-btn.kill:hover { filter: brightness(.93); }
+    .sup-btn.resume { background: var(--green); border-color: var(--green); color: #fff; }
+    .sup-btn.resume:hover { filter: brightness(.95); }
+    .all-clear { text-align: center; padding: 32px 16px; border-radius: 14px; background: var(--green-soft); border: 1px solid color-mix(in srgb, var(--green) 22%, transparent); }
+    .all-clear svg { width: 32px; height: 32px; color: var(--green); margin-bottom: 10px; stroke-width: 2; }
+    .all-clear p { font-size: 13.5px; font-weight: 600; color: color-mix(in srgb, var(--green) 55%, var(--text-strong)); }
+    .ctrl-list { background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .ctrl-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-top: 1px solid var(--border); }
+    .ctrl-row:first-child { border-top: none; }
+    .ctrl-row .av { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; }
+    .ctrl-row-body { flex: 1; min-width: 0; }
+    .ctrl-row-body strong { font-size: 13px; color: var(--text-strong); display: block; }
+    .ctrl-row-body span { font-size: 11.5px; color: var(--text-muted); }
+    .ctrl-row-actions { display: flex; gap: 7px; flex-shrink: 0; }
 
-    .info-card h4 {
-      font-weight: 600;
-      font-size: 13px;
-      margin-bottom: 4px;
-      color: var(--color-text-active);
-    }
+    .status-killed { background: var(--red-soft); color: var(--red); }
+    .status-killed .dot { background: var(--red); }
+    .nav-item .nav-count.alert { background: var(--red); color: #fff; }
 
-    .info-card p {
-      font-size: 12px;
-      color: var(--color-text-muted);
-      line-height: 1.4;
-    }
+    /* RIGHT PANEL — CREATE AGENT */
+    .panel-section-title { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); }
+    .agent-count { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 3px; display: none; }
+    /* hidden — keep id alive for JS nav-count update */
+    .agent-add-btn { display: none; }
+    .agent-list { display: none; }
 
-    /* Animations */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .create-agent-panel { padding: 22px 18px; display: flex; flex-direction: column; gap: 14px; height: 100%; overflow-y: auto; }
+    .cap-header { margin-bottom: 4px; }
+    .cap-header h3 { font-size: 16px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; margin-bottom: 2px; }
+    .cap-header p { font-size: 12px; color: var(--text-muted); }
+    .cap-field { display: flex; flex-direction: column; gap: 6px; }
+    .cap-field label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); }
+    .cap-field input, .cap-field textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--border-strong);
+      background: var(--bg-panel-2); color: var(--text); font-size: 13px; font-family: var(--font);
+      resize: none; outline: none; box-sizing: border-box; transition: border-color .2s ease;
     }
+    .cap-field input:focus, .cap-field textarea:focus { border-color: var(--accent); }
+    .cap-skins { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .cap-skin {
+      aspect-ratio: 1; border-radius: 10px; overflow: hidden; cursor: pointer;
+      border: 2px solid var(--border); transition: border-color .18s ease, transform .18s ease;
+    }
+    .cap-skin:hover { transform: scale(1.05); }
+    .cap-skin.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .cap-skin img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; display: block; }
+    .cap-skin-label { font-size: 9px; font-weight: 700; text-align: center; color: var(--text-faint); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .cap-savings {
+      display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 12px;
+      background: linear-gradient(135deg, color-mix(in srgb, #10b981 12%, var(--bg-panel)), color-mix(in srgb, #0891b2 8%, var(--bg-panel)));
+      border: 1px solid color-mix(in srgb, #10b981 22%, transparent);
+      transition: border-color .3s ease, background .3s ease;
+    }
+    .cap-savings.ai-predicted {
+      background: linear-gradient(135deg, color-mix(in srgb, #10b981 18%, var(--bg-panel)), color-mix(in srgb, #6366f1 10%, var(--bg-panel)));
+      border-color: color-mix(in srgb, #6366f1 35%, transparent);
+    }
+    .cap-savings-icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
+    .cap-savings-text { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+    .cap-savings-text b { color: var(--green); }
+    .cap-savings-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 6px; border-radius: 5px; background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent-strong); margin-left: 4px; vertical-align: middle; }
+    .cap-result {
+      background: var(--bg-panel-2); border-radius: 12px; padding: 12px; font-size: 12px;
+      color: var(--text-muted); line-height: 1.6; border: 1px solid var(--border); display: none;
+    }
+    .cap-result.visible { display: block; }
+    .cap-result strong { color: var(--text); font-weight: 700; display: block; margin-bottom: 4px; }
+    .cap-btn-generate {
+      width: 100%; padding: 11px; border-radius: 11px; border: 1.5px solid var(--accent);
+      background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      transition: background .2s ease, transform .15s ease, opacity .2s ease;
+    }
+    .cap-btn-generate:hover:not(:disabled) { background: var(--accent-strong); transform: translateY(-1px); }
+    .cap-btn-generate:disabled { opacity: 0.6; cursor: default; transform: none; }
+    .cap-btn-add {
+      width: 100%; padding: 10px; border-radius: 11px; border: 1.5px solid var(--border-strong);
+      background: var(--bg-elevated); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      transition: background .2s ease, transform .15s ease;
+    }
+    .cap-btn-add:hover { background: var(--bg-panel-2); transform: translateY(-1px); }
 
-    /* Touch screen optimization */
-    @media (max-width: 768px) {
-      .sidebar {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-      }
-      #sidebar-left {
-        left: 0;
-      }
-      #sidebar-right {
-        right: 0;
-      }
+    .agent-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px; flex: 1; }
+    .agent-item {
+      position: relative; display: flex; align-items: center; gap: 12px; padding: 13px; border-radius: 14px;
+      border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow-sm); cursor: pointer;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+    }
+    .agent-item:hover { border-color: var(--border-strong); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .agent-item.active { border-color: color-mix(in srgb, var(--accent) 45%, transparent); box-shadow: 0 10px 24px -10px var(--accent); background: color-mix(in srgb, var(--accent-soft) 60%, var(--card)); }
+    .agent-avatar { width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #fff; box-shadow: var(--shadow-sm); }
+    .agent-item-body { flex: 1; min-width: 0; }
+    .agent-item-name { display: flex; align-items: center; gap: 8px; }
+    .agent-item-name strong { font-size: 13.5px; color: var(--text-strong); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .agent-item-role { font-size: 11.5px; color: var(--text-muted); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .agent-item-sub { display: flex; align-items: center; gap: 8px; margin-top: 7px; }
+    .status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+    .status-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-active { background: var(--green-soft); color: var(--green); }
+    .status-active .dot { background: var(--green); animation: pulse 2s infinite; }
+    .status-idle { background: var(--slate-soft); color: var(--slate); }
+    .status-idle .dot { background: var(--slate); }
+    .status-paused { background: var(--amber-soft); color: var(--amber); }
+    .status-paused .dot { background: var(--amber); }
+    .status-degraded { background: var(--amber-soft); color: var(--amber); }
+    .status-degraded .dot { background: var(--amber); }
+    .status-flagged { background: var(--red-soft); color: var(--red); }
+    .status-flagged .dot { background: var(--red); animation: pulse-red 2s infinite; }
+    .model-chip { font-family: var(--mono); font-size: 10px; font-weight: 500; color: var(--text-faint); background: var(--bg-panel-2); padding: 2px 7px; border-radius: 6px; }
+
+    /* Live/Demo connection chip */
+    .topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .live-chip {
+      display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 100px;
+      border: 1px solid var(--border-strong); background: var(--bg-panel); font-size: 12.5px; font-weight: 600;
+      color: var(--text-muted); cursor: pointer; box-shadow: var(--shadow-sm);
+      transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .live-chip:hover { background: var(--bg-elevated); color: var(--text-strong); box-shadow: var(--shadow-md); }
+    .live-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--slate); }
+    .live-chip.live { color: var(--green); border-color: color-mix(in srgb, var(--green) 35%, transparent); }
+    .live-chip.live .dot { background: var(--green); box-shadow: 0 0 0 3px var(--green-soft); animation: pulse 2s infinite; }
+    .live-chip.syncing .dot { background: var(--amber); animation: none; }
+
+    @keyframes pulse-red { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--red) 60%, transparent); } 70% { box-shadow: 0 0 0 5px transparent; } }
+
+    /* Governance bits in the agent detail */
+    .flag-banner { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: 11px; font-size: 11.5px; font-weight: 600; margin-bottom: 12px; }
+    .flag-banner svg { width: 15px; height: 15px; stroke-width: 2.2; flex-shrink: 0; }
+    .flag-banner.flagged { background: var(--red-soft); color: var(--red); }
+    .flag-banner.degraded { background: var(--amber-soft); color: var(--amber); }
+    .kind-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 6px; }
+    .kind-badge.productive { background: var(--green-soft); color: var(--green); }
+    .kind-badge.abuser { background: var(--red-soft); color: var(--red); }
+    .kind-badge.real { background: rgba(0,122,204,0.12); color: #007ACC; }
+    .real-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green); background: var(--green-soft); border-radius: 5px; padding: 2px 6px; animation: pulse-badge 2.4s ease-in-out infinite; }
+    @keyframes pulse-badge { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+    .real-agent-banner { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border-radius: 11px; font-size: 11.5px; font-weight: 600; margin-bottom: 12px; background: rgba(0,122,204,0.08); color: #007ACC; border: 1px solid rgba(0,122,204,0.22); }
+    .real-agent-banner svg { width: 15px; height: 15px; stroke-width: 2.2; flex-shrink: 0; }
+    .util-bar { height: 6px; border-radius: 99px; background: var(--bg-panel-2); overflow: hidden; margin-top: 5px; }
+    .util-bar > span { display: block; height: 100%; border-radius: 99px; }
+
+    .agent-item-tools { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; opacity: 0; transform: translateX(4px); transition: opacity .18s ease, transform .18s ease; }
+    .agent-item:hover .agent-item-tools, .agent-item.active .agent-item-tools { opacity: 1; transform: translateX(0); }
+    .agent-action {
+      width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px;
+      border: 1px solid var(--border-strong); background: var(--bg-elevated); color: var(--text-muted); cursor: pointer;
+      transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+    }
+    .agent-action svg { width: 13px; height: 13px; stroke-width: 2; }
+    .agent-action:hover { background: var(--bg-panel-2); color: var(--text-strong); }
+    .agent-action.delete:hover { background: var(--red-soft); color: var(--red); border-color: color-mix(in srgb, var(--red) 30%, transparent); }
+    .agent-action:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .agent-empty { text-align: center; padding: 40px 16px; color: var(--text-muted); }
+    .agent-empty svg { width: 38px; height: 38px; color: var(--text-faint); margin-bottom: 12px; stroke-width: 1.5; }
+    .agent-empty p { font-size: 13px; line-height: 1.5; }
+
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 60%, transparent); } 70% { box-shadow: 0 0 0 5px transparent; } }
+
+    /* MODAL + DIALOG + TOAST + POPOVER */
+    .overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px;
+      background: rgba(15,23,42,0.42); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; visibility: hidden; transition: opacity .25s ease; }
+    [data-theme="dark"] .overlay { background: rgba(0,0,0,0.6); }
+    .overlay.open { opacity: 1; visibility: visible; }
+    .modal {
+      width: 100%; max-width: 480px; max-height: calc(100vh - 48px); overflow-y: auto;
+      background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow-pop);
+      transform: translateY(14px) scale(0.98); transition: transform .3s var(--ease); padding: 24px;
+    }
+    .overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+    .modal-head h2 { font-size: 19px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.02em; }
+    .modal-head p { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+    .modal-close { width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg-panel); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s ease; flex-shrink: 0; }
+    .modal-close:hover { background: var(--bg-panel-2); color: var(--text-strong); }
+    .modal-close svg { width: 16px; height: 16px; stroke-width: 2; }
+
+    .field { margin-bottom: 16px; }
+    .field > label { display: block; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .field input[type="text"], .field select {
+      width: 100%; padding: 11px 13px; border-radius: 11px; border: 1px solid var(--border-strong); background: var(--bg-panel);
+      color: var(--text); font-size: 14px; font-family: inherit; transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .field input[type="text"]:focus, .field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .field-row { display: flex; gap: 12px; }
+    .field-row .field { flex: 1; }
+
+    .archetype-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); gap: 9px; }
+    .archetype-chip {
+      border: 1px solid var(--border-strong); background: var(--bg-panel); border-radius: 13px; padding: 10px 6px 9px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 7px; transition: all .18s ease; text-align: center;
+    }
+    .archetype-chip:hover { border-color: var(--accent); background: var(--bg-panel-2); }
+    .archetype-chip.selected { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+    .archetype-thumb { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #fff; }
+    .archetype-chip span { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.2; }
+
+    .modal-foot { display: flex; gap: 10px; margin-top: 22px; }
+    .btn {
+      flex: 1; padding: 12px; border-radius: 11px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-strong);
+      background: var(--bg-panel); color: var(--text); transition: all .18s ease;
+    }
+    .btn:hover { background: var(--bg-panel-2); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); box-shadow: 0 8px 18px -8px var(--accent); }
+    .btn.primary:hover { background: var(--accent-strong); }
+    .btn.danger { background: var(--red); border-color: var(--red); color: #fff; }
+    .btn.danger:hover { filter: brightness(0.94); }
+
+    .modal.confirm { max-width: 400px; }
+    .confirm-icon { width: 46px; height: 46px; border-radius: 13px; background: var(--red-soft); color: var(--red); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .confirm-icon svg { width: 23px; height: 23px; stroke-width: 2; }
+
+    .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .setting-row:last-of-type { border-bottom: none; }
+    .setting-row .info strong { display: block; font-size: 13.5px; font-weight: 600; color: var(--text-strong); }
+    .setting-row .info span { font-size: 12px; color: var(--text-muted); }
+    .switch { width: 44px; height: 25px; border-radius: 99px; background: var(--slate-soft); border: none; position: relative; cursor: pointer; flex-shrink: 0; transition: background .2s ease; }
+    .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 19px; height: 19px; border-radius: 50%; background: #fff; box-shadow: var(--shadow-sm); transition: transform .2s var(--ease); }
+    .switch.on { background: var(--accent); }
+    .switch.on::after { transform: translateX(19px); }
+
+    #toast-stack { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
+    .toast {
+      display: flex; align-items: center; gap: 11px; padding: 12px 18px; border-radius: 13px; background: var(--text-strong); color: var(--bg-panel);
+      font-size: 13.5px; font-weight: 600; box-shadow: var(--shadow-pop); pointer-events: auto; max-width: 90vw;
+      transform: translateY(16px); opacity: 0; transition: transform .35s var(--ease), opacity .35s var(--ease);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast .ic { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .toast .ic svg { width: 12px; height: 12px; stroke-width: 3; }
+    .toast.success .ic { background: var(--green); color: #fff; }
+    .toast.info .ic { background: var(--accent); color: #fff; }
+    .toast.warn .ic { background: var(--amber); color: #fff; }
+
+    .popover {
+      position: fixed; z-index: 1500; width: 240px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px;
+      box-shadow: var(--shadow-pop); padding: 8px; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .2s ease, transform .2s ease;
+    }
+    .popover.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .popover-head { display: flex; align-items: center; gap: 11px; padding: 10px; }
+    .popover-head .avatar-placeholder { width: 36px; height: 36px; font-size: 13px; }
+    .popover-head strong { font-size: 13.5px; color: var(--text-strong); display: block; }
+    .popover-head span { font-size: 11.5px; color: var(--text-muted); }
+    .popover-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; font-size: 13px; color: var(--text); cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; transition: background .15s ease; }
+    .popover-item:hover { background: var(--bg-panel-2); }
+    .popover-item svg { width: 15px; height: 15px; stroke-width: 1.9; color: var(--text-muted); }
+    .popover-divider { height: 1px; background: var(--border); margin: 6px 4px; }
+
+    @media (max-width: 900px) {
+      .sidebar { position: absolute; top: 0; bottom: 0; box-shadow: var(--shadow-lg); }
+      #sidebar-left { left: 0; }
+      #sidebar-right { right: 0; }
+      .agent-detail { width: 260px; }
+      #view-home.detail-open .slider-wrapper { right: 260px; }
     }
   </style>
 </head>
 <body>
-
   <div id="app-container">
 
     <!-- LEFT SIDEBAR -->
     <aside id="sidebar-left" class="sidebar">
-      <!-- Sidebar Header -->
       <div class="sidebar-header">
         <div class="brand-logo">
-          <div class="brand-dot"></div>
-          <span>GreenWorkspace</span>
+          <img class="brand-mark-img" src="argus-logo.png" alt="Argus logo">
+          <div>Argus<small>Agent control room</small></div>
         </div>
       </div>
 
-      <!-- Navigation Content -->
-      <div class="sidebar-navigation">
-        <div class="nav-item active">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-          </svg>
-          <span>Главная</span>
-        </div>
-        <div class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-          </svg>
-          <span>Интеграции</span>
-        </div>
-        <div class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-          </svg>
-          <span>Статистика</span>
-        </div>
+      <nav class="sidebar-navigation">
+        <div class="nav-label">Workspace</div>
+        <button class="nav-item active" data-view="home">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>
+          <span>Workspace</span>
+          <span class="nav-count" id="nav-agent-count">0</span>
+        </button>
+        <button class="nav-item" data-view="integrations">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+          <span>New Agent</span>
+          <span class="nav-count" id="nav-int-count" style="display:none"></span>
+        </button>
+        <div class="nav-label">Oversight</div>
+        <button class="nav-item" data-view="supervision">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+          <span>Supervision</span>
+          <span class="nav-count alert" id="nav-alert-count" style="display:none;">0</span>
+        </button>
+        <button class="nav-item" data-view="audit">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+          <span>Audit</span>
+        </button>
+        <button class="nav-item" data-view="analytics">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+          <span>Analytics</span>
+        </button>
+      </nav>
+
+      <div class="eco-note">
+        <span class="leaf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg></span>
+        <div><strong>Greener by design</strong><span id="eco-note-text">Every token Argus saves is energy never burned — fewer GPU-hours, less power drawn, lower CO₂.</span></div>
       </div>
 
-      <!-- Sidebar Footer (Account & Settings buttons - non-functional cosmetic triggers) -->
       <div class="sidebar-footer">
-        <div class="footer-action" title="Личный кабинет">
-          <div class="avatar-wrapper">
-            <div class="avatar-placeholder"></div>
-          </div>
-          <span>Аккаунт</span>
-        </div>
-        <div class="footer-action" title="Настройки интерфейса">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.047 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124c.072-.044.146-.086.22-.128c.332-.183.582-.495.644-.869l.214-1.28z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span>Настройки</span>
-        </div>
+        <button class="footer-action" id="account-btn" title="Account">
+          <div class="avatar-placeholder">AF</div>
+          <span>Account</span>
+        </button>
+        <button class="footer-action" id="settings-btn" title="Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.047 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span>Settings</span>
+        </button>
       </div>
     </aside>
 
-    <!-- LEFT TOGGLE TRIGGER -->
-    <div class="toggle-trigger toggle-trigger-left" id="toggle-left" title="Скрыть/показать левую панель">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-      </svg>
+    <div class="toggle-trigger toggle-trigger-left" id="toggle-left" title="Toggle left panel ([)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
     </div>
 
-    <!-- MAIN APP CANVAS -->
+    <!-- MAIN -->
     <main>
-      <div class="grid-bg"></div>
-      
-      <!-- Toggle Mode Button above slideshow -->
-      <button class="beehive-toggle-btn" id="toggle-view-mode" title="Переключить режим отображения">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-        </svg>
-        <span id="toggle-btn-text">Режим улья</span>
-      </button>
-
-      <!-- Slider Wrapper placed in center -->
-      <div id="slider-wrapper" class="slider-wrapper">
-        <button class="slider-arrow slider-arrow-left" id="slide-prev" title="Предыдущее изображение" aria-label="Назад">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-        </button>
-
-        <div class="slider-viewport">
-          <div class="slider-track" id="slider-track">
-            <div class="slider-slide active" data-index="0">
-              <img src="background images/Bria - Remove Background_0001.png" alt="Workspace Concept 1">
-            </div>
-            <div class="slider-slide" data-index="1">
-              <img src="background images/Bria - Remove Background_0002.png" alt="Workspace Concept 2">
-            </div>
-            <div class="slider-slide" data-index="2">
-              <img src="background images/Bria - Remove Background_0003.png" alt="Workspace Concept 3">
-            </div>
-            <div class="slider-slide" data-index="4">
-              <img src="background images/Bria - Remove Background_0005.png" alt="Workspace Concept 5">
-            </div>
-            <div class="slider-slide" data-index="3">
-              <img src="background images/Bria - Remove Background_0004.png" alt="Workspace Concept 4">
-            </div>
-          </div>
+      <div class="main-topbar">
+        <div class="topbar-title">
+          <h1 id="topbar-h">Workspace</h1>
+          <p id="topbar-sub">Your live agent fleet</p>
         </div>
-
-        <button class="slider-arrow slider-arrow-right" id="slide-next" title="Следующее изображение" aria-label="Вперед">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        </button>
-
-        <div class="office-variant-controls" id="office-variant-controls">
-          <button class="office-variant-arrow" id="office-variant-prev" type="button" aria-label="Предыдущая вариация офиса">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-          </button>
-          <div class="office-variant-label" id="office-variant-label">Вариации офиса</div>
-          <button class="office-variant-arrow" id="office-variant-next" type="button" aria-label="Следующая вариация офиса">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
+        <div class="topbar-actions">
+          <button class="live-chip" id="live-chip" title="Argus backend connection — click to sync"><span class="dot"></span><span id="live-chip-text">Demo</span></button>
+          <button class="pill-btn" id="toggle-view-mode" title="Switch display mode" style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+            <span id="toggle-btn-text">Nodes</span>
           </button>
         </div>
       </div>
+
+      <!-- HOME VIEW -->
+      <section class="view active" id="view-home">
+        <div class="grid-bg"></div>
+        <div id="slider-wrapper" class="slider-wrapper">
+          <button class="slider-arrow slider-arrow-left" id="slide-prev" aria-label="Previous agent">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+          </button>
+          <div class="slider-viewport"><div class="slider-track" id="slider-track"></div></div>
+          <button class="slider-arrow slider-arrow-right" id="slide-next" aria-label="Next agent">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+          </button>
+          <div class="office-variant-controls" id="office-variant-controls">
+            <button class="office-variant-arrow" id="office-variant-prev" aria-label="Previous variant">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <div class="office-variant-label" id="office-variant-label">Layout</div>
+            <button class="office-variant-arrow" id="office-variant-next" aria-label="Next variant">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="agent-detail" id="agent-detail"></div>
+      </section>
+
+      <!-- NEW AGENT VIEW (was Integrations) -->
+      <section class="view" id="view-integrations">
+        <div class="view-scroll">
+          <div class="view-inner" style="max-width:540px; margin:0 auto; padding:40px 24px;">
+            <div class="section-eyebrow">Deploy a new agent</div>
+            <h2 style="font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--text-strong);margin:8px 0 28px;">New Agent</h2>
+
+            <div style="display:flex;flex-direction:column;gap:18px;">
+
+              <div class="cap-field">
+                <label>Name</label>
+                <input id="cap-name" type="text" placeholder="e.g. Research Bot" maxlength="40">
+              </div>
+
+              <div class="cap-field">
+                <label>Task</label>
+                <textarea id="cap-task" rows="4" placeholder="What should this agent do?"></textarea>
+              </div>
+
+              <div class="cap-field">
+                <label>Character</label>
+                <div class="cap-skins" id="cap-skins" style="grid-template-columns:repeat(5,1fr);gap:10px;"></div>
+              </div>
+
+              <div class="cap-savings" id="cap-savings-box">
+                <span class="cap-savings-icon" id="cap-savings-icon">⚡</span>
+                <span class="cap-savings-text" id="cap-savings-text">With Argus your agent saves ~<b id="cap-savings-pct">68</b>% of compute via caching &amp; dedup</span>
+              </div>
+
+              <div class="cap-result" id="cap-result"></div>
+
+              <button class="cap-btn-generate" id="cap-generate" style="padding:14px;font-size:14px;">✦ Generate with AI</button>
+              <button class="cap-btn-add" id="cap-add" style="padding:13px;font-size:14px;">+ Add to fleet</button>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS VIEW -->
+      <section class="view" id="view-analytics">
+        <div class="view-scroll"><div class="view-inner" id="analytics-inner"></div></div>
+      </section>
+
+      <!-- SUPERVISION VIEW -->
+      <section class="view" id="view-supervision">
+        <div class="view-scroll"><div class="view-inner" id="supervision-inner"></div></div>
+      </section>
+
+      <!-- AUDIT VIEW -->
+      <section class="view" id="view-audit">
+        <div class="view-scroll"><div class="view-inner" id="audit-inner"></div></div>
+      </section>
     </main>
 
-    <!-- RIGHT SIDEBAR -->
-    <aside id="sidebar-right" class="sidebar">
-      <div class="right-panel-content calibration-panel">
-        <h3 class="panel-section-title">Калибровка улья</h3>
-        <p class="calibration-note">
-          Конфигурация улья зафиксирована в коде и больше не изменяется через интерфейс.
-        </p>
-      </div>
-    </aside>
-
-    <!-- RIGHT TOGGLE TRIGGER -->
-    <div class="toggle-trigger toggle-trigger-right" id="toggle-right" title="Скрыть/показать правую панель">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-      </svg>
+    <div class="toggle-trigger toggle-trigger-right" id="toggle-right" title="Toggle right panel (])">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
     </div>
 
+    <!-- RIGHT SIDEBAR — hidden; stubs kept for JS compatibility -->
+    <aside id="sidebar-right" class="sidebar">
+      <p class="agent-count" id="agent-count" style="display:none"></p>
+      <button id="add-agent-btn" class="agent-add-btn" style="display:none"></button>
+      <div id="agent-list" class="agent-list" style="display:none"></div>
+    </aside>
   </div>
 
-  <!-- Interactive script to handle transitions and states -->
+  <div class="overlay" id="modal-overlay"><div class="modal" id="modal-box"></div></div>
+  <div class="popover" id="account-popover"></div>
+  <div id="toast-stack"></div>
+
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const sidebarLeft = document.getElementById('sidebar-left');
-      const sidebarRight = document.getElementById('sidebar-right');
-      const btnLeft = document.getElementById('toggle-left');
-      const btnRight = document.getElementById('toggle-right');
+  (function () {
+    'use strict';
+    document.addEventListener('DOMContentLoaded', init);
 
-      // Expand/Collapse Left Sidebar
-      btnLeft.addEventListener('click', () => {
-        sidebarLeft.classList.toggle('collapsed');
-      });
+    /* ============================================================ CATALOGS ============================================================ */
+    const SCENES = {
+      office:  { title: 'Guardian Office', baseImage: 'background images/GUARDIAN AND OFFICE.png',
+        variants: [
+          'background images/GUARDIAN AND OFFICE.png',
+          'OFFICE ALL CHARAKTER/Bria - Remove Background_0001.png',
+          'OFFICE ALL CHARAKTER/Bria - Remove Background_0002.png',
+          'OFFICE ALL CHARAKTER/Bria - Remove Background_0003.png',
+          'OFFICE ALL CHARAKTER/Bria - Remove Background_0004.png',
+          'OFFICE ALL CHARAKTER/Bria - Remove Background_0005.png'
+        ] },
+      alchemy: { title: 'Alchemy Lab',  baseImage: 'background images/ALCHEMY AND WOMAN.png' },
+      robot:   { title: 'Robotics Bay', baseImage: 'background images/ROBOT AND ROOM.png' },
+      punk:    { title: 'Studio',       baseImage: 'background images/PINK ROOM AND PUNK.png' },
+      mage:    { title: 'Research Den', baseImage: 'background images/mag and grey office.png' }
+    };
 
-      // Expand/Collapse Right Sidebar
-      btnRight.addEventListener('click', () => {
-        sidebarRight.classList.toggle('collapsed');
-      });
+    const ARCHETYPES = [
+      { key: 'guardian',  name: 'Guardian',  role: 'Security Guardian',   sceneKey: 'office',  accent: '#4f46e5', task: 'Monitoring perimeter access logs for anomalies.' },
+      { key: 'alchemist', name: 'Alchemist', role: 'Data Alchemist',      sceneKey: 'alchemy', accent: '#db2777', task: 'Transforming raw event streams into clean datasets.' },
+      { key: 'robot',     name: 'Automaton', role: 'Automation Engineer', sceneKey: 'robot',   accent: '#7c3aed', task: 'Running the nightly deployment + smoke-test pipeline.' },
+      { key: 'punk',      name: 'Punk',      role: 'Creative Strategist',  sceneKey: 'punk',   accent: '#ec4899', task: 'Drafting campaign concepts from the latest brief.' },
+      { key: 'mage',      name: 'Mage',      role: 'Research Mage',        sceneKey: 'mage',    accent: '#0891b2', task: 'Synthesising research notes into a briefing doc.' },
+      { key: 'extension', name: 'Extension', role: 'VS Code Extension',   sceneKey: 'office',  accent: '#007ACC', task: 'Routing IDE prompts through the cheapest available model.' }
+    ];
 
-      // Slider Logic
-      const slides = document.querySelectorAll('.slider-slide');
-      const btnPrev = document.getElementById('slide-prev');
-      const btnNext = document.getElementById('slide-next');
-      const btnToggleView = document.getElementById('toggle-view-mode');
-      const sliderWrapper = document.getElementById('slider-wrapper');
-      const btnToggleText = document.getElementById('toggle-btn-text');
-      const officeVariantControls = document.getElementById('office-variant-controls');
-      const officeVariantPrev = document.getElementById('office-variant-prev');
-      const officeVariantNext = document.getElementById('office-variant-next');
-      const officeVariantLabel = document.getElementById('office-variant-label');
-      
-      let currentIndex = 0;
-      let isBeehive = false;
+    // archetypeKey → animation played once on carousel scroll / beehive enter+exit
+    const AGENT_VIDEOS = {
+      guardian:  'videos/Thinking.mp4',
+      alchemist: 'videos/404.mp4',
+      mage:      'videos/succes.mp4',
+      punk:      'videos/CONFUSED.mp4',
+      robot:     'videos/TYping.mp4',
+      extension: 'videos/TYping.mp4',
+    };
 
-      const officeCatalogIndex = 0;
-      const officeSlideImage = slides[officeCatalogIndex].querySelector('img');
-      const officeBaseImage = 'background images/Bria - Remove Background_0001.png';
-      const officeVariants = [
-        officeBaseImage,
-        'OFFICE ALL CHARAKTER/Bria - Remove Background_0001.png',
-        'OFFICE ALL CHARAKTER/Bria - Remove Background_0002.png',
-        'OFFICE ALL CHARAKTER/Bria - Remove Background_0003.png',
-        'OFFICE ALL CHARAKTER/Bria - Remove Background_0004.png',
-        'OFFICE ALL CHARAKTER/Bria - Remove Background_0005.png'
-      ];
-      let officeVariantIndex = 0;
+    const MODELS = [
+      { id: 'claude-opus-4-8',   label: 'Opus 4.8' },
+      { id: 'claude-sonnet-4-6', label: 'Sonnet 4.6' },
+      { id: 'claude-haiku-4-5',  label: 'Haiku 4.5' }
+    ];
 
-      const beehiveScale = 0.39;
-      const ratioX = 0.400;
-      const ratioY = 0.620;
-      const boxSize = 450;
+    const STATUSES = {
+      active:   { label: 'Active',   cls: 'status-active' },
+      idle:     { label: 'Idle',     cls: 'status-idle' },
+      paused:   { label: 'Paused',   cls: 'status-paused' },
+      degraded: { label: 'Degraded', cls: 'status-degraded' },
+      flagged:  { label: 'Flagged',  cls: 'status-flagged' },
+      killed:   { label: 'Killed',   cls: 'status-killed' }
+    };
 
-      function getBeehivePosition(index) {
-        const scaledSize = boxSize * beehiveScale;
-        const positions = [
-          { x: 0, y: 0 },
-          { x: ratioX * scaledSize, y: -ratioY * scaledSize },
-          { x: -ratioX * scaledSize, y: -ratioY * scaledSize },
-          { x: -2 * ratioX * scaledSize, y: 0 },
-          { x: 2 * ratioX * scaledSize, y: 0 }
-        ];
+    // Energy model — transparent, adjustable estimate (shown in the UI, not hidden).
+    const ENERGY = { whPer1kTokens: 0.4, co2gPerKwh: 420 };
+    function tokensToWh(tokens) { return (tokens / 1000) * ENERGY.whPer1kTokens; }
+    function whToCo2g(wh) { return (wh / 1000) * ENERGY.co2gPerKwh; }
+    function fmtEnergy(wh) { return wh >= 1000 ? `${(wh/1000).toFixed(2)} kWh` : `${wh.toFixed(1)} Wh`; }
+    function fmtCo2(g) { return g >= 1000 ? `${(g/1000).toFixed(2)} kg` : `${Math.round(g)} g`; }
 
-        return positions[index];
+    // Backend "character" → frontend archetype (1:1 with ARCHETYPES keys).
+    const CHAR_TO_ARCH = { guardian: 'guardian', alchemist: 'alchemist', robot: 'robot', punk: 'punk', mage: 'mage', extension: 'extension' };
+
+    const DEFAULT_INTEGRATIONS = [
+      { key: 'github',   name: 'GitHub',       cat: 'Source control', color: '#1f2328', mono: 'GH', desc: 'Let agents open PRs, review diffs and read issues.', connected: true },
+      { key: 'slack',    name: 'Slack',        cat: 'Messaging',      color: '#4a154b', mono: 'SL', desc: 'Post agent updates and receive commands from channels.', connected: true },
+      { key: 'linear',   name: 'Linear',       cat: 'Project mgmt',   color: '#5e6ad2', mono: 'LN', desc: 'Sync tasks so agents can pick up and close issues.', connected: false },
+      { key: 'notion',   name: 'Notion',       cat: 'Docs',           color: '#111111', mono: 'NO', desc: 'Read specs and write generated docs back to pages.', connected: false },
+      { key: 'gdrive',   name: 'Google Drive', cat: 'Storage',        color: '#1a73e8', mono: 'GD', desc: 'Mount documents and spreadsheets as agent context.', connected: false },
+      { key: 'postgres', name: 'Postgres',     cat: 'Database',       color: '#336791', mono: 'PG', desc: 'Give agents read access to query production data.', connected: true },
+      { key: 'webhooks', name: 'Webhooks',     cat: 'Automation',     color: '#0891b2', mono: 'WH', desc: 'Trigger agent runs from any external event.', connected: false },
+      { key: 'anthropic',name: 'Anthropic API',cat: 'Model provider', color: '#d97757', mono: 'AN', desc: 'The inference backend powering every agent.', connected: true }
+    ];
+
+    const LS = { agents: 'argus-agents-v2', integrations: 'argus-integrations-v1', settings: 'argus-settings-v1' };
+    const DEFAULT_SETTINGS = { theme: 'light', apiBase: 'http://localhost:8000', useBackend: true };
+
+    /* ============================================================ STATE ============================================================ */
+    let agents = [], integrations = [], settings = { ...DEFAULT_SETTINGS };
+    let currentIndex = 0, isBeehive = false, currentView = 'home', slides = [];
+    let dataSource = 'demo', orgState = null;   // 'demo' | 'live'
+    let auditEvents = [];
+    const acknowledged = new Set();
+    const beehiveScale = 0.39, ratioX = 0.40, ratioY = 0.62, boxSize = 560;
+    let el = {};
+    function isLive() { return dataSource === 'live'; }
+
+    /* ============================================================ UTIL ============================================================ */
+    function $(id) { return document.getElementById(id); }
+    function esc(v) { return String(v).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+    function uid() { return 'agent-' + Date.now().toString(36) + '-' + Math.floor(Math.random()*1e4).toString(36); }
+    function archetype(key) { return ARCHETYPES.find(a => a.key === key) || ARCHETYPES[0]; }
+    function modelLabel(id) {
+      const m = MODELS.find(x => x.id === id);
+      if (m) return m.label;
+      if (!id) return '—';
+      const mt = /^claude-(opus|sonnet|haiku)-(\d+)-(\d+)/.exec(id);
+      if (mt) return mt[1][0].toUpperCase() + mt[1].slice(1) + ' ' + mt[2] + '.' + mt[3];
+      return id;
+    }
+    function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+    function seededMetrics(seed) {
+      let h = 0; for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+      return { tasks: 40 + (h % 460), success: Number((90 + ((h >> 4) % 100) / 10).toFixed(1)), uptime: Number((1 + ((h >> 8) % 280) / 10).toFixed(1)) };
+    }
+
+    function getAgentImage(agent) {
+      const scene = SCENES[agent.sceneKey] || SCENES.office;
+      if (!scene.variants) return scene.baseImage;
+      const i = ((agent.variantIndex || 0) % scene.variants.length + scene.variants.length) % scene.variants.length;
+      agent.variantIndex = i;
+      return scene.variants[i];
+    }
+
+    /* ============================================================ PERSISTENCE ============================================================ */
+    function defaultAgents() {
+      return ARCHETYPES.map((a, i) => ({
+        id: 'agent-' + a.key, name: a.name, archetypeKey: a.key, sceneKey: a.sceneKey, variantIndex: 0,
+        role: a.role, model: MODELS[i % MODELS.length].id,
+        status: i === 1 ? 'idle' : (i === 3 ? 'paused' : 'active'), task: a.task, metrics: seededMetrics(a.key)
+      }));
+    }
+    function loadAgents() {
+      try {
+        const raw = localStorage.getItem(LS.agents);
+        if (!raw) return defaultAgents();
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed) || parsed.length === 0) return defaultAgents();
+        return parsed.map(a => {
+          const arch = archetype(a.archetypeKey || 'guardian');
+          return {
+            id: a.id || uid(),
+            name: (typeof a.name === 'string' && a.name.trim()) ? a.name.trim() : arch.name,
+            archetypeKey: arch.key,
+            sceneKey: SCENES[a.sceneKey] ? a.sceneKey : arch.sceneKey,
+            variantIndex: Number.isInteger(a.variantIndex) ? a.variantIndex : 0,
+            role: (typeof a.role === 'string' && a.role.trim()) ? a.role.trim() : arch.role,
+            model: MODELS.some(m => m.id === a.model) ? a.model : MODELS[0].id,
+            status: STATUSES[a.status] ? a.status : 'active',
+            task: (typeof a.task === 'string' && a.task.trim()) ? a.task : arch.task,
+            metrics: (a.metrics && typeof a.metrics.tasks === 'number') ? a.metrics : seededMetrics(a.id || arch.key)
+          };
+        });
+      } catch { return defaultAgents(); }
+    }
+    function saveAgents() { try { localStorage.setItem(LS.agents, JSON.stringify(agents)); } catch {} }
+
+    function loadIntegrations() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(LS.integrations) || '{}');
+        return DEFAULT_INTEGRATIONS.map(d => ({ ...d, connected: typeof saved[d.key] === 'boolean' ? saved[d.key] : d.connected }));
+      } catch { return DEFAULT_INTEGRATIONS.map(d => ({ ...d })); }
+    }
+    function saveIntegrations() {
+      try { const map = {}; integrations.forEach(i => map[i.key] = i.connected); localStorage.setItem(LS.integrations, JSON.stringify(map)); } catch {}
+    }
+    function loadSettings() { try { return Object.assign({ ...DEFAULT_SETTINGS }, JSON.parse(localStorage.getItem(LS.settings) || '{}')); } catch { return { ...DEFAULT_SETTINGS }; } }
+    function saveSettings() { try { localStorage.setItem(LS.settings, JSON.stringify(settings)); } catch {} }
+
+    /* ============================================================ ARGUS BACKEND CONNECTOR ============================================================ */
+    function apiBase() { return (settings.apiBase || DEFAULT_SETTINGS.apiBase).replace(/\/+$/, ''); }
+
+    // Map a backend agent (from GET /v1/agents) to a frontend agent object.
+    function mapLiveAgent(a) {
+      const archKey = CHAR_TO_ARCH[a.character] || 'guardian';
+      const arch = archetype(archKey);
+      return {
+        id: a.id,
+        name: a.name || arch.name,
+        archetypeKey: archKey,
+        sceneKey: arch.sceneKey,
+        variantIndex: 0,
+        role: a.role || arch.role,
+        model: a.model || 'claude-haiku-4-5',
+        status: STATUSES[a.status] ? a.status : 'active',
+        task: a.persona || arch.task,
+        live: {
+          calls: a.calls || 0,
+          tokens: a.tokens || 0,
+          cost: a.cost || 0,
+          quality: a.avg_quality,
+          util: a.utilization || 0,
+          action: a.budget_action || 'ok',
+          budget: a.budget || 0,
+          used: a.used || 0,
+          anomaly: !!a.anomaly,
+          stuck: !!a.stuck,
+          kind: a.kind || 'productive',
+          taskTypes: a.task_types || {},
+          activeTask: a.active_task || '',
+          providersCount: a.providers_count || 0,
+          lastHeartbeat: a.last_heartbeat || null,
+          savedCents: a.saved_cents || 0,
+        },
+        metrics: null
+      };
+    }
+
+    function updateLiveChip(stateOverride) {
+      if (!el.liveChip) return;
+      const s = stateOverride || (isLive() ? 'live' : 'demo');
+      el.liveChip.classList.toggle('live', s === 'live');
+      el.liveChip.classList.toggle('syncing', s === 'syncing');
+      el.liveChipText.textContent = s === 'live' ? 'Live · Argus' : s === 'syncing' ? 'Syncing…' : 'Demo data';
+    }
+
+    async function syncBackend({ manual = false } = {}) {
+      updateLiveChip('syncing');
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 4500);
+        const res = await fetch(apiBase() + '/v1/agents', { signal: ctrl.signal, headers: { 'Accept': 'application/json' } });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data || !Array.isArray(data.agents) || data.agents.length === 0) throw new Error('empty roster');
+
+        agents = data.agents.map(mapLiveAgent);
+        orgState = data.org || null;
+        dataSource = 'live';
+        currentIndex = clamp(currentIndex, 0, agents.length - 1);
+        updateLiveChip(); updateEcoNote(); updateAlertBadge(); renderCreatePanel();
+        renderWorkspace();
+        if (currentView === 'integrations') renderIntegrations();
+        if (currentView === 'analytics') renderAnalytics();
+        if (currentView === 'supervision') renderSupervision();
+        if (currentView === 'audit') { await fetchAudit(); renderAudit(); }
+        if (manual) toast(`Synced ${agents.length} agents from Argus`, 'success');
+        return true;
+      } catch (err) {
+        if (!isLive()) { dataSource = 'demo'; }
+        updateLiveChip();
+        if (manual) toast('Argus backend unreachable — staying in demo', 'warn');
+        return false;
       }
+    }
 
-      function applyBeehiveLayout(duration = 0.2) {
-        slides.forEach((slide, i) => {
-          gsap.killTweensOf(slide);
-          slide.classList.add('active');
-          const pos = getBeehivePosition(i);
-          gsap.to(slide, {
-            x: pos.x,
-            y: pos.y,
-            scale: beehiveScale,
-            opacity: 1,
-            pointerEvents: 'auto',
-            duration,
-            ease: duration > 0.3 ? 'back.out(1.25)' : 'power1.out'
+    function useDemoData() {
+      dataSource = 'demo';
+      orgState = null;
+      agents = loadAgents();
+      currentIndex = 0; isBeehive = false;
+      updateLiveChip(); updateEcoNote(); updateAlertBadge();
+      renderWorkspace();
+      if (currentView === 'analytics') renderAnalytics();
+      if (currentView === 'supervision') renderSupervision();
+      if (currentView === 'audit') fetchAudit().then(() => { if (currentView === 'audit') renderAudit(); });
+    }
+
+    /* ---- Energy fact (eco statement) ---- */
+    function updateEcoNote() {
+      if (!el.ecoNoteText) return;
+      const saved = (isLive() && orgState && orgState.tokens_saved) ? orgState.tokens_saved : 0;
+      if (saved > 0) {
+        const wh = tokensToWh(saved);
+        el.ecoNoteText.innerHTML = `Argus skipped redundant work this session — about <b style="color:var(--text)">${esc(fmtEnergy(wh))}</b> of compute and ${esc(fmtCo2(whToCo2g(wh)))} of CO₂ never spent.`;
+      } else {
+        el.ecoNoteText.textContent = 'Every token Argus saves is energy never burned — fewer GPU-hours, less power drawn, lower CO₂.';
+      }
+    }
+
+    /* ---- Supervision alerts badge ---- */
+    function updateAlertBadge() {
+      if (!el.navAlertCount) return;
+      const n = agents.filter(a => a.status === 'flagged' || a.status === 'killed').length;
+      el.navAlertCount.textContent = n;
+      el.navAlertCount.style.display = n > 0 ? 'inline-block' : 'none';
+    }
+
+    /* ---- Human-in-the-loop control: pause / resume / kill ---- */
+    async function controlAgent(id, action) {
+      const agent = agents.find(x => x.id === id);
+      const verb = action === 'resume' ? 'reactivated' : action === 'kill' ? 'killed' : 'paused';
+      if (isLive()) {
+        try {
+          const res = await fetch(apiBase() + '/v1/agents/' + encodeURIComponent(id) + '/control', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action })
           });
-        });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          if (action === 'resume') acknowledged.delete(id);
+          await syncBackend();
+          renderSupervision();
+          toast(`${agent ? agent.name : 'Agent'} ${verb}`, action === 'resume' ? 'success' : 'warn');
+        } catch { toast('Control failed — backend unreachable', 'warn'); }
+      } else {
+        if (!agent) return;
+        agent.status = action === 'resume' ? 'active' : action === 'kill' ? 'killed' : 'paused';
+        if (action === 'resume') acknowledged.delete(id);
+        saveAgents(); renderWorkspace(); renderSupervision(); updateAlertBadge();
+        toast(`${agent.name} ${verb}`, action === 'resume' ? 'success' : 'warn');
       }
+    }
 
-      function updateOfficeVariantControls() {
-        const isOfficeSelected = !isBeehive && currentIndex === officeCatalogIndex;
-        officeVariantControls.classList.toggle('visible', isOfficeSelected);
-        officeVariantLabel.textContent = officeVariantIndex === 0
-          ? 'Оригинал офиса'
-          : `Вариация ${officeVariantIndex}/${officeVariants.length - 1}`;
+    /* ---- Audit trail ---- */
+    let auditFilter = 'all';
+    async function fetchAudit() {
+      if (isLive()) {
+        try {
+          const res = await fetch(apiBase() + '/v1/audit?limit=200', { headers: { 'Accept': 'application/json' } });
+          if (!res.ok) throw new Error();
+          auditEvents = (await res.json()).events || [];
+        } catch { auditEvents = []; }
+      } else {
+        auditEvents = synthAudit();
       }
-
-      function setOfficeVariant(index) {
-        officeVariantIndex = (index + officeVariants.length) % officeVariants.length;
-        officeSlideImage.src = officeVariants[officeVariantIndex];
-        updateOfficeVariantControls();
+    }
+    function synthAudit() {
+      const types = ['qa', 'summarize', 'analysis', 'code_review', 'translation', 'generation'];
+      const now = Date.now() / 1000, rows = [];
+      if (!agents.length) return rows;
+      for (let i = 0; i < 26; i++) {
+        const ag = agents[i % agents.length];
+        const tok = 400 + ((i * 137) % 1700);
+        rows.push({ ts: now - i * 53, agent_id: ag.id, agent_name: ag.name, task_type: types[i % types.length],
+          model: ag.model, tokens: tok, cost: +((tok / 1000) * 0.004).toFixed(4), quality: 0.8 + (i % 15) / 100, anomaly: false, stuck: false });
       }
+      return rows;
+    }
+    function relTime(ts) {
+      if (!ts) return '—';
+      const s = Math.max(0, Date.now() / 1000 - ts);
+      if (s < 60) return Math.floor(s) + 's ago';
+      if (s < 3600) return Math.floor(s / 60) + 'm ago';
+      if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+      return Math.floor(s / 86400) + 'd ago';
+    }
+    function exportAudit() {
+      try {
+        const blob = new Blob([JSON.stringify(auditEvents, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'argus-audit.json'; a.click();
+        URL.revokeObjectURL(url);
+        toast('Audit exported', 'success');
+      } catch { toast('Export failed', 'warn'); }
+    }
 
-      // Initialize slide states
-      function initSlider() {
-        slides.forEach((slide, i) => {
-          gsap.killTweensOf(slide);
-          if (i === currentIndex) {
-            gsap.set(slide, {
-              x: 0,
-              y: 0,
-              scale: 1,
-              opacity: 1,
-              pointerEvents: 'auto'
-            });
-            slide.classList.add('active');
-          } else {
-            gsap.set(slide, {
-              x: 0,
-              y: 0,
-              scale: 0.85,
-              opacity: 0,
-              pointerEvents: 'none'
-            });
-            slide.classList.remove('active');
+    function renderAudit() {
+      const rows = auditEvents.filter(e => auditFilter === 'all' || e.agent_id === auditFilter);
+      el.auditInner.innerHTML = `
+        <div class="section-eyebrow">${isLive() ? 'Live · ' : ''}Audit trail — every governed call, ${auditEvents.length} events</div>
+        <div class="view-toolbar">
+          <select id="audit-filter">
+            <option value="all">All agents</option>
+            ${agents.map(a => `<option value="${a.id}"${a.id === auditFilter ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}
+          </select>
+          <div class="spacer"></div>
+          <button class="ghost-btn" id="audit-refresh"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>Refresh</button>
+          <button class="ghost-btn" id="audit-export"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>Export</button>
+        </div>
+        ${rows.length ? `
+          <div class="audit-head"><span>Time</span><span>Agent</span><span>Task</span><span>Model</span><span class="r">Tokens</span><span class="r">Cost</span></div>
+          <div class="audit-list">
+            ${rows.map(e => {
+              const ag = agents.find(a => a.id === e.agent_id);
+              const accent = archetype(ag ? ag.archetypeKey : 'guardian').accent;
+              const flagged = e.anomaly || e.stuck;
+              return `<div class="audit-item${flagged ? ' flagged-row' : ''}">
+                <span class="audit-time">${relTime(e.ts)}</span>
+                <span class="audit-agent"><span class="av" style="background:${accent}">${esc((e.agent_name || '?')[0])}</span><strong>${esc(e.agent_name || e.agent_id)}</strong></span>
+                <span class="audit-type">${esc(e.task_type || '—')}</span>
+                <span><span class="model-chip">${esc(modelLabel(e.model))}</span></span>
+                <span class="audit-num">${(e.tokens || 0).toLocaleString()}</span>
+                <span class="audit-num audit-flags">${e.anomaly ? '<span class="flag-pill anomaly">anomaly</span>' : ''}${e.stuck ? '<span class="flag-pill stuck">stuck</span>' : ''}<span>${fmtCost(e.cost)}</span></span>
+              </div>`;
+            }).join('')}
+          </div>` : `<div class="data-panel" style="text-align:center;color:var(--text-muted);font-size:13px;padding:34px;">No events yet. ${isLive() ? 'Run agent traffic to populate the trail.' : 'Connect to the Argus backend for the live audit trail.'}</div>`}`;
+      $('audit-filter').onchange = (e) => { auditFilter = e.target.value; renderAudit(); };
+      $('audit-refresh').onclick = () => fetchAudit().then(renderAudit);
+      $('audit-export').onclick = exportAudit;
+    }
+
+    /* ---- Supervision inbox ---- */
+    function alertReason(a) {
+      if (a.status === 'killed') return 'Stopped by a human operator.';
+      const L = a.live || {};
+      if (L.stuck) return 'Stuck-loop detected (SPRT) — repeating with no progress.';
+      if (L.action === 'block' || L.util >= 1) return 'Token budget exhausted — over its allocation.';
+      if (L.anomaly) return 'Token-spend anomaly detected (CUSUM).';
+      return 'Flagged by Argus governance — review recommended.';
+    }
+    function renderSupervision() {
+      const alerts = agents.filter(a => (a.status === 'flagged' || a.status === 'killed') && !acknowledged.has(a.id));
+      el.supervisionInner.innerHTML = `
+        <div class="sup-section-title">Needs attention${alerts.length ? ` · ${alerts.length}` : ''}</div>
+        ${alerts.length ? alerts.map(a => { const arch = archetype(a.archetypeKey); const killed = a.status === 'killed'; return `
+          <div class="sup-alert">
+            <span class="av" style="background:${arch.accent}">${esc(a.name[0] || 'A')}</span>
+            <div class="sup-alert-body"><strong>${esc(a.name)}</strong><p>${esc(alertReason(a))}</p></div>
+            <div class="sup-alert-actions">
+              <button class="sup-btn" data-ack="${a.id}">Acknowledge</button>
+              ${killed
+                ? `<button class="sup-btn resume" data-ctl="resume" data-id="${a.id}">Reactivate</button>`
+                : `<button class="sup-btn" data-ctl="pause" data-id="${a.id}">Pause</button><button class="sup-btn kill" data-ctl="kill" data-id="${a.id}">Kill</button>`}
+            </div>
+          </div>`; }).join('')
+        : `<div class="all-clear"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg><p>All clear — every agent is within policy.</p></div>`}
+
+        <div class="sup-section-title">Fleet controls</div>
+        <div class="ctrl-list">
+          ${agents.map(a => {
+            const arch = archetype(a.archetypeKey), st = STATUSES[a.status] || STATUSES.active;
+            const paused = a.status === 'paused', killed = a.status === 'killed';
+            const isRealAgent = a.live && a.live.kind === 'real';
+            const actions = isRealAgent
+              ? `<span style="font-size:11px;color:var(--text-muted);font-style:italic;">Live integration — not controllable</span>`
+              : killed
+              ? `<button class="sup-btn resume" data-ctl="resume" data-id="${a.id}">Reactivate</button>`
+              : paused
+                ? `<button class="sup-btn resume" data-ctl="resume" data-id="${a.id}">Resume</button><button class="sup-btn kill" data-ctl="kill" data-id="${a.id}">Kill</button>`
+                : `<button class="sup-btn" data-ctl="pause" data-id="${a.id}">Pause</button><button class="sup-btn kill" data-ctl="kill" data-id="${a.id}">Kill</button>`;
+            return `<div class="ctrl-row">
+              <span class="av" style="background:${arch.accent}">${esc(a.name[0] || 'A')}</span>
+              <div class="ctrl-row-body"><strong>${esc(a.name)}</strong><span>${esc(a.role)}</span></div>
+              <span class="status-badge ${st.cls}"><span class="dot"></span>${st.label}</span>
+              <div class="ctrl-row-actions">${actions}</div>
+            </div>`;
+          }).join('')}
+        </div>`;
+      el.supervisionInner.querySelectorAll('[data-ack]').forEach(b => b.onclick = () => { acknowledged.add(b.getAttribute('data-ack')); updateAlertBadge(); renderSupervision(); });
+      el.supervisionInner.querySelectorAll('[data-ctl]').forEach(b => b.onclick = () => controlAgent(b.getAttribute('data-id'), b.getAttribute('data-ctl')));
+    }
+
+    /* ============================================================ TOASTS ============================================================ */
+    const ICONS = {
+      success: '<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>',
+      info: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 4h.01"/>',
+      warn: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01"/>'
+    };
+    function toast(msg, kind) {
+      kind = kind || 'success';
+      const t = document.createElement('div');
+      t.className = 'toast ' + kind;
+      t.innerHTML = `<span class="ic"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">${ICONS[kind]}</svg></span><span>${esc(msg)}</span>`;
+      el.toastStack.appendChild(t);
+      requestAnimationFrame(() => t.classList.add('show'));
+      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 2600);
+    }
+
+    /* ============================================================ MODAL ============================================================ */
+    function openModal(html) {
+      el.modalBox.innerHTML = html;
+      el.modalOverlay.classList.add('open');
+      const f = el.modalBox.querySelector('input, select, button');
+      if (f) setTimeout(() => f.focus(), 60);
+    }
+    function closeModal() { el.modalOverlay.classList.remove('open'); }
+
+    function confirmDialog({ title, body, confirmLabel, danger, onConfirm }) {
+      openModal(`
+        <div class="confirm-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
+        <div class="modal-head" style="margin-bottom:8px;"><div><h2>${esc(title)}</h2></div></div>
+        <p style="font-size:13.5px;color:var(--text-muted);line-height:1.55;">${esc(body)}</p>
+        <div class="modal-foot">
+          <button class="btn" data-act="cancel">Cancel</button>
+          <button class="btn ${danger ? 'danger' : 'primary'}" data-act="confirm">${esc(confirmLabel || 'Confirm')}</button>
+        </div>`);
+      el.modalBox.querySelector('[data-act="cancel"]').onclick = closeModal;
+      el.modalBox.querySelector('[data-act="confirm"]').onclick = () => { closeModal(); onConfirm && onConfirm(); };
+    }
+
+    function openAgentModal(existing) {
+      const editing = !!existing;
+      const draft = editing ? { ...existing } : { archetypeKey: ARCHETYPES[0].key, name: '', role: ARCHETYPES[0].role, model: MODELS[0].id, status: 'active' };
+      openModal(`
+        <div class="modal-head">
+          <div><h2>${editing ? 'Configure agent' : 'New agent'}</h2><p>${editing ? 'Update this agent’s setup.' : 'Pick a character, give it a role and a model.'}</p></div>
+          <button class="modal-close" data-act="close"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div class="field">
+          <label>Character</label>
+          <div class="archetype-grid" id="arch-grid">
+            ${ARCHETYPES.map(a => `
+              <button type="button" class="archetype-chip${a.key === draft.archetypeKey ? ' selected' : ''}" data-arch="${a.key}">
+                <span class="archetype-thumb" style="background:${a.accent}">${esc(a.name[0])}</span><span>${esc(a.name)}</span>
+              </button>`).join('')}
+          </div>
+        </div>
+        <div class="field"><label for="f-name">Agent name</label><input type="text" id="f-name" maxlength="40" placeholder="e.g. Sentinel" value="${esc(draft.name)}"></div>
+        <div class="field"><label for="f-role">Role</label><input type="text" id="f-role" maxlength="48" placeholder="What does it do?" value="${esc(draft.role)}"></div>
+        <div class="field-row">
+          <div class="field"><label for="f-model">Model</label><select id="f-model">${MODELS.map(m => `<option value="${m.id}"${m.id === draft.model ? ' selected' : ''}>${m.label}</option>`).join('')}</select></div>
+          <div class="field"><label for="f-status">Status</label><select id="f-status">${Object.keys(STATUSES).map(s => `<option value="${s}"${s === (draft.status||'active') ? ' selected' : ''}>${STATUSES[s].label}</option>`).join('')}</select></div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn" data-act="close">Cancel</button>
+          <button class="btn primary" data-act="save">${editing ? 'Save changes' : 'Create agent'}</button>
+        </div>`);
+
+      const nameInput = $('f-name'), roleInput = $('f-role');
+      let selectedArch = draft.archetypeKey;
+      let nameTouched = editing && draft.name !== archetype(draft.archetypeKey).name;
+      let roleTouched = editing && draft.role !== archetype(draft.archetypeKey).role;
+      nameInput.addEventListener('input', () => { nameTouched = true; });
+      roleInput.addEventListener('input', () => { roleTouched = true; });
+
+      el.modalBox.querySelectorAll('[data-arch]').forEach(chip => chip.addEventListener('click', () => {
+        selectedArch = chip.getAttribute('data-arch');
+        el.modalBox.querySelectorAll('.archetype-chip').forEach(c => c.classList.toggle('selected', c === chip));
+        const a = archetype(selectedArch);
+        if (!nameTouched || !nameInput.value.trim()) nameInput.value = a.name;
+        if (!roleTouched || !roleInput.value.trim()) roleInput.value = a.role;
+      }));
+
+      el.modalBox.querySelectorAll('[data-act="close"]').forEach(b => b.onclick = closeModal);
+      el.modalBox.querySelector('[data-act="save"]').onclick = () => {
+        const a = archetype(selectedArch);
+        const name = nameInput.value.trim() || a.name;
+        const role = roleInput.value.trim() || a.role;
+        const model = $('f-model').value, status = $('f-status').value;
+        if (editing) {
+          const target = agents.find(x => x.id === existing.id);
+          if (target) {
+            const sceneChanged = target.archetypeKey !== selectedArch;
+            Object.assign(target, { name, role, model, status, archetypeKey: selectedArch });
+            if (sceneChanged) { target.sceneKey = a.sceneKey; target.variantIndex = 0; }
           }
-        });
+          saveAgents(); renderWorkspace(); closeModal(); toast(`“${name}” updated`, 'success');
+        } else {
+          agents.push({ id: uid(), name, archetypeKey: selectedArch, sceneKey: a.sceneKey, variantIndex: 0, role, model, status, task: a.task, metrics: seededMetrics(uid()) });
+          currentIndex = agents.length - 1;
+          saveAgents();
+          if (currentView !== 'home') switchView('home');
+          renderWorkspace(); closeModal(); toast(`“${name}” deployed`, 'success');
+        }
+      };
+    }
 
-        updateOfficeVariantControls();
+    /* ============================================================ RENDER: AGENT LIST ============================================================ */
+    function renderAgentList() {
+      const live = isLive();
+      el.agentCount.textContent = live
+        ? `${agents.length} live agent${agents.length === 1 ? '' : 's'}`
+        : `${agents.length} agent${agents.length === 1 ? '' : 's'}`;
+      el.navAgentCount.textContent = agents.length;
+      el.addAgentBtn.style.display = live ? 'none' : 'inline-flex';
+      if (agents.length === 0) {
+        el.agentList.innerHTML = `<div class="agent-empty"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><p>No agents yet.<br>Add one to start building your fleet.</p></div>`;
+        return;
+      }
+      el.agentList.innerHTML = agents.map((agent, index) => {
+        const a = archetype(agent.archetypeKey), st = STATUSES[agent.status] || STATUSES.active;
+        return `
+          <div class="agent-item${index === currentIndex ? ' active' : ''}" data-focus="${agent.id}" role="button" tabindex="0">
+            <div class="agent-avatar" style="background:${a.accent}">${esc(agent.name[0] || 'A')}</div>
+            <div class="agent-item-body">
+              <div class="agent-item-name"><strong>${esc(agent.name)}</strong>${agent.live && agent.live.kind === 'real' ? ' <span class="real-badge">● Live</span>' : ''}</div>
+              <div class="agent-item-role">${esc(agent.role)}</div>
+              <div class="agent-item-sub">
+                <span class="status-badge ${st.cls}"><span class="dot"></span>${st.label}</span>
+                <span class="model-chip">${esc(modelLabel(agent.model))}</span>
+              </div>
+            </div>
+            ${live ? '' : `<div class="agent-item-tools">
+              <button class="agent-action" data-edit="${agent.id}" title="Configure" aria-label="Configure agent"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg></button>
+              <button class="agent-action delete" data-delete="${agent.id}" title="Remove" aria-label="Remove agent"${agents.length === 1 ? ' disabled' : ''}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></button>
+            </div>`}
+          </div>`;
+      }).join('');
+    }
+
+    /* ============================================================ RENDER: DETAIL ============================================================ */
+    function fmtCost(c) { c = c || 0; return c >= 1 ? `$${c.toFixed(2)}` : `$${c.toFixed(3)}`; }
+
+    function renderDetail() {
+      const agent = agents[currentIndex];
+      const show = currentView === 'home' && !isBeehive && !!agent;
+      el.agentDetail.classList.toggle('visible', show);
+      el.viewHome.classList.toggle('detail-open', show);
+      if (!show || !agent) return;
+      const a = archetype(agent.archetypeKey), st = STATUSES[agent.status] || STATUSES.active;
+      const head = `
+        <div class="agent-detail-head">
+          <div class="agent-detail-avatar" style="background:${a.accent}">${esc(agent.name[0] || 'A')}</div>
+          <div class="agent-detail-id"><h3>${esc(agent.name)}</h3><p>${esc(agent.role)} · ${esc(modelLabel(agent.model))}</p></div>
+          <span class="status-badge ${st.cls}" style="margin-left:auto;"><span class="dot"></span>${st.label}</span>
+        </div>`;
+
+      if (agent.live) {
+        // Real Extension agent — show live telemetry from the VS Code extension
+        if (agent.live.kind === 'real') {
+          const L = agent.live;
+          const savedDollars = (L.savedCents || 0) / 100;
+          const hbAge = L.lastHeartbeat ? relTime(L.lastHeartbeat) : 'no signal';
+          el.agentDetail.innerHTML = `
+            ${head}
+            <div class="real-agent-banner">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+              Live VS Code Extension — real telemetry from your IDE
+            </div>
+            <div class="agent-detail-task"><b>Active operation</b><br>${esc(L.activeTask || 'Idle — waiting for the next prompt')}</div>
+            <div class="agent-detail-meta">
+              <div class="meta-tile"><div class="v">${(L.calls || 0).toLocaleString()}</div><div class="l">Prompts run</div></div>
+              <div class="meta-tile"><div class="v">${fmtCost(L.cost || 0)}</div><div class="l">Local spend</div></div>
+              <div class="meta-tile"><div class="v">${fmtCost(savedDollars)}</div><div class="l">Saved vs full</div></div>
+            </div>
+            <div style="font-size:11.5px;color:var(--text-muted);line-height:1.7;margin-top:10px;">
+              Providers connected: <b style="color:var(--text)">${L.providersCount || 0}/3</b><br>
+              Last heartbeat: <b style="color:var(--text)">${hbAge}</b>
+            </div>`;
+          return;
+        }
+
+        const L = agent.live;
+        const q = (L.quality != null) ? `${Math.round(L.quality * 100)}%` : '—';
+        const util = Math.round((L.util || 0) * 100);
+        const utilColor = util >= 100 ? 'var(--red)' : util >= 80 ? 'var(--amber)' : 'var(--green)';
+        let banner = '';
+        if (L.anomaly || L.stuck || L.action === 'block') {
+          const why = L.stuck ? 'Stuck-loop detected (SPRT)' : L.action === 'block' ? 'Budget exhausted — calls blocked' : 'Token anomaly detected (CUSUM)';
+          banner = `<div class="flag-banner flagged"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>${why}</div>`;
+        } else if (L.action === 'degrade' || util >= 80) {
+          banner = `<div class="flag-banner degraded"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>Near budget — Argus auto-routed to a cheaper model</div>`;
+        }
+        el.agentDetail.innerHTML = `
+          ${head}
+          ${banner}
+          <div class="agent-detail-task" style="display:flex;align-items:flex-start;gap:8px;justify-content:space-between;">
+            <span>${esc(agent.task)}</span>
+            <span class="kind-badge ${L.kind === 'abuser' ? 'abuser' : L.kind === 'real' ? 'real' : 'productive'}" style="flex-shrink:0;">${L.kind === 'abuser' ? 'Abuser' : L.kind === 'real' ? 'Real' : 'Healthy'}</span>
+          </div>
+          <div class="agent-detail-meta">
+            <div class="meta-tile"><div class="v">${(L.calls || 0).toLocaleString()}</div><div class="l">Calls</div></div>
+            <div class="meta-tile"><div class="v">${(L.tokens || 0).toLocaleString()}</div><div class="l">Tokens</div></div>
+            <div class="meta-tile"><div class="v">${fmtCost(L.cost)}</div><div class="l">Spend</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">
+            <span>Budget used</span><span style="color:${utilColor}">${util}% · quality ${q}</span>
+          </div>
+          <div class="util-bar"><span style="width:${Math.min(util,100)}%;background:${utilColor}"></span></div>
+          <div class="agent-detail-actions" style="margin-top:14px;">
+            ${(agent.status === 'killed' || agent.status === 'paused')
+              ? `<button class="detail-btn" data-act="ctl" data-ctl="resume"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/></svg> ${agent.status === 'killed' ? 'Reactivate' : 'Resume'}</button>`
+              : `<button class="detail-btn" data-act="ctl" data-ctl="pause"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/></svg> Pause</button>`}
+            <button class="detail-btn primary" data-act="supervise"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg> Supervise</button>
+          </div>`;
+        const ctlBtn = el.agentDetail.querySelector('[data-act="ctl"]');
+        if (ctlBtn) ctlBtn.onclick = () => controlAgent(agent.id, ctlBtn.getAttribute('data-ctl'));
+        el.agentDetail.querySelector('[data-act="supervise"]').onclick = () => switchView('supervision');
+        return;
       }
 
-      initSlider();
+      const m = agent.metrics || seededMetrics(agent.id), isPaused = agent.status === 'paused';
+      el.agentDetail.innerHTML = `
+        ${head}
+        <div class="agent-detail-task"><b>Current task</b><br>${esc(agent.task)}</div>
+        <div class="agent-detail-meta">
+          <div class="meta-tile"><div class="v">${m.tasks.toLocaleString()}</div><div class="l">Tasks</div></div>
+          <div class="meta-tile"><div class="v">${m.success}%</div><div class="l">Success</div></div>
+          <div class="meta-tile"><div class="v">${m.uptime}d</div><div class="l">Uptime</div></div>
+        </div>
+        <div class="agent-detail-actions">
+          <button class="detail-btn" data-act="toggle-status">${isPaused
+            ? '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/></svg> Resume'
+            : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/></svg> Pause'}</button>
+          <button class="detail-btn primary" data-act="configure"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.398.164.855.142 1.205-.108l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124-.072.044-.146.087-.22.128-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87-.072-.041-.146-.083-.22-.127-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Configure</button>
+        </div>`;
+      el.agentDetail.querySelector('[data-act="toggle-status"]').onclick = () => toggleStatus(agent.id);
+      el.agentDetail.querySelector('[data-act="configure"]').onclick = () => openAgentModal(agent);
+    }
 
-      // Show Slide (Standard slideshow mode)
-      function showSlide(index, direction) {
-        if (isBeehive) return; 
-        if (index === currentIndex) return;
+    function toggleStatus(id) {
+      const agent = agents.find(x => x.id === id);
+      if (!agent) return;
+      agent.status = agent.status === 'paused' ? 'active' : 'paused';
+      saveAgents(); renderWorkspace();
+      toast(`“${agent.name}” ${agent.status === 'paused' ? 'paused' : 'resumed'}`, agent.status === 'paused' ? 'warn' : 'success');
+    }
 
-        const currentSlide = slides[currentIndex];
-        const nextSlide = slides[index];
+    /* ============================================================ RENDER: SLIDES + BEEHIVE ============================================================ */
+    function renderSlides() {
+      el.sliderTrack.innerHTML = agents.map((agent, index) => {
+        const vsrc = AGENT_VIDEOS[agent.archetypeKey] || '';
+        return `
+        <div class="slider-slide${index === currentIndex ? ' active' : ''}" data-index="${index}" data-agent-id="${agent.id}">
+          <img src="${getAgentImage(agent)}" alt="${esc(agent.name)} workspace" draggable="false">
+          ${vsrc ? `<video class="agent-video" data-agent-id="${agent.id}" src="${vsrc}" muted playsinline preload="auto"></video>` : ''}
+          <svg class="hex-outline" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polygon points="50,4 91,27 91,72 51,96 9,71 9,27" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+          </svg>
+        </div>`;
+      }).join('');
+      slides = Array.from(el.sliderTrack.querySelectorAll('.slider-slide'));
+      slides.forEach((slide, index) => slide.addEventListener('click', (e) => { if (isBeehive) { e.stopPropagation(); exitBeehiveMode(index); } }));
+    }
 
-        // Kill active tweens to handle rapid clicking immediately
-        gsap.killTweensOf(currentSlide);
-        gsap.killTweensOf(nextSlide);
+    function playAgentVideo(agentId) {
+      const v = el.sliderTrack.querySelector(`.agent-video[data-agent-id="${agentId}"]`);
+      if (!v) return;
+      v.currentTime = 0;
+      v.classList.add('playing');
+      v.play().catch(() => {});
+      v.onended = () => { v.classList.remove('playing'); v.onended = null; };
+    }
 
-        const xOffset = direction === 'next' ? 120 : -120;
-
-        // Current slide flies out
-        gsap.to(currentSlide, {
-          x: -xOffset,
-          scale: 0.85,
-          opacity: 0,
-          pointerEvents: 'none',
-          duration: 0.45,
-          ease: 'power2.inOut',
-          onComplete: () => {
-            currentSlide.classList.remove('active');
-          }
-        });
-
-        // Next slide slides in from opposite side
-        gsap.set(nextSlide, {
-          x: xOffset,
-          scale: 0.85,
-          opacity: 0
-        });
-
-        nextSlide.classList.add('active');
-
-        gsap.to(nextSlide, {
-          x: 0,
-          scale: 1,
-          opacity: 1,
-          pointerEvents: 'auto',
-          duration: 0.45,
-          ease: 'power2.inOut'
-        });
-
-        currentIndex = index;
-        updateOfficeVariantControls();
-      }
-
-      btnPrev.addEventListener('click', () => {
-        const nextIndex = (currentIndex - 1 + slides.length) % slides.length;
-        showSlide(nextIndex, 'prev');
+    function playAllVideos() {
+      el.sliderTrack.querySelectorAll('.agent-video').forEach(v => {
+        v.currentTime = 0;
+        v.classList.add('playing');
+        v.play().catch(() => {});
+        v.onended = () => { v.classList.remove('playing'); v.onended = null; };
       });
+    }
 
-      btnNext.addEventListener('click', () => {
-        const nextIndex = (currentIndex + 1) % slides.length;
-        showSlide(nextIndex, 'next');
+    function getHexDistance(q, r) { return Math.max(Math.abs(q), Math.abs(r), Math.abs(-q - r)); }
+    function generateAxialOrder(count) {
+      const coords = [], radius = Math.max(1, count);
+      for (let q = -radius; q <= radius; q++) for (let r = -radius; r <= radius; r++) { const d = getHexDistance(q, r); if (d <= radius) coords.push({ q, r, d }); }
+      coords.sort((l, x) => {
+        if (l.d !== x.d) return l.d - x.d;
+        const ly = -l.r, xy = -x.r; if (ly !== xy) return ly - xy;
+        const lx = 2 * l.q + l.r, xx = 2 * x.q + x.r; if (lx !== xx) return lx - xx;
+        return l.q - x.q;
       });
+      return coords.slice(0, count);
+    }
+    function beehivePosition(index) {
+      const scaled = boxSize * beehiveScale, coords = generateAxialOrder(agents.length), c = coords[index] || { q: 0, r: 0 };
+      return { x: (2 * c.q + c.r) * ratioX * scaled, y: -c.r * ratioY * scaled };
+    }
 
-      // Enter/Exit Beehive Mode
-      function enterBeehiveMode() {
-        isBeehive = true;
-        sliderWrapper.classList.add('beehive-mode');
-        btnToggleText.textContent = 'Режим слайдов';
-        updateOfficeVariantControls();
+    function initSlider() {
+      slides.forEach((slide, i) => {
+        gsap.killTweensOf(slide);
+        slide.style.left = '0px'; slide.style.top = '0px'; slide.style.transition = '';
+        if (i === currentIndex) { gsap.set(slide, { x: 0, y: 0, scale: 1, opacity: 1, pointerEvents: 'auto' }); slide.classList.add('active'); }
+        else { gsap.set(slide, { x: 0, y: 0, scale: 0.85, opacity: 0, pointerEvents: 'none' }); slide.classList.remove('active'); }
+      });
+      updateVariantControls();
+    }
 
-        // Hide slider arrow controls
-        gsap.to([btnPrev, btnNext], {
-          opacity: 0,
-          pointerEvents: 'none',
-          duration: 0.3
-        });
+    function applyBeehiveLayout(duration) {
+      duration = Math.max(duration || 0.2, 0.2);
+      slides.forEach((slide, i) => {
+        gsap.killTweensOf(slide); slide.classList.add('active');
+        const pos = beehivePosition(i);
+        slide.style.transition = `opacity ${duration}s ease, transform ${duration}s cubic-bezier(0.22,1,0.36,1)`;
+        slide.style.left = pos.x + 'px'; slide.style.top = pos.y + 'px';
+        slide.style.pointerEvents = 'auto'; slide.style.opacity = '1'; slide.style.transform = `scale(${beehiveScale})`;
+      });
+    }
 
-        applyBeehiveLayout(0.7);
-      }
+    function showSlide(index, direction) {
+      if (isBeehive || index === currentIndex || !slides[index]) return;
+      const cur = slides[currentIndex], next = slides[index];
+      gsap.killTweensOf(cur); gsap.killTweensOf(next);
+      const xOffset = direction === 'next' ? 120 : -120;
+      gsap.to(cur, { x: -xOffset, scale: 0.85, opacity: 0, pointerEvents: 'none', duration: 0.45, ease: 'power2.inOut', onComplete: () => cur.classList.remove('active') });
+      gsap.set(next, { x: xOffset, scale: 0.85, opacity: 0 });
+      next.classList.add('active');
+      gsap.to(next, { x: 0, scale: 1, opacity: 1, pointerEvents: 'auto', duration: 0.45, ease: 'power2.inOut' });
+      currentIndex = index;
+      renderAgentList(); renderDetail(); updateVariantControls();
+      playAgentVideo(agents[index]?.id);
+    }
 
-      function exitBeehiveMode(targetIndex = currentIndex) {
-        isBeehive = false;
-        sliderWrapper.classList.remove('beehive-mode');
-        btnToggleText.textContent = 'Режим улья';
+    function enterBeehiveMode() {
+      if (agents.length < 2) { toast('Add another agent to see the hive', 'info'); return; }
+      isBeehive = true;
+      el.sliderWrapper.classList.add('beehive-mode');
+      el.toggleBtnText.textContent = 'Focus';
+      el.topbarSub.textContent = 'Hive view · click a node to focus';
+      renderDetail();
+      gsap.to([el.btnPrev, el.btnNext], { opacity: 0, pointerEvents: 'none', duration: 0.3 });
+      applyBeehiveLayout(0.7); updateVariantControls();
+      playAllVideos();
+    }
 
-        // Show slider arrow controls
-        gsap.to([btnPrev, btnNext], {
-          opacity: 1,
-          pointerEvents: 'auto',
-          duration: 0.3
-        });
+    function exitBeehiveMode(targetIndex) {
+      if (targetIndex == null) targetIndex = currentIndex;
+      isBeehive = false;
+      el.sliderWrapper.classList.remove('beehive-mode');
+      el.toggleBtnText.textContent = 'Nodes';
+      el.topbarSub.textContent = 'Your live agent fleet';
+      currentIndex = clamp(targetIndex, 0, agents.length - 1);
+      renderAgentList(); updateVariantControls();
 
-        currentIndex = targetIndex;
-  updateOfficeVariantControls();
+      slides.forEach((slide, i) => {
+        gsap.killTweensOf(slide);
+        // Capture beehive CSS offsets BEFORE we zero them
+        const bx = parseFloat(slide.style.left) || 0;
+        const by = parseFloat(slide.style.top) || 0;
+        slide.style.left = '0px'; slide.style.top = '0px'; slide.style.transition = '';
 
-        // Animate slides back: target zoom center, other ones hide
-        slides.forEach((slide, i) => {
-          gsap.killTweensOf(slide);
-          if (i === targetIndex) {
-            slide.classList.add('active');
-            gsap.to(slide, {
-              x: 0,
-              y: 0,
-              scale: 1,
-              opacity: 1,
-              pointerEvents: 'auto',
-              duration: 0.6,
-              ease: 'power2.inOut'
-            });
-          } else {
-            gsap.to(slide, {
-              x: 0,
-              y: 0,
-              scale: 0.85,
-              opacity: 0,
-              pointerEvents: 'none',
-              duration: 0.6,
-              ease: 'power2.inOut',
+        if (i === currentIndex) {
+          slide.classList.add('active');
+          // Zoom the chosen agent in from its beehive spot to fill the viewport
+          gsap.fromTo(slide,
+            { x: bx, y: by, scale: beehiveScale, opacity: 1 },
+            { x: 0, y: 0, scale: 1, opacity: 1, pointerEvents: 'auto',
+              duration: 0.75, ease: 'power3.inOut' }
+          );
+        } else {
+          // Others shrink in place and dissolve
+          gsap.fromTo(slide,
+            { x: bx, y: by, scale: beehiveScale, opacity: 1 },
+            { x: bx, y: by, scale: beehiveScale * 0.55, opacity: 0,
+              pointerEvents: 'none', duration: 0.3, ease: 'power2.in',
               onComplete: () => {
                 slide.classList.remove('active');
+                gsap.set(slide, { x: 0, y: 0, scale: 0.85, opacity: 0 });
               }
-            });
-          }
-        });
+            }
+          );
+        }
+      });
+
+      // Arrows and detail panel appear after the zoom lands
+      gsap.to([el.btnPrev, el.btnNext], { opacity: 1, pointerEvents: 'auto', duration: 0.3, delay: 0.55 });
+      setTimeout(() => renderDetail(), 500);
+      playAgentVideo(agents[currentIndex]?.id);
+    }
+
+    function updateVariantControls() {
+      const agent = agents[currentIndex], scene = agent ? SCENES[agent.sceneKey] : null;
+      const showable = currentView === 'home' && !isBeehive && scene && scene.variants;
+      el.variantControls.classList.toggle('visible', !!showable);
+      if (!showable) return;
+      el.variantLabel.textContent = agent.variantIndex === 0 ? 'Default layout' : `Layout ${agent.variantIndex}/${scene.variants.length - 1}`;
+    }
+    function setVariant(index) {
+      const agent = agents[currentIndex]; if (!agent) return;
+      const scene = SCENES[agent.sceneKey]; if (!scene || !scene.variants) return;
+      agent.variantIndex = (index + scene.variants.length) % scene.variants.length;
+      saveAgents(); renderSlides(); initSlider();
+    }
+
+    function focusAgent(index) {
+      if (index < 0 || index >= agents.length) return;
+      if (currentView !== 'home') switchView('home');
+      currentIndex = index;
+      if (isBeehive) exitBeehiveMode(index);
+      else { initSlider(); renderAgentList(); renderDetail(); }
+    }
+
+    function renderWorkspace() {
+      currentIndex = clamp(currentIndex, 0, Math.max(0, agents.length - 1));
+      renderSlides(); renderAgentList(); initSlider(); renderDetail();
+      if (isBeehive && agents.length >= 2) applyBeehiveLayout(0.2);
+      else if (isBeehive) exitBeehiveMode(currentIndex);
+    }
+
+    /* ============================================================ RENDER: INTEGRATIONS ============================================================ */
+    function renderIntegrations() {
+      el.navIntCount.textContent = integrations.filter(i => i.connected).length;
+      if (!el.integrationGrid) { renderCreatePanel(); return; }
+      el.integrationGrid.innerHTML = integrations.map(i => `
+        <div class="integration-card">
+          <div class="integration-top">
+            <div class="integration-icon" style="background:${i.color}">${esc(i.mono)}</div>
+            <div><div class="integration-name">${esc(i.name)}</div><div class="integration-cat">${esc(i.cat)}</div></div>
+          </div>
+          <div class="integration-desc">${esc(i.desc)}</div>
+          <div class="integration-foot">
+            <span class="conn-state${i.connected ? ' on' : ''}"><span class="dot"></span>${i.connected ? 'Connected' : 'Not connected'}</span>
+            <button class="conn-btn${i.connected ? ' on' : ''}" data-int="${i.key}">${i.connected ? 'Disconnect' : 'Connect'}</button>
+          </div>
+        </div>`).join('');
+      el.integrationGrid.querySelectorAll('[data-int]').forEach(btn => btn.onclick = () => {
+        const it = integrations.find(x => x.key === btn.getAttribute('data-int')); if (!it) return;
+        it.connected = !it.connected; saveIntegrations(); renderIntegrations();
+        toast(`${it.name} ${it.connected ? 'connected' : 'disconnected'}`, it.connected ? 'success' : 'warn');
+      });
+    }
+
+    /* ============================================================ RENDER: ANALYTICS ============================================================ */
+    function renderAnalyticsLive() {
+      const total = agents.length;
+      const byStatus = { active: 0, idle: 0, degraded: 0, flagged: 0 };
+      agents.forEach(a => byStatus[a.status] = (byStatus[a.status] || 0) + 1);
+      const totalCalls = agents.reduce((s, a) => s + (a.live?.calls || 0), 0);
+      const totalTokens = agents.reduce((s, a) => s + (a.live?.tokens || 0), 0);
+      const totalCost = agents.reduce((s, a) => s + (a.live?.cost || 0), 0);
+      const qVals = agents.map(a => a.live?.quality).filter(v => v != null);
+      const avgQ = qVals.length ? qVals.reduce((s, v) => s + v, 0) / qVals.length : 0;
+      const flagged = byStatus.flagged || 0;
+
+      const segs = [
+        { k: 'active', c: 'var(--green)' }, { k: 'idle', c: 'var(--slate)' },
+        { k: 'degraded', c: 'var(--amber)' }, { k: 'flagged', c: 'var(--red)' }
+      ];
+      let acc = 0; const stops = [];
+      segs.forEach(s => { const pct = total ? (byStatus[s.k] / total) * 100 : 0; stops.push(`${s.c} ${acc}% ${acc + pct}%`); acc += pct; });
+      if (total === 0) stops.push('var(--bg-panel-2) 0% 100%');
+
+      const byCost = [...agents].sort((a, b) => (b.live?.cost || 0) - (a.live?.cost || 0));
+      const maxCost = Math.max(0.0001, ...byCost.map(a => a.live?.cost || 0));
+      const byTokens = [...agents].sort((a, b) => (b.live?.tokens || 0) - (a.live?.tokens || 0));
+      const maxTok = Math.max(1, ...byTokens.map(a => a.live?.tokens || 0));
+
+      const org = orgState || {};
+      el.analyticsInner.innerHTML = `
+        <div class="section-eyebrow">Live · Argus governance</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z"/></svg>LLM calls</div><div class="v">${totalCalls.toLocaleString()}</div><div class="s">across the fleet</div></div>
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Total spend</div><div class="v">${fmtCost(totalCost)}</div><div class="s">${totalTokens.toLocaleString()} tokens</div></div>
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Avg quality</div><div class="v">${Math.round(avgQ * 100)}%</div><div class="s">judge-scored output</div></div>
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5"/></svg>Flagged agents</div><div class="v" style="color:${flagged ? 'var(--red)' : 'var(--text-strong)'}">${flagged}</div><div class="s">anomaly / over-budget</div></div>
+          <div class="stat-card" title="Estimate: ${ENERGY.whPer1kTokens} Wh per 1k tokens · ${ENERGY.co2gPerKwh} g CO₂ per kWh"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>Energy avoided</div><div class="v" style="color:var(--green)">${esc(fmtEnergy(tokensToWh((orgState && orgState.tokens_saved) || 0)))}</div><div class="s">≈ ${esc(fmtCo2(whToCo2g(tokensToWh((orgState && orgState.tokens_saved) || 0))))} CO₂ · ${(orgState && orgState.avoided_calls) || 0} calls skipped</div></div>
+        </div>
+        ${org.budget ? `<div class="data-panel" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div><h3 style="margin-bottom:4px;">Org token budget</h3><div style="font-size:12px;color:var(--text-muted)">${Number(org.used).toLocaleString()} of ${Number(org.budget).toLocaleString()} used · ${Number(org.remaining).toLocaleString()} remaining</div></div>
+          <div style="flex:1;min-width:200px;"><div class="util-bar" style="height:10px;"><span style="width:${Math.min(100,(org.used/org.budget)*100)}%;background:var(--accent)"></span></div></div>
+        </div>` : ''}
+        <div class="panel-grid">
+          <div class="data-panel">
+            <h3>Fleet status</h3>
+            <div class="donut-wrap">
+              <div class="donut" style="background:conic-gradient(${stops.join(',')})"><div class="donut-center"><div class="v">${total}</div><div class="l">Agents</div></div></div>
+              <div class="donut-legend">${segs.map(s => `<div class="legend-row"><span class="sw" style="background:${s.c}"></span>${STATUSES[s.k].label}<b>${byStatus[s.k] || 0}</b></div>`).join('')}</div>
+            </div>
+          </div>
+          <div class="data-panel">
+            <h3>Spend by agent</h3>
+            ${byCost.map(a => { const c = a.live?.cost || 0; return `<div class="bar-row"><div class="bar-label">${esc(a.name)}</div><div class="bar-track"><div class="bar-fill" style="width:${(c/maxCost)*100}%;background:${archetype(a.archetypeKey).accent}"></div></div><div class="bar-val">${fmtCost(c)}</div></div>`; }).join('')}
+          </div>
+        </div>
+        <div class="data-panel" style="margin-bottom:24px;">
+          <h3>Tokens consumed</h3>
+          ${byTokens.map(a => { const t = a.live?.tokens || 0; return `<div class="bar-row"><div class="bar-label">${esc(a.name)}</div><div class="bar-track"><div class="bar-fill" style="width:${(t/maxTok)*100}%;background:${archetype(a.archetypeKey).accent}"></div></div><div class="bar-val">${(t/1000).toFixed(1)}k</div></div>`; }).join('')}
+        </div>
+        <div class="data-panel">
+          <h3>Fleet roster</h3>
+          <table class="roster">
+            <thead><tr><th>Agent</th><th>Model</th><th style="text-align:right">Calls</th><th style="text-align:right">Tokens</th><th style="text-align:right">Spend</th><th>Status</th></tr></thead>
+            <tbody>${agents.map(a => { const st = STATUSES[a.status] || STATUSES.active, L = a.live || {}; return `<tr><td>${esc(a.name)}</td><td><span class="model-chip">${esc(modelLabel(a.model))}</span></td><td style="text-align:right">${(L.calls||0).toLocaleString()}</td><td style="text-align:right">${(L.tokens||0).toLocaleString()}</td><td style="text-align:right;font-weight:700">${fmtCost(L.cost)}</td><td><span class="status-badge ${st.cls}"><span class="dot"></span>${st.label}</span></td></tr>`; }).join('')}</tbody>
+          </table>
+        </div>`;
+    }
+
+    function renderAnalytics() {
+      if (isLive()) return renderAnalyticsLive();
+      const total = agents.length, byStatus = { active: 0, idle: 0, paused: 0 };
+      agents.forEach(a => byStatus[a.status] = (byStatus[a.status] || 0) + 1);
+      const totalTasks = agents.reduce((s, a) => s + (a.metrics ? a.metrics.tasks : 0), 0);
+      const avgSuccess = total ? agents.reduce((s, a) => s + (a.metrics ? a.metrics.success : 0), 0) / total : 0;
+
+      const segs = [{ k: 'active', c: 'var(--green)' }, { k: 'idle', c: 'var(--slate)' }, { k: 'paused', c: 'var(--amber)' }];
+      let acc = 0; const stops = [];
+      segs.forEach(s => { const pct = total ? (byStatus[s.k] / total) * 100 : 0; stops.push(`${s.c} ${acc}% ${acc + pct}%`); acc += pct; });
+      if (total === 0) stops.push('var(--bg-panel-2) 0% 100%');
+
+      const archCounts = {}; agents.forEach(a => archCounts[a.archetypeKey] = (archCounts[a.archetypeKey] || 0) + 1);
+      const maxArch = Math.max(1, ...Object.values(archCounts));
+      const workload = [...agents].sort((a, b) => (b.metrics?.tasks || 0) - (a.metrics?.tasks || 0)).slice(0, 6);
+      const maxTasks = Math.max(1, ...workload.map(a => a.metrics?.tasks || 0));
+
+      el.analyticsInner.innerHTML = `
+        <div class="section-eyebrow">Fleet overview</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07"/></svg>Total agents</div><div class="v">${total}</div><div class="s">${byStatus.active} active right now</div></div>
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Tasks completed</div><div class="v">${totalTasks.toLocaleString()}</div><div class="s">across the whole fleet</div></div>
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/></svg>Avg success</div><div class="v">${avgSuccess.toFixed(1)}%</div><div class="s">rolling 30-day window</div></div>
+          <div class="stat-card"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>Integrations</div><div class="v">${integrations.filter(i=>i.connected).length}/${integrations.length}</div><div class="s">connected services</div></div>
+        </div>
+        <div class="panel-grid">
+          <div class="data-panel">
+            <h3>Status distribution</h3>
+            <div class="donut-wrap">
+              <div class="donut" style="background:conic-gradient(${stops.join(',')})"><div class="donut-center"><div class="v">${total}</div><div class="l">Agents</div></div></div>
+              <div class="donut-legend">${segs.map(s => `<div class="legend-row"><span class="sw" style="background:${s.c}"></span>${STATUSES[s.k].label}<b>${byStatus[s.k] || 0}</b></div>`).join('')}</div>
+            </div>
+          </div>
+          <div class="data-panel">
+            <h3>Agents by character</h3>
+            ${ARCHETYPES.filter(a => archCounts[a.key]).map(a => { const v = archCounts[a.key] || 0; return `<div class="bar-row"><div class="bar-label">${esc(a.name)}</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxArch)*100}%;background:${a.accent}"></div></div><div class="bar-val">${v}</div></div>`; }).join('') || '<p style="font-size:13px;color:var(--text-muted)">No agents to chart.</p>'}
+          </div>
+        </div>
+        <div class="data-panel" style="margin-bottom:24px;">
+          <h3>Workload — tasks completed</h3>
+          ${workload.map(a => { const arch = archetype(a.archetypeKey), v = a.metrics?.tasks || 0; return `<div class="bar-row"><div class="bar-label">${esc(a.name)}</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxTasks)*100}%;background:${arch.accent}"></div></div><div class="bar-val">${v}</div></div>`; }).join('') || '<p style="font-size:13px;color:var(--text-muted)">No agents to chart.</p>'}
+        </div>
+        <div class="data-panel">
+          <h3>Fleet roster</h3>
+          <table class="roster">
+            <thead><tr><th>Agent</th><th>Role</th><th>Model</th><th>Status</th><th style="text-align:right">Success</th></tr></thead>
+            <tbody>${agents.map(a => { const st = STATUSES[a.status] || STATUSES.active; return `<tr><td>${esc(a.name)}</td><td style="color:var(--text-muted)">${esc(a.role)}</td><td><span class="model-chip">${esc(modelLabel(a.model))}</span></td><td><span class="status-badge ${st.cls}"><span class="dot"></span>${st.label}</span></td><td style="text-align:right;font-weight:700">${a.metrics?.success ?? '—'}%</td></tr>`; }).join('')}</tbody>
+          </table>
+        </div>`;
+    }
+
+    /* ============================================================ VIEW SWITCH ============================================================ */
+    const VIEW_META = {
+      home:         { h: 'Workspace',    sub: 'Your live agent fleet' },
+      integrations: { h: 'New Agent',    sub: 'Deploy a new agent into Argus' },
+      analytics:    { h: 'Analytics',    sub: 'Performance across your fleet' },
+      supervision:  { h: 'Supervision',  sub: 'Keep humans in control of every agent' },
+      audit:        { h: 'Audit',        sub: 'A full, exportable trail of agent activity' }
+    };
+    function switchView(view) {
+      currentView = view;
+      document.querySelectorAll('.nav-item[data-view]').forEach(n => n.classList.toggle('active', n.getAttribute('data-view') === view));
+      document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + view));
+      el.topbarH.textContent = VIEW_META[view].h;
+      el.topbarSub.textContent = (view === 'home' && isBeehive) ? 'Hive view · click a node to focus' : VIEW_META[view].sub;
+      el.toggleViewMode.style.display = view === 'home' ? 'inline-flex' : 'none';
+      if (view === 'integrations') renderIntegrations();
+      if (view === 'analytics') renderAnalytics();
+      if (view === 'supervision') renderSupervision();
+      if (view === 'audit') { renderAudit(); fetchAudit().then(() => { if (currentView === 'audit') renderAudit(); }); }
+      renderDetail(); updateVariantControls();
+    }
+
+    /* ============================================================ SETTINGS + ACCOUNT ============================================================ */
+    function applyTheme() { document.documentElement.setAttribute('data-theme', settings.theme === 'dark' ? 'dark' : 'light'); }
+
+    function openSettings() {
+      const dark = settings.theme === 'dark';
+      openModal(`
+        <div class="modal-head"><div><h2>Settings</h2><p>Workspace preferences</p></div>
+          <button class="modal-close" data-act="close"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div class="field" style="margin-bottom:6px;">
+          <label for="set-api">Argus backend URL</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="set-api" value="${esc(settings.apiBase || '')}" placeholder="http://localhost:8000" style="flex:1;">
+            <button class="btn primary" id="set-connect" style="flex:0 0 auto;padding:11px 16px;">Connect</button>
+          </div>
+          <div id="set-conn-status" style="font-size:12px;margin-top:8px;color:var(--text-muted);">${isLive() ? '● Connected — showing live agents.' : 'Not connected — showing demo agents.'}</div>
+        </div>
+        <div class="setting-row"><div class="info"><strong>Data source</strong><span>Use the bundled demo fleet instead of the backend</span></div><button class="btn" id="set-demo" style="flex:0 0 auto;padding:9px 14px;">Use demo</button></div>
+        <div class="setting-row"><div class="info"><strong>Dark mode</strong><span>Switch the workspace to a dark theme</span></div><button class="switch${dark ? ' on' : ''}" id="set-theme" aria-label="Toggle dark mode"></button></div>
+        <div class="setting-row"><div class="info"><strong>Keyboard shortcuts</strong><span>[ / ] toggle panels · ← → switch agent · N new agent</span></div></div>
+        <div class="setting-row"><div class="info"><strong>Reset workspace</strong><span>Restore the default agents and integrations</span></div><button class="btn danger" id="set-reset" style="flex:0 0 auto;padding:9px 14px;">Reset</button></div>
+        <div class="modal-foot"><button class="btn primary" data-act="close">Done</button></div>`);
+      el.modalBox.querySelectorAll('[data-act="close"]').forEach(b => b.onclick = closeModal);
+      $('set-connect').onclick = async () => {
+        const url = $('set-api').value.trim();
+        if (url) { settings.apiBase = url; saveSettings(); }
+        const statusEl = $('set-conn-status');
+        statusEl.textContent = 'Connecting…';
+        const ok = await syncBackend({ manual: true });
+        statusEl.textContent = ok ? '● Connected — showing live agents.' : '× Could not reach the backend. Is uvicorn running?';
+        statusEl.style.color = ok ? 'var(--green)' : 'var(--red)';
+      };
+      $('set-demo').onclick = () => {
+        useDemoData();
+        const statusEl = $('set-conn-status');
+        statusEl.textContent = 'Showing demo agents.';
+        statusEl.style.color = 'var(--text-muted)';
+        toast('Switched to demo data', 'info');
+      };
+      $('set-theme').onclick = (e) => {
+        settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(); saveSettings();
+        e.currentTarget.classList.toggle('on', settings.theme === 'dark');
+        if (currentView === 'analytics') renderAnalytics();
+      };
+      $('set-reset').onclick = () => confirmDialog({
+        title: 'Reset workspace?', body: 'This removes your custom agents and integration choices, restoring the defaults. This cannot be undone.',
+        confirmLabel: 'Reset everything', danger: true,
+        onConfirm: () => {
+          try { localStorage.removeItem(LS.agents); localStorage.removeItem(LS.integrations); } catch {}
+          dataSource = 'demo'; orgState = null;
+          agents = loadAgents(); integrations = loadIntegrations(); currentIndex = 0; isBeehive = false;
+          saveAgents(); saveIntegrations(); updateLiveChip(); switchView('home'); renderWorkspace(); toast('Workspace reset', 'success');
+        }
+      });
+    }
+
+    function toggleAccountPopover() {
+      const pop = el.accountPopover;
+      if (pop.classList.contains('open')) { pop.classList.remove('open'); return; }
+      pop.innerHTML = `
+        <div class="popover-head"><div class="avatar-placeholder">AF</div><div><strong>Andrii Fedorov</strong><span>Workspace owner</span></div></div>
+        <div class="popover-divider"></div>
+        <button class="popover-item" data-act="settings"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.398.164.855.142 1.205-.108l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124-.072.044-.146.087-.22.128-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87-.072-.041-.146-.083-.22-.127-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Settings</button>
+        <button class="popover-item" data-act="reset"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>Reset workspace</button>`;
+      const rect = el.accountBtn.getBoundingClientRect();
+      pop.style.left = rect.left + 'px';
+      pop.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+      pop.classList.add('open');
+      pop.querySelector('[data-act="settings"]').onclick = () => { pop.classList.remove('open'); openSettings(); };
+      pop.querySelector('[data-act="reset"]').onclick = () => { pop.classList.remove('open'); openSettings(); };
+    }
+
+    /* ============================================================ EVENTS ============================================================ */
+    function wire() {
+      el.toggleLeft.onclick = () => el.sidebarLeft.classList.toggle('collapsed');
+      el.toggleRight.onclick = () => el.sidebarRight.classList.toggle('collapsed');
+      el.btnPrev.onclick = () => showSlide((currentIndex - 1 + agents.length) % agents.length, 'prev');
+      el.btnNext.onclick = () => showSlide((currentIndex + 1) % agents.length, 'next');
+      el.toggleViewMode.onclick = () => { isBeehive ? exitBeehiveMode() : enterBeehiveMode(); };
+      el.variantPrev.onclick = (e) => { e.stopPropagation(); setVariant((agents[currentIndex]?.variantIndex || 0) - 1); };
+      el.variantNext.onclick = (e) => { e.stopPropagation(); setVariant((agents[currentIndex]?.variantIndex || 0) + 1); };
+      el.addAgentBtn.onclick = () => openAgentModal(null);
+      $('cap-generate').onclick = () => generateAgentWithAI();
+      $('cap-add').onclick = () => addAgentFromPanel();
+      $('cap-task').addEventListener('input', () => {
+        // Reset AI prediction state when user changes the task
+        const savBox = $('cap-savings-box');
+        const savIcon = $('cap-savings-icon');
+        const savText = $('cap-savings-text');
+        if (savBox) savBox.classList.remove('ai-predicted');
+        if (savIcon) savIcon.textContent = '⚡';
+        if (savText) savText.innerHTML = `With Argus your agent saves ~<b id="cap-savings-pct">${computeSavingsPct($('cap-task').value)}</b>% of compute via caching &amp; dedup`;
+      });
+
+      el.agentList.addEventListener('click', (e) => {
+        const t = e.target.closest('[data-edit], [data-delete], [data-focus]'); if (!t) return;
+        const editId = t.getAttribute('data-edit');
+        if (editId) { e.stopPropagation(); const a = agents.find(x => x.id === editId); if (a) openAgentModal(a); return; }
+        const delId = t.getAttribute('data-delete');
+        if (delId) { e.stopPropagation(); requestDelete(delId); return; }
+        const focusId = t.getAttribute('data-focus');
+        if (focusId) focusAgent(agents.findIndex(x => x.id === focusId));
+      });
+      el.agentList.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const item = e.target.closest('[data-focus]');
+        if (item) { e.preventDefault(); focusAgent(agents.findIndex(x => x.id === item.getAttribute('data-focus'))); }
+      });
+
+      document.querySelectorAll('.nav-item[data-view]').forEach(n => n.onclick = () => switchView(n.getAttribute('data-view')));
+      el.liveChip.onclick = () => syncBackend({ manual: true });
+      el.settingsBtn.onclick = openSettings;
+      el.accountBtn.onclick = (e) => { e.stopPropagation(); toggleAccountPopover(); };
+      document.addEventListener('click', (e) => {
+        if (el.accountPopover.classList.contains('open') && !el.accountPopover.contains(e.target) && !el.accountBtn.contains(e.target)) el.accountPopover.classList.remove('open');
+      });
+      el.modalOverlay.addEventListener('click', (e) => { if (e.target === el.modalOverlay) closeModal(); });
+      document.addEventListener('keydown', handleHotkeys);
+    }
+
+    function requestDelete(id) {
+      if (agents.length <= 1) { toast('You need at least one agent', 'warn'); return; }
+      const agent = agents.find(x => x.id === id); if (!agent) return;
+      confirmDialog({
+        title: 'Remove agent?', body: `“${agent.name}” will be removed from your workspace. This cannot be undone.`,
+        confirmLabel: 'Remove agent', danger: true,
+        onConfirm: () => {
+          const idx = agents.findIndex(x => x.id === id); if (idx < 0) return;
+          agents.splice(idx, 1); currentIndex = clamp(currentIndex, 0, agents.length - 1);
+          saveAgents(); renderWorkspace(); toast(`“${agent.name}” removed`, 'warn');
+        }
+      });
+    }
+
+    function handleHotkeys(e) {
+      const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+      if (e.key === 'Escape') {
+        if (el.modalOverlay.classList.contains('open')) closeModal();
+        else if (el.accountPopover.classList.contains('open')) el.accountPopover.classList.remove('open');
+        else if (isBeehive) exitBeehiveMode();
+        return;
       }
+      if (typing || el.modalOverlay.classList.contains('open')) return;
+      if (e.key === '[') el.sidebarLeft.classList.toggle('collapsed');
+      else if (e.key === ']') el.sidebarRight.classList.toggle('collapsed');
+      else if ((e.key === 'n' || e.key === 'N') && !isLive()) { e.preventDefault(); openAgentModal(null); }
+      else if (currentView === 'home' && !isBeehive) {
+        if (e.key === 'ArrowLeft') showSlide((currentIndex - 1 + agents.length) % agents.length, 'prev');
+        else if (e.key === 'ArrowRight') showSlide((currentIndex + 1) % agents.length, 'next');
+      }
+    }
 
-      // View Mode Toggle button handler
-      btnToggleView.addEventListener('click', () => {
-        if (!isBeehive) {
-          enterBeehiveMode();
-        } else {
-          exitBeehiveMode();
-        }
-      });
+    /* ============================================================ CREATE AGENT PANEL ============================================================ */
+    let capSelectedArch = 'guardian';
+    let capGenerated = null;   // { role, model, task } from AI
 
-      // Individual slide click logic
-      slides.forEach((slide, i) => {
-        // Selection click in beehive mode
-        slide.addEventListener('click', (e) => {
-          if (isBeehive) {
-            e.stopPropagation();
-            exitBeehiveMode(i);
-          }
+    function computeSavingsPct(taskText) {
+      // Live mode: use real backend cache hit rate
+      if (orgState?.cache_hit_rate) return Math.round(orgState.cache_hit_rate * 100);
+      // Demo mode: predict from fleet size + task similarity to existing agents
+      const n = agents.length;
+      const base = Math.min(85, 35 + n * 8);
+      const newWords = new Set((taskText || '').toLowerCase().split(/\W+/).filter(w => w.length > 3));
+      if (!newWords.size) return base;
+      const overlap = agents.filter(a => {
+        const existing = ((a.currentTask || '') + ' ' + (a.role || '')).toLowerCase().split(/\W+/);
+        return existing.some(w => w.length > 3 && newWords.has(w));
+      }).length;
+      return Math.min(94, base + Math.round((overlap / Math.max(1, n)) * 18));
+    }
+
+    function renderCreatePanel() {
+      // Skin picker
+      const skinsEl = $('cap-skins');
+      if (!skinsEl) return;
+      skinsEl.innerHTML = ARCHETYPES.map(a => {
+        const scene = SCENES[a.sceneKey];
+        return `
+          <div>
+            <div class="cap-skin${a.key === capSelectedArch ? ' selected' : ''}" data-arch="${a.key}" title="${a.name}">
+              <img src="${scene.baseImage}" alt="${a.name}" loading="lazy">
+            </div>
+            <div class="cap-skin-label">${a.name}</div>
+          </div>`;
+      }).join('');
+      skinsEl.querySelectorAll('.cap-skin').forEach(el => {
+        el.addEventListener('click', () => {
+          capSelectedArch = el.dataset.arch;
+          renderCreatePanel();
         });
-
       });
+      // Savings prediction — don't overwrite if AI has already set a predicted value
+      const savBox = $('cap-savings-box');
+      if (!savBox || !savBox.classList.contains('ai-predicted')) {
+        const savEl = $('cap-savings-pct');
+        if (savEl) savEl.textContent = computeSavingsPct($('cap-task')?.value || '');
+      }
+    }
 
-      officeVariantPrev.addEventListener('click', (event) => {
-        event.stopPropagation();
-        setOfficeVariant(officeVariantIndex - 1);
-      });
+    async function generateAgentWithAI() {
+      const name = ($('cap-name').value || '').trim();
+      const task = ($('cap-task').value || '').trim();
+      if (!name || !task) { toast('Enter a name and task first', 'warn'); return; }
+      if (!isLive()) { toast('Start the Argus backend to use AI generation', 'warn'); return; }
 
-      officeVariantNext.addEventListener('click', (event) => {
-        event.stopPropagation();
-        setOfficeVariant(officeVariantIndex + 1);
-      });
+      const btn = $('cap-generate');
+      btn.disabled = true; btn.textContent = '⏳ Generating…';
 
-      setOfficeVariant(0);
+      const savingsPct = computeSavingsPct(task);
 
-      // Hotkeys
-      document.addEventListener('keydown', (e) => {
-        if (e.key === '[') {
-          sidebarLeft.classList.toggle('collapsed');
-        } else if (e.key === ']') {
-          sidebarRight.classList.toggle('collapsed');
-        } else if (!isBeehive) {
-          if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-            const nextIndex = (currentIndex - 1 + slides.length) % slides.length;
-            showSlide(nextIndex, 'prev');
-          } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-            const nextIndex = (currentIndex + 1) % slides.length;
-            showSlide(nextIndex, 'next');
-          }
+      try {
+        const resp = await fetch(apiBase() + '/v1/generate-agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, task, savings_pct: savingsPct })
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        capGenerated = await resp.json();
+        const resEl = $('cap-result');
+        resEl.innerHTML = `<strong>AI suggestion</strong>Role: ${esc(capGenerated.role)}<br>Model: ${esc(capGenerated.model)}<br>Task: ${esc(capGenerated.task)}`;
+        resEl.classList.add('visible');
+
+        // Update savings prediction with AI-reasoned value
+        if (capGenerated.savings_pct) {
+          const pct = Math.max(35, Math.min(92, parseInt(capGenerated.savings_pct) || 68));
+          const savEl = $('cap-savings-pct');
+          const savBox = $('cap-savings-box');
+          const savIcon = $('cap-savings-icon');
+          const savText = $('cap-savings-text');
+          if (savEl) savEl.textContent = pct;
+          if (savBox) savBox.classList.add('ai-predicted');
+          if (savIcon) savIcon.textContent = '✦';
+          if (savText) savText.innerHTML = `Argus predicts <b id="cap-savings-pct">${pct}</b>% compute savings for this task<span class="cap-savings-label">AI</span>`;
         }
+
+        toast('Agent config generated', 'success');
+      } catch (e) {
+        toast('Generation failed: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = '✦ Generate with AI';
+      }
+    }
+
+    function addAgentFromPanel() {
+      const name = ($('cap-name').value || '').trim();
+      if (!name) { toast('Enter a name first', 'warn'); return; }
+      const task = ($('cap-task').value || '').trim() || archetype(capSelectedArch).task;
+      const role = capGenerated?.role || archetype(capSelectedArch).role;
+      const model = capGenerated?.model || MODELS[0].id;
+      const a = archetype(capSelectedArch);
+      agents.push({
+        id: uid(), name, archetypeKey: capSelectedArch, sceneKey: a.sceneKey, variantIndex: 0,
+        role, model, status: 'active', task: capGenerated?.task || task, metrics: seededMetrics(uid())
       });
-    });
+      currentIndex = agents.length - 1;
+      saveAgents();
+      // reset panel
+      $('cap-name').value = ''; $('cap-task').value = ''; capGenerated = null;
+      const resEl = $('cap-result'); resEl.innerHTML = ''; resEl.classList.remove('visible');
+      // Reset AI savings state
+      const savBox = $('cap-savings-box'); const savIcon = $('cap-savings-icon'); const savText = $('cap-savings-text');
+      if (savBox) savBox.classList.remove('ai-predicted');
+      if (savIcon) savIcon.textContent = '⚡';
+      if (savText) savText.innerHTML = `With Argus your agent saves ~<b id="cap-savings-pct">68</b>% of compute via caching &amp; dedup`;
+      capSelectedArch = 'guardian'; renderCreatePanel();
+      if (currentView !== 'home') switchView('home');
+      renderWorkspace();
+      toast(`"${name}" deployed`, 'success');
+    }
+
+    /* ============================================================ INIT ============================================================ */
+    function init() {
+      el = {
+        sidebarLeft: $('sidebar-left'), sidebarRight: $('sidebar-right'), toggleLeft: $('toggle-left'), toggleRight: $('toggle-right'),
+        sliderTrack: $('slider-track'), sliderWrapper: $('slider-wrapper'), btnPrev: $('slide-prev'), btnNext: $('slide-next'),
+        toggleViewMode: $('toggle-view-mode'), toggleBtnText: $('toggle-btn-text'),
+        variantControls: $('office-variant-controls'), variantPrev: $('office-variant-prev'), variantNext: $('office-variant-next'), variantLabel: $('office-variant-label'),
+        addAgentBtn: $('add-agent-btn'), agentList: $('agent-list'), agentCount: $('agent-count'), agentDetail: $('agent-detail'), viewHome: $('view-home'),
+        navAgentCount: $('nav-agent-count'), navIntCount: $('nav-int-count'), navAlertCount: $('nav-alert-count'),
+        ecoNoteText: $('eco-note-text'),
+        integrationGrid: $('integration-grid'), analyticsInner: $('analytics-inner'),
+        supervisionInner: $('supervision-inner'), auditInner: $('audit-inner'),
+        topbarH: $('topbar-h'), topbarSub: $('topbar-sub'),
+        liveChip: $('live-chip'), liveChipText: $('live-chip-text'),
+        settingsBtn: $('settings-btn'), accountBtn: $('account-btn'), accountPopover: $('account-popover'),
+        modalOverlay: $('modal-overlay'), modalBox: $('modal-box'), toastStack: $('toast-stack')
+      };
+      settings = loadSettings(); applyTheme();
+      agents = loadAgents(); integrations = loadIntegrations();
+      wire(); renderWorkspace(); renderCreatePanel();
+      el.navIntCount.textContent = integrations.filter(i => i.connected).length;
+      el.toggleViewMode.style.display = 'inline-flex';
+      updateLiveChip(); updateEcoNote(); updateAlertBadge();
+      // Try the Argus backend in the background; stays on demo data if unreachable.
+      if (settings.useBackend !== false) syncBackend();
+    }
+  })();
   </script>
 </body>
 </html>

@@ -1,0 +1,43 @@
+# Secrets — never commit
+.env
+Argus/.env
+**/.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Argus runtime artifacts
+Argus/argus_events.db
+Argus/reports/
+*.toon
+
+# Playwright / scratch
+.playwright-mcp/
+
+# Node
+node_modules/
+
+# IDE
+.vscode/
+
+# Test / Playwright screenshots at repo root
+after-fix.png
+after-zoom.png
+beehive-check.png
+beehive-clip-check.png
+beehive-state.png
+current-state.png
+detail-final.png
+detail-panel-single.png
+hex-clip-check.png
+live-connected.png
+new-agent-scroll.png
+sup-01.png
+zoom-complete.png
+
+# OS junk
+.DS_Store
+__MACOSX/
