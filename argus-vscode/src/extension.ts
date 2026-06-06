@@ -47,12 +47,29 @@ export function deactivate() {
 async function startupFlow(ctx: vscode.ExtensionContext, force: boolean) {
   const available = await availableProviders(ctx);
   if (available.length === 0 || force) {
+    // A bare QuickPick on a background window is easy to miss. Lead with a
+    // persistent notification + button so the key prompt is impossible to
+    // overlook, THEN open the provider/key boxes.
+    if (!force) {
+      const choice = await vscode.window.showInformationMessage(
+        'Argus is ready. Connect an LLM provider API key to route real prompts and track real spend.',
+        'Connect API key',
+        'Later',
+      );
+      if (choice !== 'Connect API key') {
+        vscode.window.showInformationMessage(
+          'Argus: monitor-only mode (no real LLM calls). ' +
+            'Run “Argus: Connect (enter API key)” from the Command Palette anytime.',
+        );
+        await refreshStatusBar(ctx);
+        return;
+      }
+    }
     const entered = await promptApiKey(ctx);
     if (!entered && available.length === 0) {
-      // User dismissed the box — keep going in monitor-only mode.
-      vscode.window.showInformationMessage(
-        'Argus: no key entered — running in backend-monitor mode. ' +
-          'Run “Argus: Connect” to open the key prompt again.',
+      vscode.window.showWarningMessage(
+        'Argus: no key entered — monitor-only mode. ' +
+          'Run “Argus: Connect (enter API key)” to try again.',
       );
     }
   }
