@@ -4,9 +4,13 @@ FastAPI entry point.
 Run: uvicorn main:app --reload --port 8000
 """
 
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from api.routes import router
+
+_FRONTEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "index.html")
 
 app = FastAPI(
     title="Argus -- AI Agent Token Governance",
@@ -27,8 +31,10 @@ app.add_middleware(
 app.include_router(router, prefix="/v1")
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def root():
+    if os.path.isfile(_FRONTEND):
+        return FileResponse(_FRONTEND, media_type="text/html")
     return {
         "name":  "Argus",
         "docs":  "/docs",

@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv
+.venv/
+venv
+venv/
+env
+env/
+
+# Secrets / env files
+.env
+Argus/.env
+
+# Runtime artefacts
+.run/
+*.log
+*.pid
+
+# Dev / test only
+Argus/test_*.py
+Argus/test_results.json
+Argus/simulate.py
+Argus/seed_demo.py
+
+# VS Code extension (not deployed)
+argus-vscode/
+
+# Media assets (not needed in container)
+videos/
+background images/
+OFFICE ALL CHARAKTER/
+media/
+
+# Git
+.git/
+.gitignore
+
+# Misc
+*.DS_Store
+README.md
+LICENSE
+start.sh
+stop.sh
