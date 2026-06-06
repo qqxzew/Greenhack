@@ -9,6 +9,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY Argus/ ./Argus/
 COPY index.html ./index.html
+COPY argus-logo.png ./argus-logo.png
+COPY videos/ ./videos/
+COPY ["background images/", "./background images/"]
+COPY ["OFFICE ALL CHARAKTER/", "./OFFICE ALL CHARAKTER/"]
 
 # Run from the Argus package directory so internal imports resolve
 WORKDIR /app/Argus

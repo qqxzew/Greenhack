@@ -8,9 +8,11 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from api.routes import router
 
-_FRONTEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "index.html")
+_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+_FRONTEND = os.path.join(_ROOT, "index.html")
 
 app = FastAPI(
     title="Argus -- AI Agent Token Governance",
@@ -40,3 +42,16 @@ def root():
         "docs":  "/docs",
         "state": "/v1/state",
     }
+
+
+# Serve static assets referenced by index.html (images, videos, logo)
+for _dir in ("videos", "background images", "OFFICE ALL CHARAKTER"):
+    _path = os.path.join(_ROOT, _dir)
+    if os.path.isdir(_path):
+        app.mount("/" + _dir, StaticFiles(directory=_path), name=_dir)
+
+_logo = os.path.join(_ROOT, "argus-logo.png")
+if os.path.isfile(_logo):
+    @app.get("/argus-logo.png", include_in_schema=False)
+    def logo():
+        return FileResponse(_logo, media_type="image/png")

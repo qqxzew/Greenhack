@@ -31,11 +31,8 @@ Argus/seed_demo.py
 # VS Code extension (not deployed)
 argus-vscode/
 
-# Media assets (not needed in container)
-videos/
-background images/
-OFFICE ALL CHARAKTER/
-media/
+# VS Code extension media only
+argus-vscode/media/
 
 # Git
 .git/
