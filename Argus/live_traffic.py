@@ -29,7 +29,8 @@ import urllib.request
 # otherwise the dashboard shows nonsense like haiku > sonnet.
 from core.tracking import cost_of, latency_of
 
-BASE = "http://localhost:8000/v1"
+_port = os.environ.get("BACKEND_PORT") or os.environ.get("PORT") or "8000"
+BASE = f"http://localhost:{_port}/v1"
 
 # ── Real-LLM (live) configuration ────────────────────────────────────────────
 # The backend router returns short model ids ("claude-haiku-4-5" /
