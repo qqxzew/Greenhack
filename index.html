@@ -418,6 +418,116 @@
     .flag-pill.anomaly { background: var(--red-soft); color: var(--red); }
     .flag-pill.stuck { background: var(--amber-soft); color: var(--amber); }
 
+    /* Live Stream view */
+    .stream-toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+    .stream-toolbar select, .stream-toolbar .ghost-btn { font-size: 12.5px; }
+    .stream-status { font-size: 11.5px; color: var(--text-faint); display: inline-flex; align-items: center; gap: 6px; }
+    .stream-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .stream-status.paused .dot { background: var(--amber); animation: none; }
+    .stream-list { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .stream-item { padding: 10px 16px; border-top: 1px solid var(--border); font-size: 12.5px; cursor: pointer; transition: background 0.12s; }
+    .stream-item:first-child { border-top: none; }
+    .stream-item:hover { background: var(--bg-panel-2); }
+    .stream-item.fresh { animation: streamFlash 1.2s ease-out; }
+    @keyframes streamFlash {
+      0%   { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+      100% { background: transparent; }
+    }
+    .stream-row1 { display: grid; grid-template-columns: 70px 150px 90px 1fr 130px; gap: 12px; align-items: center; }
+    .stream-row1 .st-time { color: var(--text-faint); font-variant-numeric: tabular-nums; font-size: 11.5px; }
+    .stream-row1 .st-agent { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+    .stream-row1 .st-agent .av { width: 22px; height: 22px; border-radius: 6px; color: #fff; font-weight: 700; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .stream-row1 .st-agent strong { font-weight: 600; color: var(--text-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .stream-row1 .st-prompt { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; }
+    .stream-row1 .st-meta { text-align: right; color: var(--text-muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+    .action-pill { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 3px 8px; border-radius: 5px; white-space: nowrap; display: inline-block; text-align: center; }
+    .action-call    { background: color-mix(in srgb, #3b82f6 14%, transparent); color: #2563eb; }
+    .action-cache   { background: var(--green-soft); color: var(--green); }
+    .action-blocked { background: var(--red-soft); color: var(--red); }
+    .stream-expand { margin-top: 12px; padding: 14px 16px; background: var(--bg-panel-2); border-radius: 10px; font-size: 12px; }
+    .stream-expand .sx-section { margin-top: 14px; }
+    .stream-expand .sx-section:first-child { margin-top: 0; }
+    .stream-expand .sx-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); margin-bottom: 6px; }
+    .stream-expand pre.sx-prompt { margin: 0; padding: 10px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, "SF Mono", Menlo, monospace; color: var(--text); font-size: 11.5px; line-height: 1.55; max-height: 200px; overflow: auto; }
+    .sx-verdict { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); }
+    .sx-verdict.method-dedup, .sx-verdict.method-semantic_cache, .sx-verdict.method-cache { border-color: color-mix(in srgb, var(--green) 30%, transparent); background: color-mix(in srgb, var(--green-soft) 55%, transparent); }
+    .sx-verdict.method-route_down { border-color: color-mix(in srgb, #3b82f6 35%, transparent); background: color-mix(in srgb, #3b82f6 8%, transparent); }
+    .sx-verdict.method-route_up { border-color: color-mix(in srgb, #a855f7 35%, transparent); background: color-mix(in srgb, #a855f7 9%, transparent); }
+    .sx-verdict-icon.route_up { background: #a855f7; }
+    .sx-verdict.method-baseline { border-color: var(--border); background: var(--bg-panel-2); }
+    .sx-verdict.method-budget_block, .sx-verdict.method-human_control, .sx-verdict.method-blocked { border-color: color-mix(in srgb, var(--red) 28%, transparent); background: var(--red-soft); }
+    .sx-verdict-icon { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff; }
+    .sx-verdict-icon.dedup, .sx-verdict-icon.semantic_cache, .sx-verdict-icon.cache { background: var(--green); }
+    .sx-verdict-icon.route_down { background: #3b82f6; }
+    .sx-verdict-icon.baseline { background: var(--slate); }
+    .sx-verdict-icon.budget_block, .sx-verdict-icon.human_control, .sx-verdict-icon.blocked { background: var(--red); }
+    .sx-verdict-body { flex: 1; min-width: 0; }
+    .sx-verdict-method { font-size: 13px; font-weight: 700; color: var(--text-strong); }
+    .sx-verdict-explain { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.45; }
+
+    .sx-compare { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .sx-col { padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); }
+    .sx-col.without { opacity: 0.85; }
+    .sx-col.with { border-color: color-mix(in srgb, var(--accent) 25%, var(--border)); }
+    .sx-col.saved { background: color-mix(in srgb, var(--green-soft) 50%, var(--card)); border-color: color-mix(in srgb, var(--green) 30%, transparent); }
+    .sx-col-title { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); margin-bottom: 8px; }
+    .sx-col.with .sx-col-title { color: var(--accent-strong); }
+    .sx-col.saved .sx-col-title { color: var(--green); }
+    .sx-col .sx-row { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; font-size: 11.5px; color: var(--text-muted); }
+    .sx-col .sx-row b { font-size: 13px; color: var(--text-strong); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sx-col.saved .sx-row b { color: var(--green); }
+    .sx-col .sx-row.headline b { font-size: 18px; }
+
+    .sx-meta { display: grid; grid-template-columns: 130px 1fr; gap: 5px 14px; font-size: 11.5px; color: var(--text-muted); }
+    .sx-meta b { color: var(--text-strong); font-weight: 600; }
+    .sx-meta .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; }
+    .stream-empty { text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 13px; }
+
+    /* Impact Report */
+    .rpt-hero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+    .rpt-headline { padding: 22px 24px; border-radius: 16px; border: 1px solid var(--border); background: var(--card); }
+    .rpt-headline.money { background: linear-gradient(135deg, color-mix(in srgb, var(--green-soft) 80%, var(--card)), var(--card)); border-color: color-mix(in srgb, var(--green) 30%, transparent); }
+    .rpt-headline.time  { background: linear-gradient(135deg, color-mix(in srgb, var(--accent-soft) 70%, var(--card)), var(--card)); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+    .rpt-headline .lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); margin-bottom: 8px; }
+    .rpt-headline.money .lbl { color: var(--green); }
+    .rpt-headline.time  .lbl { color: var(--accent-strong); }
+    .rpt-headline .big  { font-size: 38px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-strong); line-height: 1; letter-spacing: -0.02em; }
+    .rpt-headline.money .big { color: var(--green); }
+    .rpt-headline.time  .big { color: var(--accent-strong); }
+    .rpt-headline .pct  { display: inline-block; margin-left: 8px; font-size: 15px; font-weight: 700; padding: 3px 9px; border-radius: 7px; vertical-align: middle; background: color-mix(in srgb, currentColor 14%, transparent); }
+    .rpt-headline .sub  { margin-top: 10px; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+    .rpt-headline .sub b { color: var(--text-strong); font-weight: 600; }
+
+    .rpt-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+    .rpt-card { padding: 18px 20px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); }
+    .rpt-card .lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); margin-bottom: 14px; }
+    .rpt-card .row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; font-size: 12.5px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+    .rpt-card .row:last-child { border-bottom: none; }
+    .rpt-card .row b { font-size: 15px; color: var(--text-strong); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .rpt-card.argus { border-color: color-mix(in srgb, var(--accent) 24%, transparent); }
+    .rpt-card.argus .lbl { color: var(--accent-strong); }
+
+    .rpt-section { margin-bottom: 22px; }
+    .rpt-section h3 { margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--text-strong); }
+    .rpt-method-list, .rpt-agent-list { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .rpt-row-block { padding: 14px 18px; border-top: 1px solid var(--border); }
+    .rpt-row-block:first-child { border-top: none; }
+    .rpt-row-top { display: grid; grid-template-columns: 14px 1fr auto auto; gap: 14px; align-items: baseline; font-size: 12.5px; }
+    .rpt-row-top .swatch { width: 12px; height: 12px; border-radius: 4px; }
+    .rpt-row-top .name { color: var(--text-strong); font-weight: 600; }
+    .rpt-row-top .name .lbl-sub { color: var(--text-faint); font-weight: 400; font-size: 11px; margin-left: 8px; }
+    .rpt-row-top .count { color: var(--text-muted); font-variant-numeric: tabular-nums; font-size: 11.5px; }
+    .rpt-row-top .saved { color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 14px; }
+    .rpt-row-bar { height: 5px; background: var(--bg-panel-2); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+    .rpt-row-bar .fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+    .rpt-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 13px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+    .rpt-foot { font-size: 11px; color: var(--text-faint); margin-top: 6px; }
+
+    @media (max-width: 1100px) {
+      .rpt-hero    { grid-template-columns: 1fr; }
+      .rpt-compare { grid-template-columns: 1fr; }
+    }
+
     /* Supervision */
     .sup-section-title { font-size: 13px; font-weight: 700; color: var(--text-strong); margin: 22px 0 12px; }
     .sup-section-title:first-child { margin-top: 0; }
@@ -720,6 +830,11 @@
           <span>Supervision</span>
           <span class="nav-count alert" id="nav-alert-count" style="display:none;">0</span>
         </button>
+        <button class="nav-item" data-view="stream">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+          <span>Live Stream</span>
+          <span class="nav-count" id="nav-stream-count" style="display:none;"></span>
+        </button>
         <button class="nav-item" data-view="audit">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
           <span>Audit</span>
@@ -727,6 +842,10 @@
         <button class="nav-item" data-view="analytics">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
           <span>Analytics</span>
+        </button>
+        <button class="nav-item" data-view="report">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+          <span>Impact Report</span>
         </button>
       </nav>
 
@@ -838,6 +957,16 @@
       <!-- SUPERVISION VIEW -->
       <section class="view" id="view-supervision">
         <div class="view-scroll"><div class="view-inner" id="supervision-inner"></div></div>
+      </section>
+
+      <!-- IMPACT REPORT VIEW -->
+      <section class="view" id="view-report">
+        <div class="view-scroll"><div class="view-inner" id="report-inner"></div></div>
+      </section>
+
+      <!-- LIVE STREAM VIEW -->
+      <section class="view" id="view-stream">
+        <div class="view-scroll"><div class="view-inner" id="stream-inner"></div></div>
       </section>
 
       <!-- AUDIT VIEW -->
@@ -1072,8 +1201,27 @@
       el.liveChipText.textContent = s === 'live' ? 'Live · Argus' : s === 'syncing' ? 'Syncing…' : 'Demo data';
     }
 
+    // Guard against overlapping polls: a slow backend + 1.5s poll cadence would
+    // otherwise stack 2-3 in-flight fetches whose results could land out of order
+    // and overwrite newer state with older.
+    let _syncInFlight = false;
+    // Structural signature: only the heavy renderWorkspace() must re-run when the
+    // roster shape changes (agents added/removed, status flip, model change, control).
+    // For pure metric ticks we update lightweight elements only — no innerHTML thrash.
+    let _lastStructSig = '';
+
+    function _structuralSig(rawAgents) {
+      // Stable, cheap signature of "things that change the DOM tree of a card".
+      return rawAgents.map(a =>
+        `${a.id}|${a.status}|${a.model || ''}|${a.control || ''}`
+      ).join(';');
+    }
+
     async function syncBackend({ manual = false } = {}) {
-      updateLiveChip('syncing');
+      // Auto-polls run silently; only manual user actions flip the chip to "syncing".
+      if (_syncInFlight) return false;
+      _syncInFlight = true;
+      if (manual) updateLiveChip('syncing');
       try {
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), 4500);
@@ -1083,16 +1231,33 @@
         const data = await res.json();
         if (!data || !Array.isArray(data.agents) || data.agents.length === 0) throw new Error('empty roster');
 
+        const sig = _structuralSig(data.agents);
+        const structuralChange = sig !== _lastStructSig;
+        _lastStructSig = sig;
+
         agents = data.agents.map(mapLiveAgent);
         orgState = data.org || null;
+        const wasLive = dataSource === 'live';
         dataSource = 'live';
         currentIndex = clamp(currentIndex, 0, agents.length - 1);
-        updateLiveChip(); updateEcoNote(); updateAlertBadge(); renderCreatePanel();
-        renderWorkspace();
-        if (currentView === 'integrations') renderIntegrations();
+
+        updateLiveChip(); updateEcoNote(); updateAlertBadge();
+
+        // Heavy re-render only when something structural changed (or we just
+        // came online). Otherwise the per-1.5s poll would destroy event
+        // handlers, hover state, and 3D-scene animations on every tick.
+        if (structuralChange || !wasLive || manual) {
+          renderCreatePanel();
+          renderWorkspace();
+          if (currentView === 'integrations') renderIntegrations();
+        }
+
+        // These views are mostly text/numbers — cheap to redraw, and the
+        // user explicitly wants to see them tick live.
         if (currentView === 'analytics') renderAnalytics();
         if (currentView === 'supervision') renderSupervision();
         if (currentView === 'audit') { await fetchAudit(); renderAudit(); }
+
         if (manual) toast(`Synced ${agents.length} agents from Argus`, 'success');
         return true;
       } catch (err) {
@@ -1100,6 +1265,8 @@
         updateLiveChip();
         if (manual) toast('Argus backend unreachable — staying in demo', 'warn');
         return false;
+      } finally {
+        _syncInFlight = false;
       }
     }
 
@@ -1235,6 +1402,423 @@
       $('audit-filter').onchange = (e) => { auditFilter = e.target.value; renderAudit(); };
       $('audit-refresh').onclick = () => fetchAudit().then(renderAudit);
       $('audit-export').onclick = exportAudit;
+    }
+
+    /* ---- Live Stream of governed calls ---- */
+    // Tails GET /v1/stream — every prompt the pipeline saw, with its decision
+    // (call_llm / cache_hit / blocked) and post-call result (tokens, cost).
+    let streamEvents = [];
+    let streamFilter = 'all';
+    let streamActionFilter = 'all';
+    let streamPaused = false;
+    let streamLastId = 0;
+    let streamPollTimer = null;
+    let streamExpanded = new Set();
+    const STREAM_KEEP = 200;          // how many rows to keep in memory
+    const STREAM_POLL_MS = 1000;      // tail cadence
+    const STREAM_FRESH_MS = 1500;     // flash animation window
+
+    async function fetchStream() {
+      if (!isLive() || streamPaused) return;
+      try {
+        const url = apiBase() + '/v1/stream?limit=80&since=' + streamLastId;
+        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) return;
+        const data = await res.json();
+        const fresh = data.events || [];
+        if (!fresh.length) return;
+        // Backend returns newest-first; we keep our buffer that way too.
+        const now = Date.now();
+        for (const e of fresh) e._receivedAt = now;
+        streamEvents = fresh.concat(streamEvents).slice(0, STREAM_KEEP);
+        streamLastId = Math.max(streamLastId, data.latest_id || 0);
+        if (currentView === 'stream') renderStreamRows();
+        updateStreamNavCount();
+      } catch { /* keep tailing */ }
+    }
+
+    function updateStreamNavCount() {
+      const el = $('nav-stream-count');
+      if (!el) return;
+      if (isLive() && streamEvents.length) {
+        el.style.display = '';
+        el.textContent = streamEvents.length >= STREAM_KEEP ? STREAM_KEEP + '+' : streamEvents.length;
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    function startStreamPolling() {
+      stopStreamPolling();
+      streamPollTimer = setInterval(fetchStream, STREAM_POLL_MS);
+    }
+    function stopStreamPolling() {
+      if (streamPollTimer) { clearInterval(streamPollTimer); streamPollTimer = null; }
+    }
+
+    function streamRelTime(ts) {
+      const s = Math.max(0, Date.now() / 1000 - ts);
+      if (s < 1)   return 'just now';
+      if (s < 60)  return Math.floor(s) + 's ago';
+      if (s < 3600) return Math.floor(s / 60) + 'm ago';
+      return Math.floor(s / 3600) + 'h ago';
+    }
+
+    function actionPill(a) {
+      if (a === 'call_llm') return `<span class="action-pill action-call">call</span>`;
+      if (a === 'cache_hit') return `<span class="action-pill action-cache">cache</span>`;
+      if (a === 'blocked')   return `<span class="action-pill action-blocked">blocked</span>`;
+      return `<span class="action-pill">${esc(String(a || '?'))}</span>`;
+    }
+
+    function streamMetaText(e) {
+      if (e.action === 'call_llm') {
+        const tok = e.tokens_total != null ? `${e.tokens_total.toLocaleString()} tok` : 'pending…';
+        const cost = e.cost != null ? ` · $${e.cost.toFixed(4)}` : '';
+        return tok + cost;
+      }
+      if (e.action === 'cache_hit') {
+        const saved = e.tokens_saved ? `~${e.tokens_saved.toLocaleString()} tok saved` : 'cached';
+        return saved + (e.source ? ` · ${e.source}` : '');
+      }
+      if (e.action === 'blocked') return e.reason || 'blocked';
+      return '';
+    }
+
+    /* ---- Impact Report ---- */
+    // Aggregated "what did Argus save us this session" view, computed
+    // server-side from the live stream buffer (GET /v1/report).
+    let reportData = null;
+    let reportPollTimer = null;
+
+    async function fetchReport() {
+      if (!isLive()) { reportData = null; return; }
+      try {
+        const res = await fetch(apiBase() + '/v1/report', { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) return;
+        reportData = await res.json();
+        if (currentView === 'report') renderReport();
+      } catch { /* keep polling */ }
+    }
+
+    function startReportPolling() {
+      stopReportPolling();
+      reportPollTimer = setInterval(fetchReport, 3000);
+    }
+    function stopReportPolling() {
+      if (reportPollTimer) { clearInterval(reportPollTimer); reportPollTimer = null; }
+    }
+
+    const METHOD_COLORS = {
+      semantic_cache: 'var(--green)',
+      dedup:          '#10b981',
+      route_down:     '#3b82f6',
+      route_up:       '#a855f7',
+      baseline:       'var(--slate)',
+      budget_block:   'var(--red)',
+      human_control:  '#f59e0b',
+      blocked:        'var(--red)',
+      cache:          'var(--green)',
+      unknown:        'var(--slate)',
+    };
+
+    function fmtUsd5(v) { v = Number(v || 0); return v < 0.0001 ? '$0.00' : '$' + v.toFixed(v < 1 ? 4 : 2); }
+    function fmtSec(ms) { ms = Number(ms || 0); if (ms < 1000) return Math.round(ms) + ' ms'; if (ms < 60000) return (ms / 1000).toFixed(1) + ' s'; return (ms / 60000).toFixed(1) + ' min'; }
+    function fmtNum(n) { return Number(n || 0).toLocaleString(); }
+
+    function renderReport() {
+      if (!isLive()) {
+        el.reportInner.innerHTML = `<div class="section-eyebrow">Impact Report</div>
+          <div class="rpt-empty">Connect to the Argus backend to see the live impact report.</div>`;
+        return;
+      }
+      const r = reportData;
+      if (!r || r.events === 0) {
+        el.reportInner.innerHTML = `<div class="section-eyebrow">Impact Report</div>
+          <div class="rpt-empty">No traffic recorded yet. Generate some prompts (via the extension or live_traffic.py) and check back in a few seconds.</div>`;
+        return;
+      }
+
+      const t = r.totals;
+      const baselineCost   = t.baseline_cost;
+      const actualCost     = t.actual_cost;
+      const savedCost      = t.saved_cost;
+      const savedPctCost   = t.saved_pct_cost;
+      const baselineLatSec = t.baseline_latency_ms / 1000;
+      const actualLatSec   = t.actual_latency_ms   / 1000;
+      const savedLatSec    = t.saved_latency_ms    / 1000;
+      const savedPctLat    = t.saved_pct_latency;
+
+      const callsTotal  = r.by_action.call_llm  || 0;
+      const cacheTotal  = r.by_action.cache_hit || 0;
+      const blockTotal  = r.by_action.blocked   || 0;
+      const cacheRate   = r.events ? Math.round((cacheTotal / r.events) * 100) : 0;
+      const winSec      = r.window_seconds || 0;
+
+      // Per-method savings bars — scale to the largest contributor.
+      const maxMethodSaved = Math.max(0.0001, ...r.by_method.map(m => m.saved_cost));
+      const methodsHtml = r.by_method.map(m => {
+        const color = METHOD_COLORS[m.id] || 'var(--slate)';
+        const pctOfTotal = savedCost > 0 ? Math.round((m.saved_cost / savedCost) * 100) : 0;
+        return `<div class="rpt-row-block">
+          <div class="rpt-row-top">
+            <span class="swatch" style="background:${color}"></span>
+            <span class="name">${esc(m.label)}<span class="lbl-sub">${fmtNum(m.count)} events · ${pctOfTotal}% of savings</span></span>
+            <span class="count">${fmtSec(m.saved_latency_ms)} saved</span>
+            <span class="saved">${fmtUsd5(m.saved_cost)}</span>
+          </div>
+          <div class="rpt-row-bar"><div class="fill" style="width:${(m.saved_cost / maxMethodSaved) * 100}%; background:${color}"></div></div>
+        </div>`;
+      }).join('');
+
+      // Per-agent breakdown — color from the agent's archetype.
+      const maxAgentSaved = Math.max(0.0001, ...r.by_agent.map(a => a.saved_cost));
+      const agentsHtml = r.by_agent.map(a => {
+        const ag = agents.find(x => x.id === a.agent_id);
+        const accent = archetype(ag ? ag.archetypeKey : 'guardian').accent;
+        const events = a.calls + a.cache_hits + a.blocked;
+        const pieces = [];
+        if (a.calls)      pieces.push(`${fmtNum(a.calls)} call${a.calls === 1 ? '' : 's'}`);
+        if (a.cache_hits) pieces.push(`${fmtNum(a.cache_hits)} cache hit${a.cache_hits === 1 ? '' : 's'}`);
+        if (a.blocked)    pieces.push(`${fmtNum(a.blocked)} blocked`);
+        return `<div class="rpt-row-block">
+          <div class="rpt-row-top">
+            <span class="swatch" style="background:${accent}"></span>
+            <span class="name">${esc(a.agent_name)}<span class="lbl-sub">${esc(pieces.join(' · '))}</span></span>
+            <span class="count">${fmtSec(a.saved_latency_ms)} saved · cost ${fmtUsd5(a.actual_cost)}</span>
+            <span class="saved">${fmtUsd5(a.saved_cost)}</span>
+          </div>
+          <div class="rpt-row-bar"><div class="fill" style="width:${(a.saved_cost / maxAgentSaved) * 100}%; background:${accent}"></div></div>
+        </div>`;
+      }).join('');
+
+      el.reportInner.innerHTML = `
+        <div class="section-eyebrow">Live · Impact Report · ${r.events} events analysed${winSec > 0 ? ` over ${fmtSec(winSec * 1000)}` : ''}</div>
+
+        <div class="rpt-hero">
+          <div class="rpt-headline money">
+            <div class="lbl">Money saved</div>
+            <div class="big">${fmtUsd5(savedCost)}<span class="pct">${savedPctCost.toFixed(0)}%</span></div>
+            <div class="sub">Right-sizing each task (baseline = standard model, frontier only where genuinely needed) this session would have cost <b>${fmtUsd5(baselineCost)}</b>. Argus actually spent <b>${fmtUsd5(actualCost)}</b>.</div>
+          </div>
+          <div class="rpt-headline time">
+            <div class="lbl">Time saved</div>
+            <div class="big">${fmtSec(savedLatSec * 1000)}<span class="pct">${savedPctLat.toFixed(0)}%</span></div>
+            <div class="sub">Modelled baseline wall-clock: <b>${fmtSec(baselineLatSec * 1000)}</b>. With Argus: <b>${fmtSec(actualLatSec * 1000)}</b>.</div>
+          </div>
+          <div class="rpt-headline calls">
+            <div class="lbl">Calls handled</div>
+            <div class="big">${fmtNum(r.events)}</div>
+            <div class="sub"><b>${fmtNum(callsTotal)}</b> sent to an LLM, <b>${fmtNum(cacheTotal)}</b> served from cache (${cacheRate}% hit rate)${blockTotal ? `, <b>${fmtNum(blockTotal)}</b> blocked` : ''}.</div>
+          </div>
+        </div>
+
+        <div class="rpt-compare">
+          <div class="rpt-card baseline">
+            <div class="lbl">Without Argus (no routing / cache)</div>
+            <div class="row"><span>Baseline</span><b>per-task standard model</b></div>
+            <div class="row"><span>Total cost</span><b>${fmtUsd5(baselineCost)}</b></div>
+            <div class="row"><span>Total wall-clock</span><b>${fmtSec(baselineLatSec * 1000)}</b></div>
+            <div class="row"><span>Tokens billed</span><b>${fmtNum(t.tokens_in + t.tokens_out)}</b></div>
+          </div>
+          <div class="rpt-card argus">
+            <div class="lbl">With Argus (actual)</div>
+            <div class="row"><span>Routing decisions</span><b>${fmtNum(callsTotal + cacheTotal + blockTotal)}</b></div>
+            <div class="row"><span>Total cost</span><b>${fmtUsd5(actualCost)}</b></div>
+            <div class="row"><span>Total wall-clock</span><b>${fmtSec(actualLatSec * 1000)}</b></div>
+            <div class="row"><span>Cache hit rate</span><b>${cacheRate}%</b></div>
+          </div>
+        </div>
+
+        <div class="rpt-section">
+          <h3>Where the savings came from — by method</h3>
+          ${r.by_method.length ? `<div class="rpt-method-list">${methodsHtml}</div>` : `<div class="rpt-empty">No methods recorded yet.</div>`}
+        </div>
+
+        <div class="rpt-section">
+          <h3>Per-agent contribution</h3>
+          ${r.by_agent.length ? `<div class="rpt-agent-list">${agentsHtml}</div>` : `<div class="rpt-empty">No agents recorded yet.</div>`}
+          <div class="rpt-foot">Cumulative since the backend started · all figures reconcile with the live stream and org counters · refreshes every 3 s while this tab is open.</div>
+        </div>
+      `;
+    }
+
+    // Build the "before → what Argus did → after + savings" panel for one event.
+    function renderExpandedAnalysis(e) {
+      const fmtUsd = v => v == null ? '—' : (v < 0.0001 ? '≈$0' : '$' + Number(v).toFixed(5));
+      const fmtMs  = v => v == null ? '—' : Math.round(v).toLocaleString() + ' ms';
+      const fmtTok = v => v == null ? '—' : Number(v).toLocaleString();
+
+      const tin  = e.tokens_in  ?? e.estimated_tokens_in;
+      const tout = e.tokens_out ?? e.estimated_tokens_out;
+      const tokensLine = (tin != null && tout != null)
+        ? `${fmtTok(tin)} in / ${fmtTok(tout)} out`
+        : (e.tokens_total != null ? fmtTok(e.tokens_total) + ' tokens' : 'pending…');
+
+      const savedPctCost = (e.baseline_cost && e.baseline_cost > 0)
+        ? Math.round((e.saved_cost / e.baseline_cost) * 100) : null;
+      const savedPctLat = (e.baseline_latency_ms && e.baseline_latency_ms > 0)
+        ? Math.round((e.saved_latency_ms / e.baseline_latency_ms) * 100) : null;
+
+      // Without-Argus column always shows the baseline model & its modelled numbers.
+      const withoutModel = e.baseline_model || 'claude-sonnet-4-5';
+      // With-Argus column: what actually happened.
+      let withModel = '—', withCost = '—', withLat = '—';
+      if (e.action === 'cache_hit') {
+        withModel = 'cache (no LLM call)';
+        withCost  = 'free';
+        withLat   = fmtMs(e.actual_latency_ms);
+      } else if (e.action === 'call_llm') {
+        withModel = modelLabel(e.model);
+        withCost  = fmtUsd(e.actual_cost);
+        withLat   = fmtMs(e.actual_latency_ms);
+      } else if (e.action === 'blocked') {
+        withModel = 'refused';
+        withCost  = '$0';
+        withLat   = '0 ms';
+      }
+
+      const showCompare = e.action !== 'blocked' || e.baseline_cost > 0;
+
+      return `<div class="stream-expand">
+
+        <div class="sx-section">
+          <div class="sx-label">① Original prompt — what the agent asked</div>
+          <pre class="sx-prompt">${esc(e.prompt || '(empty)')}</pre>
+        </div>
+
+        <div class="sx-section">
+          <div class="sx-label">② Argus verdict — what the pipeline decided</div>
+          <div class="sx-verdict method-${esc(e.method || 'unknown')}">
+            <div class="sx-verdict-icon ${esc(e.method || 'unknown')}">
+              ${e.method === 'dedup' || e.method === 'semantic_cache' || e.method === 'cache' ? '⚡'
+                : e.method === 'route_down' ? '↓'
+                : e.method === 'route_up' ? '↑'
+                : e.method === 'baseline' ? '='
+                : '⛔'}
+            </div>
+            <div class="sx-verdict-body">
+              <div class="sx-verdict-method">${esc(e.method_label || e.action)}</div>
+              <div class="sx-verdict-explain">${esc(e.verdict || '')}</div>
+            </div>
+          </div>
+        </div>
+
+        ${showCompare ? `<div class="sx-section">
+          <div class="sx-label">③ Cost &amp; latency — without Argus vs with Argus</div>
+          <div class="sx-compare">
+            <div class="sx-col without">
+              <div class="sx-col-title">Without Argus (baseline)</div>
+              <div class="sx-row"><span>Model</span><b>${esc(modelLabel(withoutModel))}</b></div>
+              <div class="sx-row headline"><span>Cost</span><b>${fmtUsd(e.baseline_cost)}</b></div>
+              <div class="sx-row headline"><span>Latency</span><b>${fmtMs(e.baseline_latency_ms)}</b></div>
+            </div>
+            <div class="sx-col with">
+              <div class="sx-col-title">With Argus (actual)</div>
+              <div class="sx-row"><span>Model</span><b>${esc(withModel)}</b></div>
+              <div class="sx-row headline"><span>Cost</span><b>${withCost}</b></div>
+              <div class="sx-row headline"><span>Latency</span><b>${withLat}</b></div>
+            </div>
+            <div class="sx-col saved">
+              <div class="sx-col-title">Saved by Argus</div>
+              <div class="sx-row"><span>Tokens</span><b>${tokensLine}</b></div>
+              <div class="sx-row headline"><span>Money</span><b>${fmtUsd(e.saved_cost)}${savedPctCost != null ? ` <span style="font-size:11.5px;font-weight:600;color:var(--green)">(${savedPctCost}%)</span>` : ''}</b></div>
+              <div class="sx-row headline"><span>Time</span><b>${fmtMs(e.saved_latency_ms)}${savedPctLat != null ? ` <span style="font-size:11.5px;font-weight:600;color:var(--green)">(${savedPctLat}%)</span>` : ''}</b></div>
+            </div>
+          </div>
+        </div>` : ''}
+
+        <div class="sx-section">
+          <div class="sx-label">④ Call metadata</div>
+          <div class="sx-meta">
+            <div>Task type</div><div><b>${esc(e.task_type || '—')}</b></div>
+            <div>Urgency</div><div><b>${e.urgency != null ? Number(e.urgency).toFixed(2) : '—'}</b></div>
+            ${e.quality != null ? `<div>Answer quality</div><div><b>${Number(e.quality).toFixed(2)}</b></div>` : ''}
+            ${e.source ? `<div>Cache source</div><div><b>${esc(e.source)}</b></div>` : ''}
+            ${e.reason ? `<div>Block reason</div><div><b>${esc(e.reason)}</b></div>` : ''}
+            <div>Task ID</div><div class="mono">${esc(e.task_id || '—')}</div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function renderStream() {
+      const liveOn = isLive();
+      el.streamInner.innerHTML = `
+        <div class="section-eyebrow">${liveOn ? 'Live · ' : ''}Live Stream — every prompt the pipeline saw</div>
+        <div class="stream-toolbar">
+          <span class="stream-status${streamPaused ? ' paused' : ''}" id="stream-status">
+            <span class="dot"></span>${streamPaused ? 'Paused' : 'Streaming'} · ${streamEvents.length} events
+          </span>
+          <div class="spacer" style="flex:1"></div>
+          <select id="stream-filter">
+            <option value="all">All agents</option>
+            ${agents.map(a => `<option value="${a.id}"${a.id === streamFilter ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}
+          </select>
+          <select id="stream-action-filter">
+            <option value="all"${streamActionFilter==='all'?' selected':''}>All actions</option>
+            <option value="call_llm"${streamActionFilter==='call_llm'?' selected':''}>Calls</option>
+            <option value="cache_hit"${streamActionFilter==='cache_hit'?' selected':''}>Cache hits</option>
+            <option value="blocked"${streamActionFilter==='blocked'?' selected':''}>Blocked</option>
+          </select>
+          <button class="ghost-btn" id="stream-pause">${streamPaused ? '▶ Resume' : '⏸ Pause'}</button>
+          <button class="ghost-btn" id="stream-clear">Clear</button>
+        </div>
+        <div id="stream-rows-container"></div>
+        ${!liveOn ? `<div class="stream-empty">Connect to the Argus backend to see the live stream.</div>` : ''}
+      `;
+      $('stream-filter').onchange = (ev) => { streamFilter = ev.target.value; renderStreamRows(); };
+      $('stream-action-filter').onchange = (ev) => { streamActionFilter = ev.target.value; renderStreamRows(); };
+      $('stream-pause').onclick = () => { streamPaused = !streamPaused; renderStream(); };
+      $('stream-clear').onclick = () => { streamEvents = []; streamExpanded.clear(); renderStream(); updateStreamNavCount(); };
+      renderStreamRows();
+    }
+
+    function renderStreamRows() {
+      const container = $('stream-rows-container');
+      if (!container) return;
+      const now = Date.now();
+      const rows = streamEvents.filter(e =>
+        (streamFilter === 'all' || e.agent_id === streamFilter) &&
+        (streamActionFilter === 'all' || e.action === streamActionFilter)
+      );
+      if (!rows.length) {
+        container.innerHTML = `<div class="stream-empty">${
+          isLive() ? 'Waiting for traffic — generate prompts via the extension or run live_traffic.py.' : 'No data yet.'
+        }</div>`;
+        // refresh the status counter
+        const st = $('stream-status');
+        if (st) st.innerHTML = `<span class="dot"></span>${streamPaused ? 'Paused' : 'Streaming'} · ${streamEvents.length} events`;
+        return;
+      }
+      container.innerHTML = `<div class="stream-list">${rows.map(e => {
+        const ag = agents.find(a => a.id === e.agent_id);
+        const accent = archetype(ag ? ag.archetypeKey : 'guardian').accent;
+        const fresh = e._receivedAt && (now - e._receivedAt < STREAM_FRESH_MS);
+        const open = streamExpanded.has(e.id);
+        const initial = (e.agent_name || '?')[0].toUpperCase();
+        const promptShort = (e.prompt || '').slice(0, 200);
+        return `<div class="stream-item${fresh ? ' fresh' : ''}" data-sid="${e.id}">
+          <div class="stream-row1">
+            <span class="st-time">${streamRelTime(e.ts)}</span>
+            <span class="st-agent"><span class="av" style="background:${accent}">${esc(initial)}</span><strong>${esc(e.agent_name || e.agent_id)}</strong></span>
+            <span>${actionPill(e.action)}</span>
+            <span class="st-prompt" title="${esc(e.prompt || '')}">${esc(promptShort)}${(e.prompt || '').length > 200 ? '…' : ''}</span>
+            <span class="st-meta">${esc(streamMetaText(e))}</span>
+          </div>
+          ${open ? renderExpandedAnalysis(e) : ''}
+        </div>`;
+      }).join('')}</div>`;
+      // Wire row expansion (newest-first; click toggles).
+      container.querySelectorAll('.stream-item').forEach(item => {
+        item.onclick = () => {
+          const id = Number(item.getAttribute('data-sid'));
+          if (streamExpanded.has(id)) streamExpanded.delete(id); else streamExpanded.add(id);
+          renderStreamRows();
+        };
+      });
+      const st = $('stream-status');
+      if (st) st.innerHTML = `<span class="dot"></span>${streamPaused ? 'Paused' : 'Streaming'} · ${streamEvents.length} events`;
     }
 
     /* ---- Supervision inbox ---- */
@@ -1852,9 +2436,12 @@
       integrations: { h: 'New Agent',    sub: 'Deploy a new agent into Argus' },
       analytics:    { h: 'Analytics',    sub: 'Performance across your fleet' },
       supervision:  { h: 'Supervision',  sub: 'Keep humans in control of every agent' },
-      audit:        { h: 'Audit',        sub: 'A full, exportable trail of agent activity' }
+      audit:        { h: 'Audit',        sub: 'A full, exportable trail of agent activity' },
+      stream:       { h: 'Live Stream',  sub: 'Every prompt the pipeline sees, in real time' },
+      report:       { h: 'Impact Report', sub: 'Money + time Argus saved you this session' }
     };
     function switchView(view) {
+      const prevView = currentView;
       currentView = view;
       document.querySelectorAll('.nav-item[data-view]').forEach(n => n.classList.toggle('active', n.getAttribute('data-view') === view));
       document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + view));
@@ -1865,6 +2452,11 @@
       if (view === 'analytics') renderAnalytics();
       if (view === 'supervision') renderSupervision();
       if (view === 'audit') { renderAudit(); fetchAudit().then(() => { if (currentView === 'audit') renderAudit(); }); }
+      if (view === 'stream') { renderStream(); fetchStream(); startStreamPolling(); }
+      if (view === 'report') { renderReport(); fetchReport(); startReportPolling(); }
+      // Stop the per-second stream poll when the user leaves the tab.
+      if (prevView === 'stream' && view !== 'stream') stopStreamPolling();
+      if (prevView === 'report' && view !== 'report') stopReportPolling();
       renderDetail(); updateVariantControls();
     }
 
@@ -2150,7 +2742,7 @@
         navAgentCount: $('nav-agent-count'), navIntCount: $('nav-int-count'), navAlertCount: $('nav-alert-count'),
         ecoNoteText: $('eco-note-text'),
         integrationGrid: $('integration-grid'), analyticsInner: $('analytics-inner'),
-        supervisionInner: $('supervision-inner'), auditInner: $('audit-inner'),
+        supervisionInner: $('supervision-inner'), auditInner: $('audit-inner'), streamInner: $('stream-inner'), reportInner: $('report-inner'),
         topbarH: $('topbar-h'), topbarSub: $('topbar-sub'),
         liveChip: $('live-chip'), liveChipText: $('live-chip-text'),
         settingsBtn: $('settings-btn'), accountBtn: $('account-btn'), accountPopover: $('account-popover'),
@@ -2163,7 +2755,11 @@
       el.toggleViewMode.style.display = 'inline-flex';
       updateLiveChip(); updateEcoNote(); updateAlertBadge();
       // Try the Argus backend in the background; stays on demo data if unreachable.
-      if (settings.useBackend !== false) syncBackend();
+      if (settings.useBackend !== false) {
+        syncBackend();
+        // Realtime poll: keep agent load on screen in sync with backend traffic.
+        setInterval(() => { if (settings.useBackend !== false) syncBackend(); }, 1500);
+      }
     }
   })();
   </script>
